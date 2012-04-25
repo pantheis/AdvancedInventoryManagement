@@ -14,7 +14,7 @@ public class mod_CamelOre extends NetworkMod
 
         public void load()
         {
-//        		MinecraftForgeClient.preloadTexture("/CamelMod/CamelOre/terrain.png");
+//              MinecraftForgeClient.preloadTexture("/CamelMod/CamelOre/terrain.png");
 //              MinecraftForgeClient.preloadTexture("/CamelMod/CamelOre/gui/items.png");
                 ModLoader.registerBlock(oreTitanium);
 //              ModLoader.addName(oreTitanium, "Titanium Ore");
