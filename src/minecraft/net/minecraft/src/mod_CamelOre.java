@@ -1,9 +1,13 @@
 package net.minecraft.src;
 
+import java.util.*;
+import java.io.File;
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.forge.*;
 
 public class mod_CamelOre extends NetworkMod
 {
+	static Configuration configuration = new Configuration(new File(Minecraft.getMinecraftDir(), "config/CamelOre.cfg"));
         public static final Block oreTitanium = new CamelOreBlockOre(250, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("oreTitanium");
         public static final Item ingotTitanium = (new Item(127)).setIconIndex(0).setItemName("ingotTitanium");
 
