@@ -4,7 +4,7 @@ import net.minecraft.src.forge.*;
 import java.io.File;
 import java.util.*;
 import net.minecraft.client.Minecraft;
-
+import kaijin.stocker.*;
 
 public class mod_CamelOre extends NetworkMod
 {

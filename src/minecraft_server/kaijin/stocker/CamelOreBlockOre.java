@@ -1,7 +1,8 @@
-package net.minecraft.src;
+package kaijin.stocker;
 
 import net.minecraft.src.forge.*;
 import java.util.*;
+import net.minecraft.src.*;
 
 public class CamelOreBlockOre extends Block implements ITextureProvider
 {
@@ -10,12 +11,6 @@ public class CamelOreBlockOre extends Block implements ITextureProvider
                 super(i, j, Material.ground);
         }
 
-// Commenting this out for now, not sure it's needed for having a block receive redstone
-/*        public boolean canConnectRedstone(IBlockAccess iba, int i, int j, int k, int dir)
-        {
-            return true;
-        }
-*/
         public void addCreativeItems(ArrayList itemList)
         {
                 itemList.add(new ItemStack(this));

@@ -4,7 +4,7 @@ import net.minecraft.src.forge.*;
 import java.io.File;
 import java.util.*;
 import net.minecraft.server.*;
-
+import kaijin.stocker.*;
 
 public class mod_CamelOre extends NetworkMod
 {
@@ -19,9 +19,7 @@ public class mod_CamelOre extends NetworkMod
 
     public void load()
     {
-//      MinecraftForgeClient.preloadTexture("/CamelMod/CamelOre/terrain.png");
         ModLoader.registerBlock(oreTitanium);
-//      ModLoader.addName(oreTitanium, "Titanium Ore");
         ModLoader.addRecipe(new ItemStack(oreTitanium, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});                
     }
     
