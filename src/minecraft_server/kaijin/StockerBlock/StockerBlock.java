@@ -4,7 +4,7 @@ import net.minecraft.src.forge.*;
 import java.util.*;
 import net.minecraft.src.*;
 
-public class StockerBlock extends Block implements ITextureProvider
+public class StockerBlock extends BlockContainer implements ITextureProvider
 {
         public StockerBlock(int i, int j)
         {
@@ -20,4 +20,10 @@ public class StockerBlock extends Block implements ITextureProvider
         {
                 return "/Kaijin/StockerBlock/terrain.png";
         }
+
+		@Override
+		public TileEntity getBlockEntity() {
+			// TODO Auto-generated method stub
+			return new TileStockerBlock();
+		}
 }
