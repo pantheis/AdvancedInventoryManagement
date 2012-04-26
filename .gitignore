@@ -3,9 +3,9 @@
 !src
 !src/minecraft
 !src/minecraft/kaijin
-!src/minecraft/kaijin/stocker
-!src/minecraft/kaijin/stocker/*
+!src/minecraft/kaijin/StockerBlock
+!src/minecraft/kaijin/StockerBlock/*
 !src/minecraft_server
 !src/minecraft_server/kaijin
-!src/minecraft_server/kaijin/stocker
-!src/minecraft_server/kaijin/stocker/*
+!src/minecraft_server/kaijin/StockerBlock
+!src/minecraft_server/kaijin/StockerBlock/*

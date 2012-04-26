@@ -1,12 +1,12 @@
-package kaijin.stocker;
+package kaijin.StockerBlock;
 
 import net.minecraft.src.forge.*;
 import java.util.*;
 import net.minecraft.src.*;
 
-public class CamelOreBlockOre extends Block implements ITextureProvider
+public class StockerBlock extends Block implements ITextureProvider
 {
-        public CamelOreBlockOre(int i, int j)
+        public StockerBlock(int i, int j)
         {
                 super(i, j, Material.ground);
         }
@@ -18,6 +18,6 @@ public class CamelOreBlockOre extends Block implements ITextureProvider
 
         public String getTextureFile()
         {
-                return "/CamelMod/CamelOre/terrain.png";
+                return "/Kaijin/StockerBlock/terrain.png";
         }
 }
