@@ -1,9 +1,9 @@
-package kaijin.StockerBlock;
+package kaijin.InventoryStocker;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 
-public class TileEntityStockerBlock extends TileEntity implements IInventory, ISidedInventory
+public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
 
 	private ItemStack items [] = new ItemStack [28];

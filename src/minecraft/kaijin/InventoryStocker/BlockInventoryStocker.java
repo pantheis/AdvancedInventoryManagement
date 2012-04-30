@@ -1,11 +1,12 @@
-package kaijin.StockerBlock;
+package kaijin.InventoryStocker;
 
 import net.minecraft.src.forge.*;
 import java.util.*;
 import net.minecraft.src.*;
+import net.minecraft.src.mod_InventoryStocker.*;
 
-public class StockerBlock extends BlockContainer implements ITextureProvider {
-        public StockerBlock(int i, int j) {
+public class BlockInventoryStocker extends BlockContainer implements ITextureProvider {
+        public BlockInventoryStocker(int i, int j) {
                 super(i, j, Material.ground);
         }
 
@@ -16,13 +17,13 @@ public class StockerBlock extends BlockContainer implements ITextureProvider {
         public String getTextureFile() {
                 return "/Kaijin/StockerBlock/terrain.png";
         }
-        public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer) {
-        	entityplayer.openGui((IInventory));
+        public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer) {
+        	entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
             return true; 
         }
 		@Override
 		public TileEntity getBlockEntity() {
 			// TODO Auto-generated method stub
-			return new TileEntityStockerBlock();
+			return new TileEntityInventoryStocker();
 		}
 }

@@ -1,11 +1,11 @@
-package kaijin.StockerBlock;
+package kaijin.InventoryStocker;
 
 import net.minecraft.src.forge.*;
 import java.util.*;
 import net.minecraft.src.*;
 
-public class StockerBlock extends BlockContainer implements ITextureProvider {
-        public StockerBlock(int i, int j) {
+public class BlockInventoryStocker extends BlockContainer implements ITextureProvider {
+        public BlockInventoryStocker(int i, int j) {
                 super(i, j, Material.ground);
         }
 
@@ -20,6 +20,6 @@ public class StockerBlock extends BlockContainer implements ITextureProvider {
 		@Override
 		public TileEntity getBlockEntity() {
 			// TODO Auto-generated method stub
-			return new TileEntityStockerBlock();
+			return new TileEntityInventoryStocker();
 		}
 }

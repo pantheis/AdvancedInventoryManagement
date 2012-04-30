@@ -1,11 +1,11 @@
-package kaijin.StockerBlock;
+package kaijin.InventoryStocker;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 
-public class GuiStockerBlock extends GuiContainer {
+public class GuiInventoryStocker extends GuiContainer {
 
-	public GuiStockerBlock(Container par1Container) {
+	public GuiInventoryStocker(Container par1Container) {
 		super(par1Container);
 		// TODO Auto-generated constructor stub
 	}
