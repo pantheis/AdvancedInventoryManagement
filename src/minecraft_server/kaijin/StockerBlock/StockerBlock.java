@@ -24,6 +24,6 @@ public class StockerBlock extends BlockContainer implements ITextureProvider
 		@Override
 		public TileEntity getBlockEntity() {
 			// TODO Auto-generated method stub
-			return new TileStockerBlock();
+			return new TileEntityStockerBlock();
 		}
 }
