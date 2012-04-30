@@ -1,7 +1,7 @@
-StockerBlock
+Inventory Stocker
 
 The goal of this project is to design a new block that will allow the player to take a snapshot of a directly attached storage block and then use an internal input buffer inventory to attempt to keep the attached storage block's storage setup exactly as it was when the snapshot was taken.
 
-The StockerBlock will have an output storage buffer that it will store things removed from the attached storage that do not match the snapshot.
+The Inventory Stocker will have an output storage buffer that it will store things removed from the attached storage that do not match the snapshot.
 
 The input and output buffers will be accessible via a GUI interface by the player, or via ISidedInventory (sides to be determined, but probably input left, output right) so that RedPower tubes and Buildcraft Pipes should attach to it.
