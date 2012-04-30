@@ -23,7 +23,6 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         }
 		@Override
 		public TileEntity getBlockEntity() {
-			// TODO Auto-generated method stub
 			return new TileEntityInventoryStocker();
 		}
 }
