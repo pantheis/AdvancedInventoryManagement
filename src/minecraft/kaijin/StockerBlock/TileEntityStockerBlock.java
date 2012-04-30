@@ -6,7 +6,11 @@ import net.minecraft.src.forge.*;
 public class TileEntityStockerBlock extends TileEntity implements IInventory, ISidedInventory
 {
 
-	private ItemStack items [] = new ItemStack [28];
+    private ItemStack contents[];
+    
+	public TileEntityStockerBlock() {
+		contents = new ItemStack [getSizeInventory()];		
+	}	
 	
 	@Override
 	public int getStartInventorySide(int side) {
@@ -23,50 +27,72 @@ public class TileEntityStockerBlock extends TileEntity implements IInventory, IS
 	@Override
 	public int getSizeInventory() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 26;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int var1) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemStack getStackInSlot(int i) {
+		return contents[i];
 	}
 
 	@Override
-	public ItemStack decrStackSize(int var1, int var2) {
+	public ItemStack decrStackSize(int i, int j) {
 		// TODO Auto-generated method stub
-		return null;
+        if(contents[i] != null) {
+            if(contents[i].stackSize <= j)
+            {
+                ItemStack itemstack = contents[i];
+                contents[i] = null;
+//                onInventoryChanged();
+            }
+            ItemStack itemstack1 = contents[i].splitStack(j);
+            
+            if(contents[i].stackSize == 0) {
+                contents[i] = null;
+            }
+            return itemstack1;
+//          onInventoryChanged();
+        } else
+        {
+            return null;
+        }
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int var1) {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.contents[var1] == null) return null;
+		ItemStack stack = this.contents[var1];
+		this.contents[var1] = null;
+		return stack;
 	}
 
 	@Override
-	public void setInventorySlotContents(int var1, ItemStack var2) {
-		// TODO Auto-generated method stub
-		
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
+        contents[i] = itemstack;
+        if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        {
+            itemstack.stackSize = getInventoryStackLimit();
+        }
 	}
 
 	@Override
 	public String getInvName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "StockerBlock";
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer var1) {
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		// TODO Auto-generated method stub
-		return false;
-	}
+        if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
+            return false;
+        }
+        return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+    }
 
 	@Override
 	public void openChest() {
