@@ -3,20 +3,20 @@ package kaijin.InventoryStocker;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
+import kaijin.InventoryStocker.*;
 
 public class GuiInventoryStocker extends GuiContainer {
-    private int inventoryRows = 0;
-    private IInventory lowerChestInventory;
+	private int inventoryRows = 0;
+	IInventory playerinventory;
+	TileEntityInventoryStocker tileentityinventorystocker;
 
-	public GuiInventoryStocker(IInventory Container1) {
-		super(new ContainerInventoryStocker(Container1));
-        this.lowerChestInventory = Container1;
-        this.allowUserInput = false;
-        short var3 = 222;
-        int var4 = var3 - 108;
-        this.inventoryRows = Container1.getSizeInventory() / 9;
-
-		// TODO Auto-generated constructor stub
+	public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker) {
+		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
+        this.playerinventory = playerinventory;
+        this.tileentityinventorystocker = tileentityinventorystocker;
+		xSize = 175;
+		ySize = 240;
+		this.inventoryRows = tileentityinventorystocker.getSizeInventory() / 9;
 	}
 	
     /**
@@ -24,7 +24,7 @@ public class GuiInventoryStocker extends GuiContainer {
      */
     protected void drawGuiContainerForegroundLayer()
     {
-        this.fontRenderer.drawString(StatCollector.translateToLocal(this.lowerChestInventory.getInvName()), 8, 6, 4210752);
+        this.fontRenderer.drawString(StatCollector.translateToLocal(this.tileentityinventorystocker.getInvName()), 8, 6, 4210752);
     }
 
     /**

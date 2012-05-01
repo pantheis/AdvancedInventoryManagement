@@ -24,7 +24,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public int getSizeInventory() {
 		// TODO Auto-generated method stub
-		return 48;
+		return 45;
 	}
 
 	public ItemStack getStackInSlot(int i) {
@@ -130,8 +130,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-//		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) == this;
-		// TODO Auto-generated method stub
         if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
             return false;
         }

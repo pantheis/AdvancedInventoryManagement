@@ -20,12 +20,12 @@ public class mod_InventoryStocker extends NetworkMod {
     public void load() {
     	MinecraftForgeClient.preloadTexture("/Kaijin/StockerBlock/terrain.png");
         ModLoader.registerBlock(InventoryStocker);
-        ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "Inventory Stocker");
+        ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
         ModLoader.addName(InventoryStocker, "Inventory Stocker");
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});
 
         // needs more GUI stuff added
-//		MinecraftForge.setGuiHandler(null, null);
+        MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
     }
 
     public static int configurationProperties() {
@@ -37,7 +37,7 @@ public class mod_InventoryStocker extends NetworkMod {
     
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return "0.0.1";
     }
 	@Override public boolean clientSideRequired() { return true; }
 	@Override public boolean serverSideRequired() { return false; }
