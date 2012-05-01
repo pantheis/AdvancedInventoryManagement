@@ -5,31 +5,35 @@ import net.minecraft.src.forge.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
-
     private ItemStack contents[];
-    
-	public TileEntityInventoryStocker() {
-		contents = new ItemStack [getSizeInventory()];		
-	}	
-	
-	public int getStartInventorySide(int side) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	public int getSizeInventorySide(int side) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public TileEntityInventoryStocker()
+    {
+        contents = new ItemStack [getSizeInventory()];
+    }
 
-	public int getSizeInventory() {
-		// TODO Auto-generated method stub
-		return 45;
-	}
+    public int getStartInventorySide(int side)
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	public ItemStack getStackInSlot(int i) {
-		return contents[i];
-	}
+    public int getSizeInventorySide(int side)
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getSizeInventory()
+    {
+        // TODO Auto-generated method stub
+        return 45;
+    }
+
+    public ItemStack getStackInSlot(int i)
+    {
+        return contents[i];
+    }
 
     public ItemStack decrStackSize(int par1, int par2)
     {
@@ -63,26 +67,34 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
-	public ItemStack getStackInSlotOnClosing(int var1) {
-		if (this.contents[var1] == null) return null;
-		ItemStack stack = this.contents[var1];
-		this.contents[var1] = null;
-		return stack;
-	}
+    public ItemStack getStackInSlotOnClosing(int var1)
+    {
+        if (this.contents[var1] == null)
+        {
+            return null;
+        }
 
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
+        ItemStack stack = this.contents[var1];
+        this.contents[var1] = null;
+        return stack;
+    }
+
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
         contents[i] = itemstack;
-        if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+
+        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
         {
             itemstack.stackSize = getInventoryStackLimit();
         }
-	}
+    }
 
-	public String getInvName() {
-		return "Inventory Stocker";
-	}
+    public String getInvName()
+    {
+        return "Inventory Stocker";
+    }
 
-	/**
+    /**
      * Reads a tile entity from NBT.
      */
     public void readFromNBT(NBTTagCompound nbttagcompound)
@@ -125,25 +137,28 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         nbttagcompound.setTag("Items", nbttaglist);
     }
 
-	public int getInventoryStackLimit() {
-		return 64;
-	}
+    public int getInventoryStackLimit()
+    {
+        return 64;
+    }
 
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-        if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+        {
             return false;
         }
+
         return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
     }
 
-	public void openChest() {
-		// TODO Auto-generated method stub
-		
-	}
+    public void openChest()
+    {
+        // TODO Auto-generated method stub
+    }
 
-	public void closeChest() {
-		// TODO Auto-generated method stub
-		
-	}
-
+    public void closeChest()
+    {
+        // TODO Auto-generated method stub
+    }
 }

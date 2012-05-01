@@ -4,20 +4,24 @@ import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
 
+public class GuiHandlerInventoryStocker implements IGuiHandler
+{
+    @Override
+    public Object getGuiElement(int ID, EntityPlayer player, World world,
+            int x, int y, int z)
+    {
+        if (!world.blockExists(x, y, z))
+        {
+            return null;
+        }
 
-public class GuiHandlerInventoryStocker implements IGuiHandler {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-	@Override
-	public Object getGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+        if (!(tile instanceof TileEntityInventoryStocker))
+        {
+            return null;
+        }
 
-		if(!world.blockExists(x, y, z))
-			return null;
-		
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if(!(tile instanceof TileEntityInventoryStocker))
-			return null;
-		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
-	}
-
+        return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
+    }
 }

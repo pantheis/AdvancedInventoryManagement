@@ -5,20 +5,22 @@ import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
 
-public class GuiInventoryStocker extends GuiContainer {
-	private int inventoryRows = 0;
-	IInventory playerinventory;
-	TileEntityInventoryStocker tileentityinventorystocker;
+public class GuiInventoryStocker extends GuiContainer
+{
+    private int inventoryRows = 0;
+    IInventory playerinventory;
+    TileEntityInventoryStocker tileentityinventorystocker;
 
-	public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker) {
-		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
+    public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
+    {
+        super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
         this.playerinventory = playerinventory;
         this.tileentityinventorystocker = tileentityinventorystocker;
-		xSize = 175;
-		ySize = 240;
-		this.inventoryRows = tileentityinventorystocker.getSizeInventory() / 9;
-	}
-	
+        xSize = 175;
+        ySize = 240;
+        this.inventoryRows = tileentityinventorystocker.getSizeInventory() / 9;
+    }
+
     /**
      * Draw the foreground layer for the GuiContainer (everythin in front of the items)
      */
@@ -40,5 +42,4 @@ public class GuiInventoryStocker extends GuiContainer {
         this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.inventoryRows * 18 + 17);
         this.drawTexturedModalRect(var5, var6 + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
     }
-
 }

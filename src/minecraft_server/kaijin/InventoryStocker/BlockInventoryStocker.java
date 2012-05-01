@@ -6,33 +6,43 @@ import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
 import kaijin.InventoryStocker.*;
 
-public class BlockInventoryStocker extends BlockContainer implements ITextureProvider {
-        public BlockInventoryStocker(int i, int j) {
-                super(i, j, Material.ground);
-        }
+public class BlockInventoryStocker extends BlockContainer implements ITextureProvider
+{
+    public BlockInventoryStocker(int i, int j)
+    {
+        super(i, j, Material.ground);
+    }
 
-        public void addCreativeItems(ArrayList itemList) {
-                itemList.add(new ItemStack(this));
-        }
+    public void addCreativeItems(ArrayList itemList)
+    {
+        itemList.add(new ItemStack(this));
+    }
 
-        public String getTextureFile() {
-                return "/Kaijin/StockerBlock/terrain.png";
-        }
-        
-    	public static boolean isClient (World world) {
-    		return false;
-    	}
+    public String getTextureFile()
+    {
+        return "/Kaijin/StockerBlock/terrain.png";
+    }
 
-        @Override
-        public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer) {
+    public static boolean isClient(World world)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
+    {
 //        	entityplayer.displayGUIChest((IInventory)tileentityinventorystocker);
-    		if(!isClient(world))
-    			entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);		
-    		return true;
+        if (!isClient(world))
+        {
+            entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
         }
-        
-        @Override
-		public TileEntity getBlockEntity() {
-			return new TileEntityInventoryStocker();
-		}
+
+        return true;
+    }
+
+    @Override
+    public TileEntity getBlockEntity()
+    {
+        return new TileEntityInventoryStocker();
+    }
 }
