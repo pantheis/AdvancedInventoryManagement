@@ -8,7 +8,7 @@ import kaijin.InventoryStocker.*;
 
 public class mod_InventoryStocker extends NetworkMod
 {
-    static Configuration configuration = new Configuration(new File("config/InventoryStocker.cfg"));
+    static Configuration configuration = new Configuration(new File(Minecraft.getMinecraftDir(), "config/InventoryStocker.cfg"));
     static int InventoryStockerBlockID = configurationProperties();
     public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
 
