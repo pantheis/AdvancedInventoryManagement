@@ -9,7 +9,7 @@ import kaijin.InventoryStocker.*;
 public class mod_InventoryStocker extends NetworkMod {
 	static Configuration configuration = new Configuration(new File("config/InventoryStocker.cfg"));
 	static int InventoryStockerBlockID = configurationProperties();
-    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("oreTitanium");
+    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
     
     public static mod_InventoryStocker instance;
     
@@ -20,8 +20,10 @@ public class mod_InventoryStocker extends NetworkMod {
     public void load() {
     	MinecraftForgeClient.preloadTexture("/Kaijin/StockerBlock/terrain.png");
         ModLoader.registerBlock(InventoryStocker);
+        ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "Inventory Stocker");
         ModLoader.addName(InventoryStocker, "Inventory Stocker");
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});
+
         // needs more GUI stuff added
 //		MinecraftForge.setGuiHandler(null, null);
     }

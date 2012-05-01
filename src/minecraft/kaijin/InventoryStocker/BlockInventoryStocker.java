@@ -4,6 +4,7 @@ import net.minecraft.src.forge.*;
 import java.util.*;
 import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
+import kaijin.InventoryStocker.GuiInventoryStocker;
 
 public class BlockInventoryStocker extends BlockContainer implements ITextureProvider {
         public BlockInventoryStocker(int i, int j) {
@@ -17,11 +18,15 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         public String getTextureFile() {
                 return "/Kaijin/StockerBlock/terrain.png";
         }
+        
+        @Override
         public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer) {
-        	entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
+        	Object tileentityinventorystocker = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+        	entityplayer.displayGUIChest((IInventory)tileentityinventorystocker);
             return true; 
         }
-		@Override
+        
+        @Override
 		public TileEntity getBlockEntity() {
 			return new TileEntityInventoryStocker();
 		}
