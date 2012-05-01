@@ -24,7 +24,6 @@ public class mod_InventoryStocker extends NetworkMod {
         ModLoader.addName(InventoryStocker, "Inventory Stocker");
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});
 
-        // needs more GUI stuff added
         MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
     }
 

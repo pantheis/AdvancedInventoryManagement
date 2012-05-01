@@ -9,15 +9,20 @@ import kaijin.InventoryStocker.*;
 public class mod_InventoryStocker extends NetworkMod {
 	static Configuration configuration = new Configuration(new File("config/InventoryStocker.cfg"));
 	static int InventoryStockerBlockID = configurationProperties();
-    public static final Block InventoryStockerBlock = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("oreTitanium");
+    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
 
+    public static mod_InventoryStocker instance;
+    
     public mod_InventoryStocker() {
-
+    	instance = this;
     }
 
     public void load() {
-        ModLoader.registerBlock(InventoryStockerBlock);
-        ModLoader.addRecipe(new ItemStack(InventoryStockerBlock, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});                
+        ModLoader.registerBlock(InventoryStocker);
+        ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
+        ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", Character.valueOf('X'), Block.dirt});
+                
+        MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
     }
     
     public static int configurationProperties() {
@@ -27,6 +32,8 @@ public class mod_InventoryStocker extends NetworkMod {
     	return InventoryStockerBlockID;
     }
     public String getVersion() {
-        return "1.0.0";
+        return "0.0.1";
     }
+	@Override public boolean clientSideRequired() { return true; }
+	@Override public boolean serverSideRequired() { return false; }
 }
