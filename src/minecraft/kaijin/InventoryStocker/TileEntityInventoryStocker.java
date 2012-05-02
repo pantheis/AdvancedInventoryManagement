@@ -21,6 +21,22 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public int getSizeInventorySide(int side)
     {
         // TODO Auto-generated method stub
+        switch(side)
+        {
+            case 0:
+                return this.getSizeInventory();
+            case 1:
+                return this.getSizeInventory();
+            case 2:
+                return this.getSizeInventory();
+            case 3:
+                return this.getSizeInventory();
+            case 4:
+                return this.getSizeInventory();
+            case 5:
+                return this.getSizeInventory();
+        }
+        
         return 0;
     }
 
