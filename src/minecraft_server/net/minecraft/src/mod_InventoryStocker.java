@@ -10,7 +10,7 @@ public class mod_InventoryStocker extends NetworkMod
 {
     static Configuration configuration = new Configuration(new File("config/InventoryStocker.cfg"));
     static int InventoryStockerBlockID = configurationProperties();
-    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.2F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
+    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
 
     public static mod_InventoryStocker instance;
 
@@ -30,7 +30,7 @@ public class mod_InventoryStocker extends NetworkMod
     public static int configurationProperties()
     {
         configuration.load();
-        InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 250).value);
+        InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 249).value);
         configuration.save();
         return InventoryStockerBlockID;
     }

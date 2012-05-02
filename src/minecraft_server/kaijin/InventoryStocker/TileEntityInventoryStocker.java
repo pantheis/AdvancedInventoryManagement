@@ -27,7 +27,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public int getSizeInventory()
     {
         // TODO Auto-generated method stub
-        return 45;
+        return 18;
     }
 
     public ItemStack getStackInSlot(int i)
