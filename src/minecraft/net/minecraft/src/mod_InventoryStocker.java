@@ -32,7 +32,7 @@ public class mod_InventoryStocker extends NetworkMod
     public static int configurationProperties()
     {
         configuration.load();
-        InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("Inventory Stocker", 250).value);
+        InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 250).value);
         configuration.save();
         return InventoryStockerBlockID;
     }
@@ -40,7 +40,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "0.0.1";
+        return "0.0.2";
     }
     @Override public boolean clientSideRequired()
     {
