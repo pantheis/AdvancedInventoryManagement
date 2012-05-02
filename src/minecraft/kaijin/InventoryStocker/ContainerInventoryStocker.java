@@ -8,36 +8,41 @@ public class ContainerInventoryStocker extends Container
 {
     private IInventory playerinventory;
     private IInventory inventorystockerinventory;
-    private int numRows;
 
     public ContainerInventoryStocker(IInventory playerinventory, IInventory inventorystockerinventory)
     {
-        this.numRows = inventorystockerinventory.getSizeInventory() / 9;
         this.playerinventory = playerinventory;
         this.inventorystockerinventory = inventorystockerinventory;
-        int var3 = (this.numRows - 4) * 18;
-        int var4;
-        int var5;
+        int xCol;
+        int yRow;
 
-        for (var4 = 0; var4 < this.numRows; ++var4)
+        for (yRow = 0; yRow < 3; ++yRow)
         {
-            for (var5 = 0; var5 < 9; ++var5)
+        	for (xCol = 0; xCol < 3; ++xCol)
             {
-                this.addSlot(new Slot(inventorystockerinventory, var5 + var4 * 9, 8 + var5 * 18, 18 + var4 * 18));
+                this.addSlot(new Slot(inventorystockerinventory, xCol + 3 * yRow, 8 + xCol * 18, 18 + yRow * 18));
             }
         }
 
-        for (var4 = 0; var4 < 3; ++var4)
+        for (yRow = 0; yRow < 3; ++yRow)
         {
-            for (var5 = 0; var5 < 9; ++var5)
+        	for (xCol = 0; xCol < 3; ++xCol)
             {
-                this.addSlot(new Slot(playerinventory, var5 + var4 * 9 + 9, 8 + var5 * 18, 103 + var4 * 18 + var3));
+                this.addSlot(new Slot(inventorystockerinventory, 9 + xCol + 3 * yRow, 116 + xCol * 18, 18 + yRow * 18));
             }
         }
 
-        for (var4 = 0; var4 < 9; ++var4)
+        for (yRow = 0; yRow < 3; ++yRow)
         {
-            this.addSlot(new Slot(playerinventory, var4, 8 + var4 * 18, 161 + var3));
+            for (xCol = 0; xCol < 9; ++xCol)
+            {
+                this.addSlot(new Slot(playerinventory, xCol + yRow * 9 + 9, 8 + xCol * 18, 86 + yRow * 18));
+            }
+        }
+
+        for (xCol = 0; xCol < 9; ++xCol)
+        {
+            this.addSlot(new Slot(playerinventory, xCol, 8 + xCol * 18, 144));
         }
     }
 
@@ -57,14 +62,14 @@ public class ContainerInventoryStocker extends Container
             ItemStack var4 = var3.getStack();
             var2 = var4.copy();
 
-            if (par1 < this.numRows * 9)
+            if (par1 < 18)
             {
-                if (!this.mergeItemStack(var4, this.numRows * 9, this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(var4, 18, this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(var4, 0, this.numRows * 9, false))
+            else if (!this.mergeItemStack(var4, 0, 18, false))
             {
                 return null;
             }

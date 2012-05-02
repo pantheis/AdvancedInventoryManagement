@@ -7,7 +7,6 @@ import kaijin.InventoryStocker.*;
 
 public class GuiInventoryStocker extends GuiContainer
 {
-    private int inventoryRows = 0;
     IInventory playerinventory;
     TileEntityInventoryStocker tileentityinventorystocker;
 
@@ -16,9 +15,8 @@ public class GuiInventoryStocker extends GuiContainer
         super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
         this.playerinventory = playerinventory;
         this.tileentityinventorystocker = tileentityinventorystocker;
-        xSize = 256;
-        ySize = 256;
-        this.inventoryRows = tileentityinventorystocker.getSizeInventory() / 9;
+        xSize = 176;
+        ySize = 168;
     }
 
     /**
@@ -26,7 +24,11 @@ public class GuiInventoryStocker extends GuiContainer
      */
     protected void drawGuiContainerForegroundLayer()
     {
-        this.fontRenderer.drawString(StatCollector.translateToLocal(this.tileentityinventorystocker.getInvName()), 8, 6, 4210752);
+        this.fontRenderer.drawString("Input", 8, 6, 4210752);
+        this.fontRenderer.drawString(this.tileentityinventorystocker.getInvName(), 70, 6, 4210752);
+        this.fontRenderer.drawString("Output", 116, 6, 4210752);
+
+        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
     /**
@@ -34,12 +36,11 @@ public class GuiInventoryStocker extends GuiContainer
      */
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int var4 = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
+        int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(var4);
-        int var5 = (this.width - this.xSize) / 2;
-        int var6 = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.inventoryRows * 18 + 17);
-        this.drawTexturedModalRect(var5, var6 + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
+        this.mc.renderEngine.bindTexture(GuiTex);
+        int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
+        int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
+        this.drawTexturedModalRect(XOffset, YOffset, 0, 0, this.xSize, this.ySize);
 	}
 }

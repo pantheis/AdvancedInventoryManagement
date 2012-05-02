@@ -9,40 +9,24 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public TileEntityInventoryStocker()
     {
-        contents = new ItemStack [getSizeInventory()];
+        contents = new ItemStack [this.getSizeInventory()];
     }
 
     public int getStartInventorySide(int side)
     {
-        // TODO Auto-generated method stub
-        return 0;
+    	if (side < 2)
+    		return 9; // Sides 0 and 1 access output section, 9-17
+    	
+    	return 0; // Sides 2-5 access input section, 0-8
     }
 
     public int getSizeInventorySide(int side)
     {
-        // TODO Auto-generated method stub
-        switch(side)
-        {
-            case 0:
-                return this.getSizeInventory();
-            case 1:
-                return this.getSizeInventory();
-            case 2:
-                return this.getSizeInventory();
-            case 3:
-                return this.getSizeInventory();
-            case 4:
-                return this.getSizeInventory();
-            case 5:
-                return this.getSizeInventory();
-        }
-        
-        return 0;
+    	return 9;
     }
 
     public int getSizeInventory()
     {
-        // TODO Auto-generated method stub
         return 18;
     }
 
@@ -107,7 +91,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public String getInvName()
     {
-        return "Inventory Stocker";
+        return "Stocker";
     }
 
     /**
