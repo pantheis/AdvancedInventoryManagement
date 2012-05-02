@@ -124,7 +124,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     public void onBlockPlaced(World world, int x, int y, int z, int facing)
     {
     	// TileEntity tile = world.getBlockTileEntity(x, y, z);
-    };
+    }
     
 	public void onBlockRemoval(World world, int x, int y, int z)
 	{

@@ -23,7 +23,8 @@ public class mod_InventoryStocker extends NetworkMod
     {
         ModLoader.registerBlock(InventoryStocker);
         ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
-        ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt});
+        ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
+        ModLoader.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"IWI", "PRP", "IWI", 'I', Item.ingotIron, 'W', Block.planks, 'P', Block.pistonBase, 'R', Item.redstone});
         MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
     }
 

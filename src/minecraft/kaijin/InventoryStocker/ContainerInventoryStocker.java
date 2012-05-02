@@ -48,7 +48,6 @@ public class ContainerInventoryStocker extends Container
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        // TODO Auto-generated method stub
         return this.inventorystockerinventory.isUseableByPlayer(entityplayer);
     }
 
