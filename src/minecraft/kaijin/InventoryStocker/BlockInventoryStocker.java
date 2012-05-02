@@ -54,30 +54,30 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 		{
 			if (i >= 4)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 			if (i >= 2)
 			{
-				return 16; // Top/bottom face
+				return 16; // Top/bottom face (as sides, so using 16 instead of 18 for now)
 			}
 			return 0; // Back face
 		}
 		if (i <= 1) 
 		{
-			return 16; // Horizontal, top or bottom face
+			return 18; // Horizontal, top or bottom face
 		}
-		if (dir == 2 || dir == 4)
+		if (dir <= 3)
 		{
-			if (i == 3 || i == 5)
+			if (i == 4 || i == 5)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 		}
 		else
 		{
-			if (i == 2 || i == 4)
+			if (i == 2 || i == 3)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 		}
 		return 0; // Back face
