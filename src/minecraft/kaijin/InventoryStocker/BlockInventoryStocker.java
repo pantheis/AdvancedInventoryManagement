@@ -108,7 +108,45 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
     {
-        if (!Utils.isClient(world))
+    	if (entityplayer.isSneaking())
+    	{
+    		if (entityplayer.getCurrentEquippedItem() == null)
+    		{
+    			int i = world.getBlockMetadata(x, y, z);
+        		switch (i)
+        		{
+        		case 0: // Bottom
+                    world.setBlockMetadataWithNotify(x, y, z, 1);
+                    world.markBlockNeedsUpdate(x, y, z);
+                    return false;
+        		case 1: // Top
+                    world.setBlockMetadataWithNotify(x, y, z, 2);
+                    world.markBlockNeedsUpdate(x, y, z);
+                    return false;
+        		case 2: // North/South
+                    world.setBlockMetadataWithNotify(x, y, z, 3);
+                    world.markBlockNeedsUpdate(x, y, z);
+                    return false;
+        		case 3: // North/South
+                    world.setBlockMetadataWithNotify(x, y, z, 4);
+                    world.markBlockNeedsUpdate(x, y, z);
+                    return false;
+        		case 4:
+        			world.setBlockMetadataWithNotify(x, y, z, 5);
+                    world.markBlockNeedsUpdate(x, y, z);
+        			return false;
+        		case 5:
+        			world.setBlockMetadataWithNotify(x, y, z, 0);
+                    world.markBlockNeedsUpdate(x, y, z);
+        			return false;
+        		default:
+        			return false;
+        		}
+    		}
+    		return false;
+    	}
+
+    	if (!Utils.isClient(world))
         {
             entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
         }
