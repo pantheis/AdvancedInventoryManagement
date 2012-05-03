@@ -2,8 +2,8 @@ package kaijin.InventoryStocker;
 
 import net.minecraft.src.*;
 
-public class Utils {
-
+public class Utils
+{
     public static boolean isClient(World world)
     {
         return false;
@@ -38,5 +38,27 @@ public class Utils {
 		}
 	}
 
-	
+    /*
+     * Convert desired side to actual side based on orientation of block
+     * I  Meta
+     *    U D S N E W     0 1 2 3 4 5
+     * 0  F K T T T T   0 0 1 2 2 2 2
+     * 1  K F B B B B   1 1 0 3 3 3 3
+     * 2  T B F K R L   2 2 3 0 1 4 5
+     * 3  B T K F L R   3 3 2 1 0 5 4
+     * 4  R R R L F K   4 4 4 4 5 0 1
+     * 5  L L L R K F   5 5 5 5 4 1 0
+     * 
+     */
+    public static int lookupRotatedSide(int side, int orientation)
+    {
+    	final int table[][] = {
+    			{0, 1, 2, 2, 2, 2},
+    			{1, 0, 3, 3, 3, 3},
+    			{2, 3, 0, 1, 4, 5},
+    			{3, 2, 1, 0, 5, 4},
+    			{4, 4, 4, 5, 0, 1},
+    			{5, 5, 5, 4, 1, 0}};
+    	return table[side][orientation];
+    }
 }
