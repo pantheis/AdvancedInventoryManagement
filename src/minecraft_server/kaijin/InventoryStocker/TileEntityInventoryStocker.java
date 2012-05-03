@@ -12,18 +12,29 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         contents = new ItemStack [this.getSizeInventory()];
     }
 
-    public int getStartInventorySide(int side)
-    {
-       	if (side < 2)
-    		return 9; // Sides 0 and 1 access output section, 9-17
-    	
-    	return 0; // Sides 2-5 access input section, 0-8
-     }
+	public int getStartInventorySide(int i)
+	{
+		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
+		int side = getRotatedSideFromMetadata(i);
+		if (side == 1)
+			return 9; // access output section, 9-17
+		return 0; // access input section, 0-8
+	}
+	
+	public int getSizeInventorySide(int i)
+	{
+		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
+		int side = getRotatedSideFromMetadata(i);
+		if (side == 0)
+			return 0; // Front has no inventory access
+		return 9;
+	}
 
-    public int getSizeInventorySide(int side)
-    {
-    	return 9;
-    }
+	public int getRotatedSideFromMetadata(int side)
+	{
+		int dir = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7;
+		return Utils.lookupRotatedSide(side, dir);
+	}
 
     public int getSizeInventory()
     {
