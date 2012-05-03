@@ -1,7 +1,9 @@
 package kaijin.InventoryStocker;
 
+import net.minecraft.client.*;
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
+import kaijin.InventoryStocker.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
@@ -61,14 +63,27 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     			int x = xCoord;
     			int y = yCoord;
     			int z = zCoord;
+
     			switch(i)
     			{
-    			case 0: y--;
-    			case 1: y++;
-    			case 2: z--;
-    			case 3: z++;
-    			case 4: x--;
-    			case 5: x++;
+    			case 0: 
+    				y++;
+    				break;
+    			case 1: 
+    				y--;
+    				break;
+    			case 2: 
+    				z++;
+    				break;
+    			case 3: 
+    				z--;
+    				break;
+    			case 4: 
+    				x++;
+    				break;
+    			case 5: 
+    				x--;
+    				break;
     			}
     			return worldObj.getBlockTileEntity(x, y, z);
     		}
@@ -217,15 +232,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	public void updateEntity ()
 	{
 		super.updateEntity();
-		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord, zCoord);
+		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord,zCoord);
 		if (isPowered)
 		{
 			TileEntity tile = getTileAtFrontFace();
-			if(tile instanceof IInventory)
+			if(tile != null && tile instanceof IInventory)
 			{
 				/*
 				 * Put code here that will deal with the adjacent inventory
+				 * 
+				 * ModLoader.getMinecraftInstance().thePlayer.addChatMessage("It works!");
+				 * 
 				 */
+				
 			}
 		}
 	}

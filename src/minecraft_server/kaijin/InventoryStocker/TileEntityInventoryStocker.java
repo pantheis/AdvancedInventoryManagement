@@ -7,6 +7,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 {
     private ItemStack contents[];
 
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
+
     public TileEntityInventoryStocker()
     {
         contents = new ItemStack [this.getSizeInventory()];
@@ -35,6 +41,53 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		int dir = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7;
 		return Utils.lookupRotatedSide(side, dir);
 	}
+
+    public TileEntity getTileAtFrontFace()
+    {
+    	for(int i = 0; i < 6; ++i)
+    	{
+    		int dir = getRotatedSideFromMetadata(i);
+    		if (dir == 0)
+    		{
+    		    /**
+    		     *      I is used to find the block x,y,z adjacent to ours
+    		     *      0: -Y (bottom side)
+    		     *      1: +Y (top side)
+    		     *      2: -Z
+    		     *      3: +Z
+    		     *      4: -X
+    		     *      5: +x
+    		     */
+    			int x = xCoord;
+    			int y = yCoord;
+    			int z = zCoord;
+
+    			switch(i)
+    			{
+    			case 0: 
+    				y++;
+    				break;
+    			case 1: 
+    				y--;
+    				break;
+    			case 2: 
+    				z++;
+    				break;
+    			case 3: 
+    				z--;
+    				break;
+    			case 4: 
+    				x++;
+    				break;
+    			case 5: 
+    				x--;
+    				break;
+    			}
+    			return worldObj.getBlockTileEntity(x, y, z);
+    		}
+    	}
+    	return null;
+    }
 
     public int getSizeInventory()
     {
@@ -172,4 +225,25 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         // TODO Auto-generated method stub
     }
+    
+	@Override
+	public void updateEntity ()
+	{
+		super.updateEntity();
+		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord,zCoord);
+		if (isPowered)
+		{
+			TileEntity tile = getTileAtFrontFace();
+			if(tile != null && tile instanceof IInventory)
+			{
+				/*
+				 * Put code here that will deal with the adjacent inventory
+				 * 
+				 * ModLoader.getMinecraftInstance().thePlayer.addChatMessage("It works!");
+				 * 
+				 */
+				
+			}
+		}
+	}
 }
