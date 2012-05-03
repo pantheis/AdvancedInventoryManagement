@@ -36,6 +36,40 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return Utils.lookupRotatedSide(side, dir);
 	}
 	
+    public TileEntity getTileAtFrontFace()
+    {
+    	for(int i = 0; i < 6; ++i)
+    	{
+    		int dir = getRotatedSideFromMetadata(i);
+    		if (dir == 0)
+    		{
+    		    /**
+    		     *      I is used to find the block x,y,z adjacent to ours
+    		     *      0: -Y (bottom side)
+    		     *      1: +Y (top side)
+    		     *      2: -Z
+    		     *      3: +Z
+    		     *      4: -X
+    		     *      5: +x
+    		     */
+    			int x = xCoord;
+    			int y = yCoord;
+    			int z = zCoord;
+    			switch(i)
+    			{
+    			case 0: y--;
+    			case 1: y++;
+    			case 2: z--;
+    			case 3: z++;
+    			case 4: x--;
+    			case 5: x++;
+    			}
+    			return worldObj.getBlockTileEntity(x, y, z);
+    		}
+    	}
+    	return null;
+    }
+	
 	public int getSizeInventory()
 	{
 	    return 18;
@@ -171,5 +205,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	public void closeChest()
 	{
 	    // TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void updateEntity ()
+	{
+		super.updateEntity();
+		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord, zCoord);
+		if (isPowered)
+		{
+			TileEntity tile = getTileAtFrontFace();
+			if(tile)
+			{
+				
+			}
+		}
 	}
 }

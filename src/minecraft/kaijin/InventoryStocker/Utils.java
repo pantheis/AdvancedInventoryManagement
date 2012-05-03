@@ -61,4 +61,9 @@ public class Utils
     			{5, 5, 5, 4, 1, 0}};
     	return table[side][orientation];
     }
+    
+    public static int getBlockAtFace(int side)
+    {
+    	return 0;
+    }
 }
