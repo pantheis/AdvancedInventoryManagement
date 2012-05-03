@@ -54,30 +54,30 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 		{
 			if (i >= 4)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 			if (i >= 2)
 			{
-				return 16; // Top/bottom face
+				return 16; // Top/bottom face (as sides, so using 16 instead of 18 for now)
 			}
 			return 0; // Back face
 		}
 		if (i <= 1) 
 		{
-			return 16; // Horizontal, top or bottom face
+			return 18; // Horizontal, top or bottom face
 		}
-		if (dir == 2 || dir == 4)
+		if (dir <= 3)
 		{
-			if (i == 3 || i == 5)
+			if (i == 4 || i == 5)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 		}
 		else
 		{
-			if (i == 2 || i == 4)
+			if (i == 2 || i == 3)
 			{
-				return 18; // Side face
+				return 16; // Side face
 			}
 		}
 		return 0; // Back face
@@ -108,40 +108,19 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
     {
+    	// Prevent GUI popup and handle block rotation 
     	if (entityplayer.isSneaking())
     	{
-    		if(entityplayer.getCurrentEquippedItem() == null)
+    		if (entityplayer.getCurrentEquippedItem() == null)
     		{
     			int i = world.getBlockMetadata(x, y, z);
-        		switch (i)
-        		{
-        		case 0: // Bottom
-                    world.setBlockMetadataWithNotify(x, y, z, 1);
-                    world.markBlockNeedsUpdate(x, y, z);
-                    return false;
-        		case 1: // Top
-                    world.setBlockMetadataWithNotify(x, y, z, 2);
-                    world.markBlockNeedsUpdate(x, y, z);
-                    return false;
-        		case 2: // North/South
-                    world.setBlockMetadataWithNotify(x, y, z, 3);
-                    world.markBlockNeedsUpdate(x, y, z);
-                    return false;
-        		case 3: // North/South
-                    world.setBlockMetadataWithNotify(x, y, z, 4);
-                    world.markBlockNeedsUpdate(x, y, z);
-                    return false;
-        		case 4:
-        			world.setBlockMetadataWithNotify(x, y, z, 5);
-                    world.markBlockNeedsUpdate(x, y, z);
-        			return false;
-        		case 5:
-        			world.setBlockMetadataWithNotify(x, y, z, 0);
-                    world.markBlockNeedsUpdate(x, y, z);
-        			return false;
-        		default:
-        			return false;
-        		}
+    			int dir = i & 7; // Get orientation from first 3 bits of meta data
+    			i ^= dir; // Clear those bits
+    			++dir; // Rotate
+    			if (dir > 5) dir = 0; // Start over
+    			i |= dir; // Write orientation back to meta data value
+                world.setBlockMetadataWithNotify(x, y, z, i); // And store it
+                world.markBlockNeedsUpdate(x, y, z);
     		}
     		return false;
     	}
