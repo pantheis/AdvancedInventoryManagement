@@ -7,6 +7,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 {
 	private ItemStack contents[];
 	
+	@Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
+	
 	public TileEntityInventoryStocker()
 	{
 	    contents = new ItemStack [this.getSizeInventory()];
@@ -215,9 +221,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (isPowered)
 		{
 			TileEntity tile = getTileAtFrontFace();
-			if(tile)
+			if(tile instanceof IInventory)
 			{
-				
+				/*
+				 * Put code here that will deal with the adjacent inventory
+				 */
 			}
 		}
 	}
