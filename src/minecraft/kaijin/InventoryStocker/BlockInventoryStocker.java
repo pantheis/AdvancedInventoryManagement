@@ -10,7 +10,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 {
 	public BlockInventoryStocker(int i, int j)
 	{
-	    super(i, j, Material.iron);
+	    super(i, j, Material.ground);
 	}
 	
 	public void addCreativeItems(ArrayList itemList)
