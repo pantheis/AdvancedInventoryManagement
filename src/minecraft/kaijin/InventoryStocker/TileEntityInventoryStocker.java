@@ -9,7 +9,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 {
 	private ItemStack contents[];
     private boolean previousPoweredState = false;
-	
+	private boolean snapShotState = false;
+    
 	@Override
     public boolean canUpdate()
     {
@@ -221,6 +222,61 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	    // TODO Auto-generated method stub
 	}
 	
+	public boolean getSnapshotState()
+	{
+		/*
+		 * returns true if it has a snapshot, false if it doesn't have one
+		 * Does NOT test if the snapshot should still be valid
+		 * (remote inventory changed, removed, etc)
+		 */
+		if (snapShotState)
+			return true;
+		else
+			return false;
+	}
+	
+	public ItemStack takeSnapShot(TileEntity tile)
+	{
+		/*
+		 * This function will take a snapshot the IInventory of the TileEntity passed to it
+		 * and return it as a new ItemStack. This will be a copy of the remote inventory as
+		 * it looks when this function is called.
+		 * 
+		 * It will check that the TileEntity passed to it actually implements IInventory and
+		 * return null if it does not. 
+		 */
+		
+		if (!(tile instanceof IInventory))
+		{
+			return null;
+		}
+		
+		// Get number of slots in the remote inventory
+		int numSlots = ((IInventory)tile).getSizeInventory();
+		
+		// Iterate through remote slots and make a copy of it
+		
+		for (int i = 0; i < numSlots; i++)
+		{
+			ItemStack var1 = ((IInventory)tile).getStackInSlot(i);
+			ItemStack var2 = new ItemStack(var1.itemID, var1.stackSize, var1.getItemDamage());
+		}
+        
+
+        if (this.stackTagCompound != null)
+        {
+            var2.stackTagCompound = (NBTTagCompound)this.stackTagCompound.copy();
+        }
+
+        this.stackSize -= par1;
+        return var2;
+	}
+	
+	public boolean stockInventory(TileEntity tile, ItemStack itemstack)
+	{
+		return false;
+	}
+	
 	@Override
 	public void updateEntity ()
 	{
@@ -241,6 +297,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				 * 
 				 */
 			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
+			    ItemStack remoteItems = takeSnapShot(tile);
 			}
 		}
 	}
