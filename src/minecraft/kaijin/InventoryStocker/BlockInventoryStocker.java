@@ -27,15 +27,15 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 	{
 		switch (i)
 		{
-		case 0: // Top
+		case 0: // Bottom
 			return 0;
-		case 1: // Bottom
+		case 1: // Top
 			return 0;
-		case 2: // South
+		case 2: // North
 			return 16;
-		case 3: // North
+		case 3: // South
 			return 16;
-		default: // 4-5 East/West
+		default: // 4-5 West-East
 			return 16;
 		}
 	}
@@ -44,7 +44,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 	{
 		int dir = m & 7;
 		int side = Utils.lookupRotatedSide(i, dir);
-		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
+		// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
 	
 		switch (side)
 		{
