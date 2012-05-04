@@ -229,13 +229,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 * Does NOT test if the snapshot should still be valid
 		 * (remote inventory changed, removed, etc)
 		 */
-		if (snapShotState)
-			return true;
-		else
-			return false;
+		return snapShotState;
 	}
 	
-	public ItemStack takeSnapShot(TileEntity tile)
+	public ItemStack[] takeSnapShot(TileEntity tile)
 	{
 		/*
 		 * This function will take a snapshot the IInventory of the TileEntity passed to it
@@ -253,27 +250,35 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		
 		// Get number of slots in the remote inventory
 		int numSlots = ((IInventory)tile).getSizeInventory();
-		
+		ItemStack tempCopy;
+		ItemStack returnCopy[] = new ItemStack[numSlots];
+
 		// Iterate through remote slots and make a copy of it
-		
 		for (int i = 0; i < numSlots; i++)
 		{
-			ItemStack var1 = ((IInventory)tile).getStackInSlot(i);
-			ItemStack var2 = new ItemStack(var1.itemID, var1.stackSize, var1.getItemDamage());
+			tempCopy = ((IInventory)tile).getStackInSlot(i);
+			if (tempCopy == null){
+				returnCopy[i] = null;
+			}
+			else
+			{
+				returnCopy[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
+				if(tempCopy.stackTagCompound != null)
+				{
+					returnCopy[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
+				}
+			}
 		}
-        
-
-        if (this.stackTagCompound != null)
-        {
-            var2.stackTagCompound = (NBTTagCompound)this.stackTagCompound.copy();
-        }
-
-        this.stackSize -= par1;
-        return var2;
+        return returnCopy;
 	}
 	
-	public boolean stockInventory(TileEntity tile, ItemStack itemstack)
+	public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
 	{
+		// test to make sure we're actually passed stuff that makes sense
+		if (tile != null && tile instanceof IInventory && itemstack != null)
+		{
+			// do code here
+		}
 		return false;
 	}
 	
@@ -297,7 +302,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				 * 
 				 */
 			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
-			    ItemStack remoteItems = takeSnapShot(tile);
+			    ItemStack remoteItems[] = takeSnapShot(tile);
+			    stockInventory(tile, remoteItems);
 			}
 		}
 	}
