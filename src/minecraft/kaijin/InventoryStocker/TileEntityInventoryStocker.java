@@ -239,6 +239,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
 				
 			}
+			else
+			{
+			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest NOT Found!");
+			}
 		}
 	}
 }
