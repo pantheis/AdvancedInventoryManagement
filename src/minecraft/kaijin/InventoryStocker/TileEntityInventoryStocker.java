@@ -46,7 +46,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	
     public TileEntity getTileAtFrontFace()
     {
-   		int dir = getRotatedSideFromMetadata(0);
+        int dir = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7;
    	    /**
    	     *      0: -Y (bottom side)
    	     *      1: +Y (top side)
@@ -58,30 +58,38 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
    		int x = xCoord;
     	int y = yCoord;
     	int z = zCoord;
-
+    	
+    	String d = Integer.toString(dir);
+    	ModLoader.getMinecraftInstance().thePlayer.addChatMessage(d);
     	switch(dir)
     	{
     	case 0: 
-    		y++;
+    		y--;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 0 y--");
     		break;
     	case 1: 
-    		y--;
+    		y++;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 1 y++");
     		break;
     	case 2: 
     		z--;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 2 z--");
     		break;
     	case 3: 
     		z++;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 3 z++");
     		break;
     	case 4: 
     		x--;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 4 x--");
     		break;
     	case 5: 
     		x++;
+    		ModLoader.getMinecraftInstance().thePlayer.addChatMessage("case 5 x++");
     		break;
     	}
     	String s = "I'm at: " + Float.toString(xCoord) + "," + Float.toString(yCoord) + "," + Float.toString(zCoord);
-    	String s2 = "I'm testing: " + Float.toString(x) + "," + Float.toString(y) + "," + Float.toString(z);
+    	String s2 = "I'm testing: " + Float.toString(x) + "," + Float.toString(y) + "," + Float.toString(z) + ", " + (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7);
     	ModLoader.getMinecraftInstance().thePlayer.addChatMessage(s);
     	ModLoader.getMinecraftInstance().thePlayer.addChatMessage(s2);
     	return worldObj.getBlockTileEntity(x, y, z);
