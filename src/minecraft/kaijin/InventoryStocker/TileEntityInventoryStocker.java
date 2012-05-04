@@ -10,7 +10,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private ItemStack contents[];
     private boolean previousPoweredState = false;
 	private boolean snapShotState = false;
-    
+		
 	@Override
     public boolean canUpdate()
     {
@@ -274,11 +274,38 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	
 	public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
 	{
+		/*
+		 * This function is the main worker for our block. It takes a TileEntity and
+		 * an ItemStack array as inputs and will attempt to use its internal inventory
+		 * object to do the following:
+		 * 
+		 * Iterate through the remote inventory, comparing each slot with our local
+		 * snapshot we took earlier.
+		 *  
+		 * If a remote inventory slot has the wrong item in it, remove it to the local inventory
+		 * output, then see if we can fill the remote slot with the correct item and quantity from
+		 * our local inventory, in reverse slot order. If the remote slot should be empty, set it
+		 * as such.
+		 *  
+		 * If a remote inventory slot is empty and shouldn't be, attempt to correct that
+		 * using our local inventory in reverse slot order.
+		 *  
+		 * If a remote inventory slot has the correct item, check that it has the correct quantity
+		 * of the item. If not, attempt to correct that using our local inventory in reverse slot
+		 * order.
+		 * 
+		 * At the moment, this will only key on damage values if the ItemID is stackable. If it is
+		 * not stackable, then it will ignore damage values for determining if the remote inventory
+		 * has the correct item in it already.
+		 *  
+		 */
+
 		// test to make sure we're actually passed stuff that makes sense
 		if (tile != null && tile instanceof IInventory && itemstack != null)
 		{
 			// do code here
 		}
+		// return false for now to avoid errors
 		return false;
 	}
 	
