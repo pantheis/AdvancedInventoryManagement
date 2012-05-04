@@ -46,50 +46,42 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	
     public TileEntity getTileAtFrontFace()
     {
-    	for(int i = 0; i < 6; ++i)
-    	{
-    		int dir = getRotatedSideFromMetadata(i);
-    		if (dir == 0)
-    		{
-    		    /**
-    		     *      I is used to find the block x,y,z adjacent to ours
-    		     *      0: -Y (bottom side)
-    		     *      1: +Y (top side)
-    		     *      2: -Z
-    		     *      3: +Z
-    		     *      4: -X
-    		     *      5: +x
-    		     */
-    			int x = xCoord;
-    			int y = yCoord;
-    			int z = zCoord;
+   		int dir = getRotatedSideFromMetadata(0);
+   	    /**
+   	     *      0: -Y (bottom side)
+   	     *      1: +Y (top side)
+   	     *      2: -Z
+   	     *      3: +Z
+   	     *      4: -X
+   	     *      5: +x
+   	     */
+   		int x = xCoord;
+    	int y = yCoord;
+    	int z = zCoord;
 
-    			switch(i)
-    			{
-    			case 0: 
-    				y++;
-    				break;
-    			case 1: 
-    				y--;
-    				break;
-    			case 2: 
-    				z++;
-    				break;
-    			case 3: 
-    				z--;
-    				break;
-    			case 4: 
-    				x++;
-    				break;
-    			case 5: 
-    				x--;
-    				break;
-    			}
-    			return worldObj.getBlockTileEntity(x, y, z);
-    		}
+    	switch(dir)
+    	{
+    	case 0: 
+    		y++;
+    		break;
+    	case 1: 
+    		y--;
+    		break;
+    	case 2: 
+    		z++;
+    		break;
+    	case 3: 
+    		z--;
+    		break;
+    	case 4: 
+    		x++;
+    		break;
+    	case 5: 
+    		x--;
+    		break;
     	}
-    	return null;
-    }
+    	return worldObj.getBlockTileEntity(x, y, z);
+   	}
 	
 	public int getSizeInventory()
 	{
@@ -244,6 +236,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				 * ModLoader.getMinecraftInstance().thePlayer.addChatMessage("It works!");
 				 * 
 				 */
+			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
 				
 			}
 		}
