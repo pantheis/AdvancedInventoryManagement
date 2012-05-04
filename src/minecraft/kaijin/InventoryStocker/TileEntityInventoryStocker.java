@@ -68,18 +68,22 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     		y--;
     		break;
     	case 2: 
-    		z++;
-    		break;
-    	case 3: 
     		z--;
     		break;
-    	case 4: 
-    		x++;
+    	case 3: 
+    		z++;
     		break;
-    	case 5: 
+    	case 4: 
     		x--;
     		break;
+    	case 5: 
+    		x++;
+    		break;
     	}
+    	String s = "I'm at: " + Float.toString(xCoord) + "," + Float.toString(yCoord) + "," + Float.toString(zCoord);
+    	String s2 = "I'm testing: " + Float.toString(x) + "," + Float.toString(y) + "," + Float.toString(z);
+    	ModLoader.getMinecraftInstance().thePlayer.addChatMessage(s);
+    	ModLoader.getMinecraftInstance().thePlayer.addChatMessage(s2);
     	return worldObj.getBlockTileEntity(x, y, z);
    	}
 	
