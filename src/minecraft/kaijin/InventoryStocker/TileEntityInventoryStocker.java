@@ -50,10 +50,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
    	    /**
    	     *      0: -Y (bottom side)
    	     *      1: +Y (top side)
-   	     *      2: -Z
-   	     *      3: +Z
-   	     *      4: -X
-   	     *      5: +x
+   	     *      2: -Z (west side)
+   	     *      3: +Z (east side)
+   	     *      4: -X (north side)
+   	     *      5: +x (south side)
    	     */
    		int x = xCoord;
     	int y = yCoord;
