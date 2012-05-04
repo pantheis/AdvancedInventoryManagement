@@ -8,13 +8,13 @@ import kaijin.InventoryStocker.*;
 public class GuiInventoryStocker extends GuiContainer
 {
     IInventory playerinventory;
-    TileEntityInventoryStocker tileentityinventorystocker;
+    TileEntityInventoryStocker tile;
 
     public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
     {
         super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
         this.playerinventory = playerinventory;
-        this.tileentityinventorystocker = tileentityinventorystocker;
+        this.tile = tileentityinventorystocker;
         xSize = 176;
         ySize = 168;
     }
@@ -25,7 +25,7 @@ public class GuiInventoryStocker extends GuiContainer
     protected void drawGuiContainerForegroundLayer()
     {
         this.fontRenderer.drawString("Input", 8, 6, 4210752);
-        this.fontRenderer.drawString(this.tileentityinventorystocker.getInvName(), 70, 6, 4210752);
+        this.fontRenderer.drawString(this.tile.getInvName(), 70, 6, 4210752);
         this.fontRenderer.drawString("Output", 116, 6, 4210752);
 
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
