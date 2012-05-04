@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.minecraft.src.forge.*;
+
 import java.io.File;
 import java.util.*;
 import net.minecraft.server.*;
@@ -21,6 +22,7 @@ public class mod_InventoryStocker extends NetworkMod
 
     public void load()
     {
+    	MinecraftForge.versionDetect("Inventory Stocker", 3, 1, 2);
         ModLoader.registerBlock(InventoryStocker);
         ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
