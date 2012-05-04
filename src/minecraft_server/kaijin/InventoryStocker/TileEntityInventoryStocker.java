@@ -2,10 +2,12 @@ package kaijin.InventoryStocker;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
+import kaijin.InventoryStocker.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
     private ItemStack contents[];
+    private boolean previousPoweredState = false;
 
     @Override
     public boolean canUpdate()
@@ -44,49 +46,41 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public TileEntity getTileAtFrontFace()
     {
-    	for(int i = 0; i < 6; ++i)
-    	{
-    		int dir = getRotatedSideFromMetadata(i);
-    		if (dir == 0)
-    		{
-    		    /**
-    		     *      I is used to find the block x,y,z adjacent to ours
-    		     *      0: -Y (bottom side)
-    		     *      1: +Y (top side)
-    		     *      2: -Z
-    		     *      3: +Z
-    		     *      4: -X
-    		     *      5: +x
-    		     */
-    			int x = xCoord;
-    			int y = yCoord;
-    			int z = zCoord;
-
-    			switch(i)
-    			{
-    			case 0: 
-    				y++;
-    				break;
-    			case 1: 
-    				y--;
-    				break;
-    			case 2: 
-    				z++;
-    				break;
-    			case 3: 
-    				z--;
-    				break;
-    			case 4: 
-    				x++;
-    				break;
-    			case 5: 
-    				x--;
-    				break;
-    			}
-    			return worldObj.getBlockTileEntity(x, y, z);
-    		}
-    	}
-    	return null;
+        int dir = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7;
+        /**
+         *      0: -Y (bottom side)
+         *      1: +Y (top side)
+         *      2: -Z (west side)
+         *      3: +Z (east side)
+         *      4: -X (north side)
+         *      5: +x (south side)
+         */
+        int x = xCoord;
+        int y = yCoord;
+        int z = zCoord;
+        
+        switch(dir)
+        {
+        case 0: 
+            y--;
+            break;
+        case 1: 
+            y++;
+            break;
+        case 2: 
+            z--;
+            break;
+        case 3: 
+            z++;
+            break;
+        case 4: 
+            x--;
+            break;
+        case 5: 
+            x++;
+            break;
+        }
+        return worldObj.getBlockTileEntity(x, y, z);
     }
 
     public int getSizeInventory()
@@ -231,8 +225,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		super.updateEntity();
 		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord,zCoord);
-		if (isPowered)
+		if (!isPowered) previousPoweredState = false;
+		if (isPowered && !previousPoweredState)
 		{
+	        previousPoweredState = true;
 			TileEntity tile = getTileAtFrontFace();
 			if(tile != null && tile instanceof IInventory)
 			{
@@ -242,7 +238,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				 * ModLoader.getMinecraftInstance().thePlayer.addChatMessage("It works!");
 				 * 
 				 */
-				
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import kaijin.InventoryStocker.*;
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
 	private ItemStack contents[];
+    private boolean previousPoweredState = false;
 	
 	@Override
     public boolean canUpdate()
@@ -225,8 +226,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		super.updateEntity();
 		boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord,yCoord,zCoord);
-		if (isPowered)
+		if (!isPowered) previousPoweredState = false;
+		if (isPowered && !previousPoweredState)
 		{
+		    previousPoweredState = true;
+            ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Powered");
 			TileEntity tile = getTileAtFrontFace();
 			if(tile != null && tile instanceof IInventory)
 			{
@@ -237,7 +241,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				 * 
 				 */
 			    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
-				
 			}
 		}
 	}
