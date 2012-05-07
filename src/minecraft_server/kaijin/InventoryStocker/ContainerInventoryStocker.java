@@ -18,7 +18,7 @@ public class ContainerInventoryStocker extends Container
 
         for (yRow = 0; yRow < 3; ++yRow)
         {
-        	for (xCol = 0; xCol < 3; ++xCol)
+            for (xCol = 0; xCol < 3; ++xCol)
             {
                 this.addSlot(new Slot(inventorystockerinventory, xCol + 3 * yRow, 8 + xCol * 18, 18 + yRow * 18));
             }
@@ -26,7 +26,7 @@ public class ContainerInventoryStocker extends Container
 
         for (yRow = 0; yRow < 3; ++yRow)
         {
-        	for (xCol = 0; xCol < 3; ++xCol)
+            for (xCol = 0; xCol < 3; ++xCol)
             {
                 this.addSlot(new Slot(inventorystockerinventory, 9 + xCol + 3 * yRow, 116 + xCol * 18, 18 + yRow * 18));
             }
