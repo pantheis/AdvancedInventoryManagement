@@ -136,6 +136,20 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         return new TileEntityInventoryStocker();
     }
 
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+    {
+        super.onNeighborBlockChange(world, x, y, z, blockID);
+        TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+        if (tile != null)
+        {
+            tile.onUpdate();
+        }
+    }
+    
     public void onBlockPlaced(World world, int x, int y, int z, int facing)
     {
         // TileEntity tile = world.getBlockTileEntity(x, y, z);

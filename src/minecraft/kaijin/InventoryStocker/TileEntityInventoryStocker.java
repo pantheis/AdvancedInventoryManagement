@@ -5,6 +5,7 @@ import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
 
+
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
     //ItemStack privates
@@ -16,7 +17,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private boolean snapShotState = false;
 
     //other privates
-    TileEntity lastEntity = null;
+    private TileEntity lastTileEntity = null;
+    private int targetTileHash=0;
 
     @Override
     public boolean canUpdate()
@@ -202,6 +204,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);
+        nbttagcompound.setInteger("TargetTileHash", targetTileHash);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.contents.length; ++i)
@@ -216,6 +219,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         nbttagcompound.setTag("Items", nbttaglist);
+        
     }
 
     public int getInventoryStackLimit()
@@ -292,10 +296,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
         }
-
         return returnCopy;
     }
 
+    public void storeRemoteInventory(TileEntity tile, int hash)
+    {
+        
+    }
+    
     public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
     {
         /*
@@ -334,11 +342,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
+    public void onUpdate()
+    {
+        TileEntity tile = getTileAtFrontFace();
+        if (tile != lastTileEntity)
+        {
+                lastTileEntity = null;
+                snapShotState = false;
+        }
+    }
+    
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        
+                
         /*
          * Need to update this function to properly reference remote NBTTags and block ID to verify
          * if our block is still the same and store that information in our own NBTTag to compare
@@ -376,6 +394,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
             //grab TileEntity at front face
             TileEntity tile = getTileAtFrontFace();
+            if (tile != null)
+            {
+                String hashtemp = tile.getClass().getName();
+                byte[] hashValue = Utils.getHash(hashtemp);
+                String hashString = "Hash: " + hashtemp + ", " + hashValue ;
+                ModLoader.getMinecraftInstance().thePlayer.addChatMessage(hashString);
+            }
+            else
+            {
+                ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Hash: null");
+            }
+            
             //Verify that the tile we got back exists and implements IInventory            
             if (tile != null && tile instanceof IInventory)
             {
@@ -388,7 +418,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                  * Check if our snapshot is considered valid and/or the tile we just got doesn't
                  * match the one we had prior.
                  */
-                if (!getSnapshotState() || lastEntity != tile)
+                if (!getSnapshotState() || tile != lastTileEntity)
                 {
                     ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Taking snapshot");
                     /*
@@ -396,7 +426,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                      * remote entity and set the snapshot flag to true
                      */
                     ItemStack remoteItems[] = takeSnapShot(tile);
-                    lastEntity = tile;
+                    lastTileEntity = tile;
                     snapShotState = true;
                 }
                 else
@@ -416,7 +446,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                  * does not implement IInventory. We will clear the last snapshot.
                  */
                 snapShotState = false;
-                lastEntity = null;
+                lastTileEntity = null;
                 ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Clearing snapshot");
             }
         }
