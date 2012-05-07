@@ -18,7 +18,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     //other privates
     private TileEntity lastTileEntity = null;
-    private int targetTileHash=0;
+    private String targetTile="";
 
     @Override
     public boolean canUpdate()
@@ -183,6 +183,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readFromNBT(nbttagcompound);
+        targetTile = nbttagcompound.getString("targetTile");
         NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
         this.contents = new ItemStack[this.getSizeInventory()];
 
@@ -204,7 +205,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("TargetTileHash", targetTileHash);
+        nbttagcompound.setString("targetTile", targetTile);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.contents.length; ++i)
@@ -296,6 +297,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
         }
+        /*
+         *  get remote entity class name and store it as targetTile, which also ends up being stored in our
+         *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
+         */
+        targetTile = tile.getClass().getName();
         return returnCopy;
     }
 
@@ -396,14 +402,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             TileEntity tile = getTileAtFrontFace();
             if (tile != null)
             {
-                String hashtemp = tile.getClass().getName();
-                byte[] hashValue = Utils.getHash(hashtemp);
-                String hashString = "Hash: " + hashtemp + ", " + hashValue ;
-                ModLoader.getMinecraftInstance().thePlayer.addChatMessage(hashString);
+                
             }
             else
             {
-                ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Hash: null");
+                
             }
             
             //Verify that the tile we got back exists and implements IInventory            

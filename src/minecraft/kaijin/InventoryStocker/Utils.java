@@ -2,37 +2,8 @@ package kaijin.InventoryStocker;
 
 import net.minecraft.src.*;
 
-import java.io.UnsupportedEncodingException;
-import java.security.*;
-
 public class Utils
 {
-    public static byte[] getHash(String password)
-    {
-        MessageDigest digest = null;
-        try
-        {
-            digest = MessageDigest.getInstance("SHA-1");
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        digest.reset();
-        byte[] input = null;
-        try
-        {
-            input = digest.digest(password.getBytes("UTF-8"));
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return input;
-    }
-    
     public static boolean isClient(World world)
     {
         return world instanceof WorldClient;
