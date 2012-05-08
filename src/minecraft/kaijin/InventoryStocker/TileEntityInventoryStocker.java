@@ -19,6 +19,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     //other privates
     private TileEntity lastTileEntity = null;
     private String targetTileName = "none";
+    private int remoteNumSlots = 0;
 
     @Override
     public boolean canUpdate()
@@ -185,11 +186,22 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!Utils.isClient(worldObj))
         {
             super.readFromNBT(nbttagcompound);
+            //read extra NBT stuff here
             targetTileName = nbttagcompound.getString("targetTileName");
-            System.out.println("readNBT:"+targetTileName);
+            remoteNumSlots = nbttagcompound.getInteger("remoteItemsSize");
+            
+            System.out.println("readNBI: "+targetTileName+" removeInvSize:"+remoteNumSlots);
+            
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+            NBTTagList nbttagremote = nbttagcompound.getTagList("remoteItems");
+            
             this.contents = new ItemStack[this.getSizeInventory()];
+            if (remoteNumSlots != 0)
+            {
+                this.remoteItems = new ItemStack[remoteNumSlots];
+            }
 
+            //our inventory
             for (int i = 0; i < nbttaglist.tagCount(); ++i)
             {
                 NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
@@ -198,6 +210,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 if (j >= 0 && j < this.contents.length)
                 {
                     this.contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                }
+            }
+
+            //remote inventory
+            if (nbttagremote.tagCount() != 0)
+            {
+                for (int i = 0; i < nbttagremote.tagCount(); ++i)
+                {
+                    NBTTagCompound remoteItems1 = (NBTTagCompound)nbttagremote.tagAt(i);
+                    int j = remoteItems1.getByte("remoteSlot") & 255;
+
+                    if (j >= 0 && j < this.remoteItems.length)
+                    {
+                        this.remoteItems[j] = ItemStack.loadItemStackFromNBT(remoteItems1);
+                    }
                 }
             }
         }
@@ -211,10 +238,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!Utils.isClient(worldObj))
         {
             super.writeToNBT(nbttagcompound);
-            nbttagcompound.setString("targetTileName", targetTileName);
-            System.out.println("writeNBI:"+targetTileName);
             NBTTagList nbttaglist = new NBTTagList();
-
+            NBTTagList nbttagremote = new NBTTagList();
+            
+            //our inventory
             for (int i = 0; i < this.contents.length; ++i)
             {
                 if (this.contents[i] != null)
@@ -225,7 +252,29 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     nbttaglist.appendTag(nbttagcompound1);
                 }
             }
+            
+            //remote inventory
+            if (this.remoteItems != null)
+            {
+                for (int i = 0; i < this.remoteItems.length; i++)
+                {
+                    if (this.remoteItems[i] != null)
+                    {
+                        NBTTagCompound remoteItems1 = new NBTTagCompound();
+                        remoteItems1.setByte("remoteSlot", (byte)i);
+                        this.remoteItems[i].writeToNBT(remoteItems1);
+                        nbttaglist.appendTag(remoteItems1);
+                    }
+                }
+            }
+                        
+            //write stuff to NBt here
             nbttagcompound.setTag("Items", nbttaglist);
+            nbttagcompound.setTag("remoteItems", nbttagremote);
+            nbttagcompound.setString("targetTileName", targetTileName);
+            nbttagcompound.setInteger("remoteItemsSize", remoteNumSlots);
+            
+            System.out.println("writeNBI: "+targetTileName+" removeInvSize:"+remoteNumSlots);
         }
     }
 
@@ -280,12 +329,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         // Get number of slots in the remote inventory
-        int numSlots = ((IInventory)tile).getSizeInventory();
+        remoteNumSlots = ((IInventory)tile).getSizeInventory();
         ItemStack tempCopy;
-        ItemStack returnCopy[] = new ItemStack[numSlots];
+        ItemStack returnCopy[] = new ItemStack[remoteNumSlots];
 
         // Iterate through remote slots and make a copy of it
-        for (int i = 0; i < numSlots; i++)
+        for (int i = 0; i < remoteNumSlots; i++)
         {
             tempCopy = ((IInventory)tile).getStackInSlot(i);
 
@@ -362,6 +411,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void onLoad()
     {
+        /*
+         * This function fires only once on first load of an instance of our tile and attempts to see
+         * if we should have a valid inventory or not. it will set the lastTileEntity var, and
+         * snapShotState. The actual remoteInventory object will be loaded (or not) via the NBT calls.
+         */
         if(!Utils.isClient(worldObj))
         {
             tileLoaded = true;
@@ -379,6 +433,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 else
                 {
                     System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
+                    clearSnapshot();
                     return;
                 }
             }
@@ -428,6 +483,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         lastTileEntity = null;
         snapShotState = false;
         targetTileName = "none";
+        remoteItems = null;
+        remoteNumSlots = 0;
     }
     
     @Override
@@ -503,7 +560,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                          * Take a snapshot of the remote inventory, set the lastEntity to the current
                          * remote entity and set the snapshot flag to true
                          */
-                        ItemStack remoteItems[] = takeSnapShot(tile);
+                        remoteItems = takeSnapShot(tile);
                         lastTileEntity = tile;
                         snapShotState = true;
                     }
