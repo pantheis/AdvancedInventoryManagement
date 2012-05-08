@@ -6,9 +6,18 @@ import kaijin.InventoryStocker.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
+    //ItemStack privates
     private ItemStack contents[];
+    private ItemStack remoteItems[];
+
+    //Boolean privates
     private boolean previousPoweredState = false;
     private boolean snapShotState = false;
+    private boolean tileLoaded = false;
+
+    //other privates
+    private TileEntity lastTileEntity = null;
+    private String targetTileName = "none";
 
     @Override
     public boolean canUpdate()
@@ -173,6 +182,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readFromNBT(nbttagcompound);
+        targetTileName = nbttagcompound.getString("targetTileName");
+        System.out.println("readNBT:"+targetTileName);
         NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
         this.contents = new ItemStack[this.getSizeInventory()];
 
@@ -194,6 +205,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);
+        nbttagcompound.setString("targetTileName", targetTileName);
+        System.out.println("writeNBI:"+targetTileName);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.contents.length; ++i)
@@ -208,6 +221,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         nbttagcompound.setTag("Items", nbttaglist);
+        
     }
 
     public int getInventoryStackLimit()
@@ -284,8 +298,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
         }
-
+        /*
+         *  get remote entity class name and store it as targetTile, which also ends up being stored in our
+         *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
+         */
+        targetTileName = tile.getClass().getName();
         return returnCopy;
+    }
+
+    public void storeRemoteInventory(TileEntity tile, int hash)
+    {
+        
     }
 
     public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
@@ -326,33 +349,158 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
+    public void onLoad()
+    {
+        tileLoaded = true;
+        TileEntity tile = getTileAtFrontFace();
+        if (tile != null)
+        {
+            String tempName = tile.getClass().getName();
+            if (tempName.equals(targetTileName))
+            {
+                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" MATCHED");
+                lastTileEntity = tile;
+                snapShotState = true;
+                return;
+            }
+            else
+            {
+                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
+                return;
+            }
+        }
+        else
+        {
+            System.out.println("onLoad tile = null");
+        }
+    }
+
+    public void onUpdate()
+    {
+        TileEntity tile = getTileAtFrontFace();
+        if (tile != null)
+        {
+            String tempName = tile.getClass().getName();
+            int tempHash = tile.getClass().hashCode();
+            if (!tempName.equals(targetTileName))
+            {
+                clearSnapshot();
+                System.out.println("onUpdate clear, tname="+tempName+" tarname="+targetTileName);
+                return;
+            }
+            else if (tile != lastTileEntity)
+            {
+                clearSnapshot();
+                System.out.println("onUpdate clear, tileEntity does not match lastTileEntity");
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            System.out.println("onUpdate clear, tile = null");
+            clearSnapshot();
+        }
+    }
+
+    public void clearSnapshot()
+    {
+        lastTileEntity = null;
+        snapShotState = false;
+        targetTileName = "none";
+    }
+    
     @Override
     public void updateEntity()
     {
         super.updateEntity();
+
+        /*
+         * See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+         */
+        if (!tileLoaded)
+        {
+            System.out.println("tileLoaded false, running onLoad");
+            this.onLoad();
+        }
+
+        /*
+         * Need to update this function to properly reference remote NBTTags and block ID to verify
+         * if our block is still the same and store that information in our own NBTTag to compare
+         * after we are saved to disk and reloaded (server restart, player quit SSP, chunk unload
+         * etc)
+         * 
+         * String NBTTagKeyID = (String)classToNameMap.get(remoteTile.getClass());
+         * get remote name
+         * and x,y,z and store it in our own tag to match on load
+         */
+        
+        /*
+         * check if one of the blocks next to us or us is getting power from a neighboring block. 
+         */
         boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
+        /*
+         * If we're not powered, set the previousPoweredState to false
+         */
         if (!isPowered)
         {
             previousPoweredState = false;
         }
 
+        /*
+         * If we are powered and the previous power state is false, it's time to go to
+         * work. We test it this way so that we only trigger our work state once
+         * per redstone power state cycle (pulse).
+         */
         if (isPowered && !previousPoweredState)
         {
+            //We're powered now, set the state flag to true
             previousPoweredState = true;
-            TileEntity tile = getTileAtFrontFace();
 
+            //grab TileEntity at front face
+            TileEntity tile = getTileAtFrontFace();
+            
+            //Verify that the tile we got back exists and implements IInventory            
             if (tile != null && tile instanceof IInventory)
             {
                 /*
-                 * Put code here that will deal with the adjacent inventory
-                 *
-                 * ModLoader.getMinecraftInstance().thePlayer.addChatMessage("It works!");
-                 *
+                 * Check if our snapshot is considered valid and/or the tile we just got doesn't
+                 * match the one we had prior.
                  */
-                ItemStack remoteItems[] = takeSnapShot(tile);
-                stockInventory(tile, remoteItems);
+                if (!getSnapshotState() || tile != lastTileEntity)
+                {
+                    /*
+                     * Take a snapshot of the remote inventory, set the lastEntity to the current
+                     * remote entity and set the snapshot flag to true
+                     */
+                    ItemStack remoteItems[] = takeSnapShot(tile);
+                    lastTileEntity = tile;
+                    snapShotState = true;
+                }
+                else
+                {
+                    /*
+                     * If we've made it here, it's time to stock the remote inventory
+                     */
+                    stockInventory(tile, remoteItems);
+                }
+            }
+            else
+            {
+                /*
+                 * This code deals with us not getting a valid tile entity from
+                 * the getTileAtFrontFace code. This can happen because there is no
+                 * detected tileentity (returned false), or the tileentity that was returned
+                 * does not implement IInventory. We will clear the last snapshot.
+                 */
+                clearSnapshot();
+                System.out.println("entityUpdate snapshot clear");
             }
         }
     }
+
 }

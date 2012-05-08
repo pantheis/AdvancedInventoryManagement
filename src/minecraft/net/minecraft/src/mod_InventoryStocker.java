@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import net.minecraft.src.forge.*;
-
 import java.io.File;
 import java.util.*;
 import net.minecraft.client.Minecraft;
@@ -44,7 +43,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "0.0.5";
+        return "0.0.8";
     }
     @Override public boolean clientSideRequired()
     {

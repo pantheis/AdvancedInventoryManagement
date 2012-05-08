@@ -5,7 +5,6 @@ import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
 
-
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
     //ItemStack privates
@@ -15,10 +14,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     //Boolean privates
     private boolean previousPoweredState = false;
     private boolean snapShotState = false;
+    private boolean tileLoaded = false;
 
     //other privates
     private TileEntity lastTileEntity = null;
-    private String targetTile="";
+    private String targetTileName = "none";
 
     @Override
     public boolean canUpdate()
@@ -183,7 +183,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readFromNBT(nbttagcompound);
-        targetTile = nbttagcompound.getString("targetTile");
+        targetTileName = nbttagcompound.getString("targetTileName");
+        System.out.println("readNBT:"+targetTileName);
         NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
         this.contents = new ItemStack[this.getSizeInventory()];
 
@@ -205,7 +206,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setString("targetTile", targetTile);
+        nbttagcompound.setString("targetTileName", targetTileName);
+        System.out.println("writeNBI:"+targetTileName);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.contents.length; ++i)
@@ -301,7 +303,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          *  get remote entity class name and store it as targetTile, which also ends up being stored in our
          *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
          */
-        targetTile = tile.getClass().getName();
+        targetTileName = tile.getClass().getName();
         return returnCopy;
     }
 
@@ -348,21 +350,84 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
+    public void onLoad()
+    {
+        tileLoaded = true;
+        TileEntity tile = getTileAtFrontFace();
+        if (tile != null)
+        {
+            String tempName = tile.getClass().getName();
+            if (tempName.equals(targetTileName))
+            {
+                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" MATCHED");
+                lastTileEntity = tile;
+                snapShotState = true;
+                return;
+            }
+            else
+            {
+                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
+                return;
+            }
+        }
+        else
+        {
+            System.out.println("onLoad tile = null");
+        }
+    }
+
     public void onUpdate()
     {
         TileEntity tile = getTileAtFrontFace();
-        if (tile != lastTileEntity)
+        if (tile != null)
         {
-                lastTileEntity = null;
-                snapShotState = false;
+            String tempName = tile.getClass().getName();
+            int tempHash = tile.getClass().hashCode();
+            if (!tempName.equals(targetTileName))
+            {
+                clearSnapshot();
+                System.out.println("onUpdate clear, tname="+tempName+" tarname="+targetTileName);
+                return;
+            }
+            else if (tile != lastTileEntity)
+            {
+                clearSnapshot();
+                System.out.println("onUpdate clear, tileEntity does not match lastTileEntity");
+                return;
+            }
+            else
+            {
+                return;
+            }
         }
+        else
+        {
+            System.out.println("onUpdate clear, tile = null");
+            clearSnapshot();
+        }
+    }
+    
+    public void clearSnapshot()
+    {
+        lastTileEntity = null;
+        snapShotState = false;
+        targetTileName = "none";
     }
     
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-                
+
+        /*
+         * See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+         */
+        if (!tileLoaded)
+        {
+            System.out.println("tileLoaded false, running onLoad");
+            this.onLoad();
+        }
+
         /*
          * Need to update this function to properly reference remote NBTTags and block ID to verify
          * if our block is still the same and store that information in our own NBTTag to compare
@@ -400,14 +465,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
             //grab TileEntity at front face
             TileEntity tile = getTileAtFrontFace();
-            if (tile != null)
-            {
-                
-            }
-            else
-            {
-                
-            }
             
             //Verify that the tile we got back exists and implements IInventory            
             if (tile != null && tile instanceof IInventory)
@@ -448,8 +505,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                  * detected tileentity (returned false), or the tileentity that was returned
                  * does not implement IInventory. We will clear the last snapshot.
                  */
-                snapShotState = false;
-                lastTileEntity = null;
+                clearSnapshot();
+                System.out.println("entityUpdate snapshot clear");
                 ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Clearing snapshot");
             }
         }

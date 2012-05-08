@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import net.minecraft.src.forge.*;
-
 import java.io.File;
 import java.util.*;
 import net.minecraft.server.*;
@@ -23,6 +22,7 @@ public class mod_InventoryStocker extends NetworkMod
     public void load()
     {
         MinecraftForge.versionDetect("Inventory Stocker", 3, 1, 2);
+        MinecraftForge.registerConnectionHandler(new ConnectionHandler());
         ModLoader.registerBlock(InventoryStocker);
         ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
@@ -39,7 +39,7 @@ public class mod_InventoryStocker extends NetworkMod
     }
     public String getVersion()
     {
-        return "0.0.5";
+        return "0.0.8";
     }
     @Override public boolean clientSideRequired()
     {
