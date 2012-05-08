@@ -27,7 +27,6 @@ public class GuiInventoryStocker extends GuiContainer
         this.fontRenderer.drawString("Input", 8, 6, 4210752);
         this.fontRenderer.drawString(this.tile.getInvName(), 70, 6, 4210752);
         this.fontRenderer.drawString("Output", 116, 6, 4210752);
-
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
@@ -42,5 +41,5 @@ public class GuiInventoryStocker extends GuiContainer
         int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
         int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
         this.drawTexturedModalRect(XOffset, YOffset, 0, 0, this.xSize, this.ySize);
-	}
+    }
 }

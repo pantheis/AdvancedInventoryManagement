@@ -3,12 +3,8 @@ package kaijin.InventoryStocker;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.NetworkManager;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
-import net.minecraft.src.forge.IPacketHandler;
+import net.minecraft.src.*;
+import net.minecraft.src.forge.*;
 
 public class PacketHandler implements IPacketHandler
 {

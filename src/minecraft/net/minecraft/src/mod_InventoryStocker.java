@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import net.minecraft.src.forge.*;
-
 import java.io.File;
 import java.util.*;
 import net.minecraft.client.Minecraft;
@@ -22,8 +21,8 @@ public class mod_InventoryStocker extends NetworkMod
 
     public void load()
     {
-    	MinecraftForge.versionDetect("Inventory Stocker", 3, 1, 3);
-    	MinecraftForge.registerConnectionHandler(new ConnectionHandler());
+        MinecraftForge.versionDetect("Inventory Stocker", 3, 1, 2);
+        MinecraftForge.registerConnectionHandler(new ConnectionHandler());
         MinecraftForgeClient.preloadTexture("/kaijin/InventoryStocker/terrain.png");
         ModLoader.registerBlock(InventoryStocker);
         ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
@@ -44,7 +43,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "0.0.5";
+        return "0.0.8";
     }
     @Override public boolean clientSideRequired()
     {
