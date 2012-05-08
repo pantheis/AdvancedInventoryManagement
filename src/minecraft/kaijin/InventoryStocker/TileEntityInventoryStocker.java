@@ -182,20 +182,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
-        super.readFromNBT(nbttagcompound);
-        targetTileName = nbttagcompound.getString("targetTileName");
-        System.out.println("readNBT:"+targetTileName);
-        NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
-        this.contents = new ItemStack[this.getSizeInventory()];
-
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+        if(!Utils.isClient(worldObj))
         {
-            NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-            int j = nbttagcompound1.getByte("Slot") & 255;
+            super.readFromNBT(nbttagcompound);
+            targetTileName = nbttagcompound.getString("targetTileName");
+            System.out.println("readNBT:"+targetTileName);
+            NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+            this.contents = new ItemStack[this.getSizeInventory()];
 
-            if (j >= 0 && j < this.contents.length)
+            for (int i = 0; i < nbttaglist.tagCount(); ++i)
             {
-                this.contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+                int j = nbttagcompound1.getByte("Slot") & 255;
+
+                if (j >= 0 && j < this.contents.length)
+                {
+                    this.contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                }
             }
         }
     }
@@ -205,24 +208,25 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setString("targetTileName", targetTileName);
-        System.out.println("writeNBI:"+targetTileName);
-        NBTTagList nbttaglist = new NBTTagList();
-
-        for (int i = 0; i < this.contents.length; ++i)
+        if(!Utils.isClient(worldObj))
         {
-            if (this.contents[i] != null)
-            {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte)i);
-                this.contents[i].writeToNBT(nbttagcompound1);
-                nbttaglist.appendTag(nbttagcompound1);
-            }
-        }
+            super.writeToNBT(nbttagcompound);
+            nbttagcompound.setString("targetTileName", targetTileName);
+            System.out.println("writeNBI:"+targetTileName);
+            NBTTagList nbttaglist = new NBTTagList();
 
-        nbttagcompound.setTag("Items", nbttaglist);
-        
+            for (int i = 0; i < this.contents.length; ++i)
+            {
+                if (this.contents[i] != null)
+                {
+                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                    nbttagcompound1.setByte("Slot", (byte)i);
+                    this.contents[i].writeToNBT(nbttagcompound1);
+                    nbttaglist.appendTag(nbttagcompound1);
+                }
+            }
+            nbttagcompound.setTag("Items", nbttaglist);
+        }
     }
 
     public int getInventoryStackLimit()
@@ -352,58 +356,64 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void onLoad()
     {
-        tileLoaded = true;
-        TileEntity tile = getTileAtFrontFace();
-        if (tile != null)
+        if(!Utils.isClient(worldObj))
         {
-            String tempName = tile.getClass().getName();
-            if (tempName.equals(targetTileName))
+            tileLoaded = true;
+            TileEntity tile = getTileAtFrontFace();
+            if (tile != null)
             {
-                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" MATCHED");
-                lastTileEntity = tile;
-                snapShotState = true;
-                return;
+                String tempName = tile.getClass().getName();
+                if (tempName.equals(targetTileName))
+                {
+                    System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" MATCHED");
+                    lastTileEntity = tile;
+                    snapShotState = true;
+                    return;
+                }
+                else
+                {
+                    System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
+                    return;
+                }
             }
             else
             {
-                System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
-                return;
+                System.out.println("onLoad tile = null");
             }
         }
-        else
-        {
-            System.out.println("onLoad tile = null");
-        }
     }
+        
 
     public void onUpdate()
     {
-        TileEntity tile = getTileAtFrontFace();
-        if (tile != null)
+        if(!Utils.isClient(worldObj))
         {
-            String tempName = tile.getClass().getName();
-            int tempHash = tile.getClass().hashCode();
-            if (!tempName.equals(targetTileName))
+            TileEntity tile = getTileAtFrontFace();
+            if (tile != null)
             {
-                clearSnapshot();
-                System.out.println("onUpdate clear, tname="+tempName+" tarname="+targetTileName);
-                return;
-            }
-            else if (tile != lastTileEntity)
-            {
-                clearSnapshot();
-                System.out.println("onUpdate clear, tileEntity does not match lastTileEntity");
-                return;
+                String tempName = tile.getClass().getName();
+                if (!tempName.equals(targetTileName))
+                {
+                    clearSnapshot();
+                    System.out.println("onUpdate clear, tname="+tempName+" tarname="+targetTileName);
+                    return;
+                }
+                else if (tile != lastTileEntity)
+                {
+                    clearSnapshot();
+                    System.out.println("onUpdate clear, tileEntity does not match lastTileEntity");
+                    return;
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
-                return;
+                System.out.println("onUpdate clear, tile = null");
+                clearSnapshot();
             }
-        }
-        else
-        {
-            System.out.println("onUpdate clear, tile = null");
-            clearSnapshot();
         }
     }
     
@@ -418,96 +428,98 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void updateEntity()
     {
         super.updateEntity();
-
-        /*
-         * See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
-         */
-        if (!tileLoaded)
+        if(!Utils.isClient(worldObj))
         {
-            System.out.println("tileLoaded false, running onLoad");
-            this.onLoad();
-        }
-
-        /*
-         * Need to update this function to properly reference remote NBTTags and block ID to verify
-         * if our block is still the same and store that information in our own NBTTag to compare
-         * after we are saved to disk and reloaded (server restart, player quit SSP, chunk unload
-         * etc)
-         * 
-         * String NBTTagKeyID = (String)classToNameMap.get(remoteTile.getClass());
-         * get remote name
-         * and x,y,z and store it in our own tag to match on load
-         */
-        
-        /*
-         * check if one of the blocks next to us or us is getting power from a neighboring block. 
-         */
-        boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-
-        /*
-         * If we're not powered, set the previousPoweredState to false
-         */
-        if (!isPowered)
-        {
-            previousPoweredState = false;
-        }
-
-        /*
-         * If we are powered and the previous power state is false, it's time to go to
-         * work. We test it this way so that we only trigger our work state once
-         * per redstone power state cycle (pulse).
-         */
-        if (isPowered && !previousPoweredState)
-        {
-        	//We're powered now, set the state flag to true
-            previousPoweredState = true;
-            ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Powered");
-
-            //grab TileEntity at front face
-            TileEntity tile = getTileAtFrontFace();
-            
-            //Verify that the tile we got back exists and implements IInventory            
-            if (tile != null && tile instanceof IInventory)
+            /*
+             * See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+             */
+            if (!tileLoaded)
             {
-                /*
-                 * Code here deals with the adjacent inventory
-                 */
-                ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Chest Found!");
+                System.out.println("tileLoaded false, running onLoad");
+                this.onLoad();
+            }
 
-                /*
-                 * Check if our snapshot is considered valid and/or the tile we just got doesn't
-                 * match the one we had prior.
-                 */
-                if (!getSnapshotState() || tile != lastTileEntity)
+            /*
+             * Need to update this function to properly reference remote NBTTags and block ID to verify
+             * if our block is still the same and store that information in our own NBTTag to compare
+             * after we are saved to disk and reloaded (server restart, player quit SSP, chunk unload
+             * etc)
+             * 
+             * String NBTTagKeyID = (String)classToNameMap.get(remoteTile.getClass());
+             * get remote name
+             * and x,y,z and store it in our own tag to match on load
+             */
+            
+            /*
+             * check if one of the blocks next to us or us is getting power from a neighboring block. 
+             */
+            
+            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+
+            /*
+             * If we're not powered, set the previousPoweredState to false
+             */
+            if (!isPowered)
+            {
+                previousPoweredState = false;
+            }
+
+            /*
+             * If we are powered and the previous power state is false, it's time to go to
+             * work. We test it this way so that we only trigger our work state once
+             * per redstone power state cycle (pulse).
+             */
+            if (isPowered && !previousPoweredState)
+            {
+                //We're powered now, set the state flag to true
+                previousPoweredState = true;
+                System.out.println("Powered");
+
+                //grab TileEntity at front face
+                TileEntity tile = getTileAtFrontFace();
+                
+                //Verify that the tile we got back exists and implements IInventory            
+                if (tile != null && tile instanceof IInventory)
                 {
-                    ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Taking snapshot");
                     /*
-                     * Take a snapshot of the remote inventory, set the lastEntity to the current
-                     * remote entity and set the snapshot flag to true
+                     * Code here deals with the adjacent inventory
                      */
-                    ItemStack remoteItems[] = takeSnapShot(tile);
-                    lastTileEntity = tile;
-                    snapShotState = true;
+                    System.out.println("Chest Found!");
+
+                    /*
+                     * Check if our snapshot is considered valid and/or the tile we just got doesn't
+                     * match the one we had prior.
+                     */
+                    if (!getSnapshotState() || tile != lastTileEntity)
+                    {
+                        System.out.println("Taking snapshot");
+                        /*
+                         * Take a snapshot of the remote inventory, set the lastEntity to the current
+                         * remote entity and set the snapshot flag to true
+                         */
+                        ItemStack remoteItems[] = takeSnapShot(tile);
+                        lastTileEntity = tile;
+                        snapShotState = true;
+                    }
+                    else
+                    {
+                        /*
+                         * If we've made it here, it's time to stock the remote inventory
+                         */
+                        stockInventory(tile, remoteItems);
+                    }
                 }
                 else
                 {
                     /*
-                     * If we've made it here, it's time to stock the remote inventory
+                     * This code deals with us not getting a valid tile entity from
+                     * the getTileAtFrontFace code. This can happen because there is no
+                     * detected tileentity (returned false), or the tileentity that was returned
+                     * does not implement IInventory. We will clear the last snapshot.
                      */
-                    stockInventory(tile, remoteItems);
+                    clearSnapshot();
+                    System.out.println("entityUpdate snapshot clear");
                 }
-            }
-            else
-            {
-                /*
-                 * This code deals with us not getting a valid tile entity from
-                 * the getTileAtFrontFace code. This can happen because there is no
-                 * detected tileentity (returned false), or the tileentity that was returned
-                 * does not implement IInventory. We will clear the last snapshot.
-                 */
-                clearSnapshot();
-                System.out.println("entityUpdate snapshot clear");
-                ModLoader.getMinecraftInstance().thePlayer.addChatMessage("Clearing snapshot");
             }
         }
     }
