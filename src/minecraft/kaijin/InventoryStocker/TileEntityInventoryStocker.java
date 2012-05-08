@@ -313,7 +313,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void storeRemoteInventory(TileEntity tile, int hash)
     {
-        
+        if(!Utils.isClient(worldObj))
+        {
+            
+        }
     }
     
     public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
@@ -343,14 +346,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          * has the correct item in it already.
          *
          */
-
-        // test to make sure we're actually passed stuff that makes sense
-        if (tile != null && tile instanceof IInventory && itemstack != null)
+        if(!Utils.isClient(worldObj))
         {
-            // do code here
-        }
+            // test to make sure we're actually passed stuff that makes sense
+            if (tile != null && tile instanceof IInventory && itemstack != null)
+            {
+                // do code here
+            }
 
-        // return false for now to avoid errors
+            // return false for now to avoid errors
+            return false;
+        }
         return false;
     }
 
