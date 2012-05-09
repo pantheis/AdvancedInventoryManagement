@@ -424,7 +424,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     continue; // Slot is and should be empty. Next!
 
                 // Slot is empty but shouldn't be. Add what belongs there.
-                
+                addItemToRemote(slot, tile);
             }
             else
             {
