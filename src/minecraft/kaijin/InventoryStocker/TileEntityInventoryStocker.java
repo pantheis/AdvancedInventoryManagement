@@ -424,7 +424,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     continue; // Slot is and should be empty. Next!
 
                 // Slot is empty but shouldn't be. Add what belongs there.
-                
+                addItemToRemote(slot, tile);
             }
             else
             {
@@ -447,7 +447,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 {
                     // Wrong item type in slot! Try to remove what doesn't belong and add what does.
                     removeItemFromRemote(slot, tile);
-                    addItemToRemote(slot, tile);
+                    if (tile.getStackInSlot(slot) == null)
+                        addItemToRemote(slot, tile);
                 }
 
                 
@@ -485,41 +486,87 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // If all existing ItemStacks become full, and there is no room left for a new stack,
         // leave the untransferred remainder in the remote inventory.
         
-        // TODO
+        ItemStack remoteStack = remote.getStackInSlot(slot);
+        if (remoteStack == null)
+            return;
+        int max = remoteStack.getMaxStackSize();
+        int amtLeft = remoteStack.stackSize;
+        if (amtLeft > max)
+            amtLeft = max;
+
+        int delayedDestination = -1;
+        for (int i = 9; i < 18; i++) // Pull only into the Output section
+        {
+            if (contents[i] == null)
+            {
+                if (delayedDestination == -1) // Remember this parking space in case we don't find a matching partial slot. 
+                    delayedDestination = i; // Remember to car-pool, boys and girls!
+            }
+            else if (checkItemTypesMatch(contents[i], remoteStack))
+            {
+                int room = max - contents[i].stackSize;
+                if (room >= amtLeft)
+                {
+                    // Space for all, so toss it in.
+                    contents[i].stackSize += amtLeft;
+                    remoteStack.stackSize -= amtLeft;
+                    if (remoteStack.stackSize <= 0)
+                        remote.setInventorySlotContents(slot, null);
+                    return;
+                }
+                else
+                {
+                    // Room for some of it, so add what we can, then keep looking.
+                    contents[i].stackSize += room;
+                    remoteStack.stackSize -= room;
+                    amtLeft -= room;
+                }
+            }
+        }
+        
+        if (amtLeft > 0 && delayedDestination >= 0)
+        {
+            // Not enough room in existing stacks, so transfer whatever's left to a new one.
+            contents[delayedDestination] = remoteStack;
+            remote.setInventorySlotContents(slot, null);
+        }
     }
 
     protected void addItemToRemote(int slot, IInventory remote)
     {
         int max = remoteSnapshot[slot].getMaxStackSize();
-        int amtRemaining = remoteSnapshot[slot].stackSize;
-        if (amtRemaining > max)
-            amtRemaining = max;
+        int amtNeeded = remoteSnapshot[slot].stackSize;
+        if (amtNeeded > max)
+            amtNeeded = max;
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 18; i++) // Scan Output section as well in case desired items were removed for being in the wrong slot
         {
             if (contents[i] != null && checkItemTypesMatch(contents[i], remoteSnapshot[slot]))
             {
-                if (contents[i].stackSize > amtRemaining)
+                if (contents[i].stackSize > amtNeeded)
                 {
+                    // Found enough to meet the quota, so shift it on over.
                     if (remote.getStackInSlot(slot) == null)
                     {
-                        // Split stack and move new stack of amtRemaining into remote slot.
-                        // TODO
+                        // It's currently empty, so split stack and move new stack of amtNeeded into remote slot.
+                        ItemStack extra = contents[i].splitStack(amtNeeded);
+                        remote.setInventorySlotContents(slot, extra);
                     }
                     else
                     {
-                        // Transfer enough from one stack to the other.
-                        contents[i].stackSize -= amtRemaining;
-                        remote.getStackInSlot(slot).stackSize += amtRemaining;
+                        // There's already some present, so transfer the amount from one stack to the other.
+                        contents[i].stackSize -= amtNeeded;
+                        remote.getStackInSlot(slot).stackSize += amtNeeded;
                     }
-                    
                     return;
                 }
-                
-                // Decrease amtRemaining by stackSize, move stack into remote slot, and continue searching.
-                amtRemaining -= contents[i].stackSize;
-                remote.setInventorySlotContents(slot, contents[i]);
-                contents[i] = null;
+                else
+                {
+                    // Decrease amtNeeded by stackSize, move stack into remote slot, and continue searching.
+                    amtNeeded -= contents[i].stackSize;
+                    remote.setInventorySlotContents(slot, contents[i]);
+                    contents[i] = null;
+                }
             }
         }
     }
@@ -527,16 +574,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     protected void adjustRemoteStackSize(int slot, IInventory remote)
     {
         int max = remoteSnapshot[slot].getMaxStackSize();
-        int amtRemaining = remoteSnapshot[slot].stackSize - remote.getStackInSlot(slot).stackSize;
+        int amtNeeded = remoteSnapshot[slot].stackSize - remote.getStackInSlot(slot).stackSize;
 
-        if (amtRemaining > 0)
+        if (amtNeeded > 0)
         {
             // Transfer enough into the remote stack to make it match.
             // TODO
         }
-        else if (amtRemaining < 0)
+        else if (amtNeeded < 0)
         {
-           amtRemaining = -amtRemaining; // Switch it to positive
+           amtNeeded = -amtNeeded; // Switch it to positive
            // Transfer enough out of the remote stack to make it match.
            // TODO
         }
