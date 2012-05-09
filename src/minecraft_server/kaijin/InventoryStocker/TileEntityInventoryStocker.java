@@ -468,22 +468,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     // Test if two item stacks' types match, while ignoring damage level if needed.  
     protected boolean checkItemTypesMatch(ItemStack a, ItemStack b)
     {
+        // System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
+        // System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
+        // System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
+        // System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
+
         if (a.itemID == b.itemID)
         {        
-            // TODO This section may need work and/or more research.
-            // How do other mods test to see if items should stack together or compare as identical?
-            if (a.isStackable() || b.isStackable())
-            {
-                // Item is stackable. Check damage value to test for match properly?
-                if (a.getItemDamage() == b.getItemDamage()) // Already tested ItemID, so a.isItemEqual(b) would be partially redundant.
-                    return true;
-            }
-            else
-            {
-                // Ignore damage value of damageable items while testing for match!
-                if (a.isItemStackDamageable() && b.isItemStackDamageable()) // No idea if it's possible for these to differ. Better safe...
-                    return true;
-            }
+            // Ignore damage value of damageable items while testing for match!
+            if (a.isItemStackDamageable())
+                return true;
+
+            // Already tested ItemID, so a.isItemEqual(b) would be partially redundant.
+            if (a.getItemDamage() == b.getItemDamage())
+                return true;
         }
         return false;
     }
