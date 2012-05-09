@@ -12,7 +12,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     //Boolean privates
     private boolean previousPoweredState = false;
-    private boolean snapShotState = false;
+    private boolean hasSnapshot = false;
     private boolean tileLoaded = false;
 
     //other privates
@@ -29,7 +29,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public TileEntityInventoryStocker()
     {
         this.contents = new ItemStack [this.getSizeInventory()];
-        this.remoteItems = null;
+        this.clearSnapshot();
     }
 
     public int getStartInventorySide(int i)
@@ -165,7 +165,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
-        contents[i] = itemstack;
+        this.contents[i] = itemstack;
 
         if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
         {
@@ -285,6 +285,40 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
+    public void onLoad()
+    {
+        /*
+         * This function fires only once on first load of an instance of our tile and attempts to see
+         * if we should have a valid inventory or not. It will set the lastTileEntity and
+         * hasSnapshot state. The actual remoteInventory object will be loaded (or not) via the NBT calls.
+         */
+        if(!Utils.isClient(worldObj))
+        {
+            tileLoaded = true;
+            System.out.println("onLoad, remote inv size = " + this.remoteNumSlots);
+            TileEntity tile = getTileAtFrontFace();
+            if (tile == null)
+            {
+                System.out.println("onLoad tile = null");
+            }
+            else
+            {
+                String tempName = tile.getClass().getName();
+                if (tempName.equals(targetTileName))
+                {
+                    System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
+                    lastTileEntity = tile;
+                    hasSnapshot = true;
+                }
+                else
+                {
+                    System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
+                    clearSnapshot();
+                }
+            }
+        }
+    }
+        
     public int getInventoryStackLimit()
     {
         return 64;
@@ -310,16 +344,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // TODO Auto-generated method stub
     }
 
-    public boolean getSnapshotState()
-    {
-        /*
-         * returns true if it has a snapshot, false if it doesn't have one
-         * Does NOT test if the snapshot should still be valid
-         * (remote inventory changed, removed, etc)
-         */
-        return snapShotState;
-    }
-
     public ItemStack[] takeSnapShot(TileEntity tile)
     {
         /*
@@ -336,12 +360,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         // Get number of slots in the remote inventory
-        remoteNumSlots = ((IInventory)tile).getSizeInventory();
+        this.remoteNumSlots = ((IInventory)tile).getSizeInventory();
         ItemStack tempCopy;
-        ItemStack returnCopy[] = new ItemStack[remoteNumSlots];
+        ItemStack returnCopy[] = new ItemStack[this.remoteNumSlots];
 
         // Iterate through remote slots and make a copy of it
-        for (int i = 0; i < remoteNumSlots; i++)
+        for (int i = 0; i < this.remoteNumSlots; i++)
         {
             tempCopy = ((IInventory)tile).getStackInSlot(i);
 
@@ -408,81 +432,49 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
-    public void onLoad()
+    public boolean checkInvalidSnapshot()
     {
-        /*
-         * This function fires only once on first load of an instance of our tile and attempts to see
-         * if we should have a valid inventory or not. it will set the lastTileEntity var, and
-         * snapShotState. The actual remoteInventory object will be loaded (or not) via the NBT calls.
-         */
-        if(!Utils.isClient(worldObj))
+        TileEntity tile = getTileAtFrontFace();
+        if (tile == null)
         {
-            tileLoaded = true;
-            TileEntity tile = getTileAtFrontFace();
-            if (tile != null)
+            System.out.println("Invalid: Tile = null");
+            return true;
+        }
+        else
+        {
+            String tempName = tile.getClass().getName();
+            if (!tempName.equals(targetTileName))
             {
-                String tempName = tile.getClass().getName();
-                if (tempName.equals(targetTileName))
-                {
-                    System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" MATCHED");
-                    lastTileEntity = tile;
-                    snapShotState = true;
-                    return;
-                }
-                else
-                {
-                    System.out.println("onLoad, tname="+tempName+" tarname="+targetTileName+" NOT MATCHED");
-                    clearSnapshot();
-                    return;
-                }
+                System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
+                return true;
             }
-            else
+            else if (tile != lastTileEntity)
             {
-                System.out.println("onLoad tile = null");
+                System.out.println("Invalid: tileEntity does not match lastTileEntity");
+                return true;
+            }
+            else if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
+            {
+                System.out.println("Invalid: tileEntity inventory size has changed");
+                return true;
             }
         }
+        return false;
     }
-        
 
     public void onUpdate()
     {
         if(!Utils.isClient(worldObj))
         {
-            TileEntity tile = getTileAtFrontFace();
-            if (tile == null)
-            {
-                System.out.println("onUpdate clear, tile = null");
+            if (checkInvalidSnapshot())
                 clearSnapshot();
-            }
-            else
-            {
-                String tempName = tile.getClass().getName();
-                if (!tempName.equals(targetTileName))
-                {
-                    clearSnapshot();
-                    System.out.println("onUpdate clear-TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
-                    return;
-                }
-                else if (tile != lastTileEntity)
-                {
-                    clearSnapshot();
-                    System.out.println("onUpdate clear-tileEntity does not match lastTileEntity");
-                    return;
-                }
-                else if (((IInventory)tile).getSizeInventory() != ((IInventory)lastTileEntity).getSizeInventory())
-                {
-                    clearSnapshot();
-                    System.out.println("onUpdate clear, tileEntity inventory size does not match lastTileEntity inventory size");
-                    return;
-                }
-            }
         }
     }
     
     public void clearSnapshot()
     {
         lastTileEntity = null;
-        snapShotState = false;
+        hasSnapshot = false;
         targetTileName = "none";
         remoteItems = null;
         remoteNumSlots = 0;
@@ -554,7 +546,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                      * Check if our snapshot is considered valid and/or the tile we just got doesn't
                      * match the one we had prior.
                      */
-                    if (!getSnapshotState() || tile != lastTileEntity || ((IInventory)tile).getSizeInventory() != ((IInventory)lastTileEntity).getSizeInventory())
+                    if (!hasSnapshot || checkInvalidSnapshot())
                     {
                         System.out.println("Taking snapshot");
                         /*
@@ -562,9 +554,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                          * remote entity and set the snapshot flag to true
                          */
                         clearSnapshot();
-                        this.remoteItems = takeSnapShot(tile);
+                        remoteItems = takeSnapShot(tile);
                         lastTileEntity = tile;
-                        snapShotState = true;
+                        hasSnapshot = true;
                     }
                     else
                     {
