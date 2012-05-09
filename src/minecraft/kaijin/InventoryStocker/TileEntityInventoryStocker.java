@@ -392,49 +392,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return returnCopy;
     }
 
-    public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
+    public void stockInventory(TileEntity tile)
     {
         /*
-         * This function is the main worker for our block. It takes a TileEntity and
-         * an ItemStack array as inputs and will attempt to use its internal inventory
-         * object to do the following:
-         *
-         * Iterate through the remote inventory, comparing each slot with our local
-         * snapshot we took earlier.
-         *
-         * If a remote inventory slot has the wrong item in it, remove it to the local inventory
-         * output, then see if we can fill the remote slot with the correct item and quantity from
-         * our local inventory, in reverse slot order. If the remote slot should be empty, set it
-         * as such.
-         *
-         * If a remote inventory slot is empty and shouldn't be, attempt to correct that
-         * using our local inventory in reverse slot order.
-         *
-         * If a remote inventory slot has the correct item, check that it has the correct quantity
-         * of the item. If not, attempt to correct that using our local inventory in reverse slot
-         * order.
-         *
-         * At the moment, this will only key on damage values if the ItemID is stackable. If it is
-         * not stackable, then it will ignore damage values for determining if the remote inventory
-         * has the correct item in it already.
-         *
+         * outline what needs to happen here
          */
-        if(!Utils.isClient(worldObj))
-        {
-            // test to make sure we're actually passed stuff that makes sense
-            if (tile != null && tile instanceof IInventory && itemstack != null)
-            {
-                // do code here
-            }
-
-            // return false for now to avoid errors
-            return false;
-        }
-        return false;
     }
 
     public boolean checkInvalidSnapshot()
     {
+        /*
+         * Will check if our snapshot should be invalidated, returns true if snapshot is invalid
+         * false otherwise.
+         */
+
         TileEntity tile = getTileAtFrontFace();
         if (tile == null)
         {
@@ -564,7 +535,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         /*
                          * If we've made it here, it's time to stock the remote inventory
                          */
-                        stockInventory(tile, remoteItems);
+                        stockInventory(tile);
                     }
                 }
                 else
