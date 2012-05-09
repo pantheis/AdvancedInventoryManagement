@@ -504,7 +504,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     if (remote.getStackInSlot(slot) == null)
                     {
                         // Split stack and move new stack of amtRemaining into remote slot.
-                        // TODO
+                        ItemStack extra = contents[i].splitStack(amtRemaining);
+                        remote.setInventorySlotContents(slot, extra);
                     }
                     else
                     {
