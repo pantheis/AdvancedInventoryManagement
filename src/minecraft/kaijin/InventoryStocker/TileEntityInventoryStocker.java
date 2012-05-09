@@ -548,7 +548,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if (amtNeeded > max)
             amtNeeded = max;
 
-        for (int i = 0; i < 18; i++) // Scan Output section as well in case desired items were removed for being in the wrong slot
+        for (int i = 17; i >= 0; i--) // Scan Output section as well in case desired items were removed for being in the wrong slot
         {
             if (contents[i] != null && checkItemTypesMatch(contents[i], remoteSnapshot[slot]))
             {
