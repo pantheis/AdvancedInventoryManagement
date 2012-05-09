@@ -8,7 +8,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 {
     //ItemStack privates
     private ItemStack contents[];
-    private ItemStack remoteItems[];
+    private ItemStack remoteSnapshot[];
 
     //Boolean privates
     private boolean previousPoweredState = false;
@@ -188,18 +188,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             super.readFromNBT(nbttagcompound);
             //read extra NBT stuff here
             targetTileName = nbttagcompound.getString("targetTileName");
-            remoteNumSlots = nbttagcompound.getInteger("remoteItemsSize");
+            remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
             
             System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
             
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
-            NBTTagList nbttagremote = nbttagcompound.getTagList("remoteItems");
+            NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
             
             this.contents = new ItemStack[this.getSizeInventory()];
-            this.remoteItems = null;
+            this.remoteSnapshot = null;
             if (remoteNumSlots != 0)
             {
-                this.remoteItems = new ItemStack[remoteNumSlots];
+                this.remoteSnapshot = new ItemStack[remoteNumSlots];
             }
 
             //our inventory
@@ -220,13 +220,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 for (int i = 0; i < nbttagremote.tagCount(); ++i)
                 {
-                    NBTTagCompound remoteItems1 = (NBTTagCompound)nbttagremote.tagAt(i);
-                    int j = remoteItems1.getByte("Slot") & 255;
+                    NBTTagCompound remoteSnapshot1 = (NBTTagCompound)nbttagremote.tagAt(i);
+                    int j = remoteSnapshot1.getByte("Slot") & 255;
 
-                    if (j >= 0 && j < this.remoteItems.length)
+                    if (j >= 0 && j < this.remoteSnapshot.length)
                     {
-                        this.remoteItems[j] = ItemStack.loadItemStackFromNBT(remoteItems1);
-                        System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteItems[j].itemID);
+                        this.remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
+                        System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteSnapshot[j].itemID);
                     }
                 }
             }
@@ -257,18 +257,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
             
             //remote inventory
-            if (this.remoteItems != null)
+            if (this.remoteSnapshot != null)
             {
-                System.out.println("writeNBT Target: "+targetTileName+" remoteInvSize:"+this.remoteItems.length);
-                for (int i = 0; i < this.remoteItems.length; i++)
+                System.out.println("writeNBT Target: "+targetTileName+" remoteInvSize:"+this.remoteSnapshot.length);
+                for (int i = 0; i < this.remoteSnapshot.length; i++)
                 {
-                    if (this.remoteItems[i] != null)
+                    if (this.remoteSnapshot[i] != null)
                     {
-                        System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteItems[i].itemID+" StackSize: "+this.remoteItems[i].stackSize+" meta: "+this.remoteItems[i].getItemDamage());
-                        NBTTagCompound remoteItems1 = new NBTTagCompound();
-                        remoteItems1.setByte("Slot", (byte)i);
-                        this.remoteItems[i].writeToNBT(remoteItems1);
-                        nbttagremote.appendTag(remoteItems1);
+                        System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteSnapshot[i].itemID+" StackSize: "+this.remoteSnapshot[i].stackSize+" meta: "+this.remoteSnapshot[i].getItemDamage());
+                        NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
+                        remoteSnapshot1.setByte("Slot", (byte)i);
+                        this.remoteSnapshot[i].writeToNBT(remoteSnapshot1);
+                        nbttagremote.appendTag(remoteSnapshot1);
                     }
                 }
             }
@@ -279,9 +279,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         
             //write stuff to NBT here
             nbttagcompound.setTag("Items", nbttaglist);
-            nbttagcompound.setTag("remoteItems", nbttagremote);
+            nbttagcompound.setTag("remoteSnapshot", nbttagremote);
             nbttagcompound.setString("targetTileName", targetTileName);
-            nbttagcompound.setInteger("remoteItemsSize", remoteNumSlots);
+            nbttagcompound.setInteger("remoteSnapshotSize", remoteNumSlots);
         }
     }
 
@@ -392,11 +392,192 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return returnCopy;
     }
 
-    public void stockInventory(TileEntity tile)
+    public boolean inputGridIsEmpty()
+    {
+        for (int i=0; i<9; i++)
+        {
+            if (contents[i] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected void stockInventory(IInventory tile)
     {
         /*
          * outline what needs to happen here
          */
+        // boolean inputIsEmpty = inputGridIsEmpty();
+
+        int startSlot = 0;
+        int endSlot = startSlot + tile.getSizeInventory();
+        
+        for (int slot = startSlot; slot < endSlot; slot++)
+        {
+            ItemStack i = tile.getStackInSlot(slot);
+            ItemStack s = remoteSnapshot[slot];
+            if (i == null)
+            {
+                if (s == null)
+                    continue; // Slot is and should be empty. Next!
+
+                // Slot is empty but shouldn't be. Add what belongs there.
+                addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
+            }
+            else
+            {
+                // Slot is occupied. Figure out if contents belong there.
+                if (s == null)
+                {
+                    // Nope! Slot should be empty. Need to remove this.
+                    // Call helper function to do that here, and then
+                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+                    continue; // move on to next slot!
+                }
+                
+                // Compare contents of slot between remote inventory and snapshot.
+                if (checkItemTypesMatch(i, s))
+                {
+                    // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
+                    int amtNeeded = remoteSnapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
+                    if (amtNeeded > 0)
+                    {
+                        addItemToRemote(slot, tile, amtNeeded);
+                    }
+                    else if (amtNeeded < 0)
+                    {
+                        removeItemFromRemote(slot, tile, -amtNeeded);
+                    }
+                    // else the size is already the same and we've nothing to do. Hooray!
+                }
+                else
+                {
+                    // Wrong item type in slot! Try to remove what doesn't belong and add what does.
+                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+                    if (tile.getStackInSlot(slot) == null)
+                        addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
+                }
+
+                
+            }
+        }
+    }
+
+    // Test if two item stacks' types match, while ignoring damage level if needed.  
+    protected boolean checkItemTypesMatch(ItemStack a, ItemStack b)
+    {
+        if (a.itemID == b.itemID)
+        {        
+            // TODO This section may need work and/or more research.
+            // How do other mods test to see if items should stack together or compare as identical?
+            if (a.isStackable() || b.isStackable())
+            {
+                // Item is stackable. Check damage value to test for match properly?
+                if (a.getItemDamage() == b.getItemDamage()) // Already tested ItemID, so a.isItemEqual(b) would be partially redundant.
+                    return true;
+            }
+            else
+            {
+                // Ignore damage value of damageable items while testing for match!
+                if (a.isItemStackDamageable() && b.isItemStackDamageable()) // No idea if it's possible for these to differ. Better safe...
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    protected void removeItemFromRemote(int slot, IInventory remote, int amount)
+    {
+        // Find room in output grid
+        // Use checkItemTypesMatch on any existing contents to see if the new output will stack
+        // If all existing ItemStacks become full, and there is no room left for a new stack,
+        // leave the untransferred remainder in the remote inventory.
+        
+        ItemStack remoteStack = remote.getStackInSlot(slot);
+        if (remoteStack == null)
+            return;
+        int max = remoteStack.getMaxStackSize();
+        int amtLeft = amount;
+        if (amtLeft > max)
+            amtLeft = max;
+
+        int delayedDestination = -1;
+        for (int i = 9; i < 18; i++) // Pull only into the Output section
+        {
+            if (contents[i] == null)
+            {
+                if (delayedDestination == -1) // Remember this parking space in case we don't find a matching partial slot. 
+                    delayedDestination = i; // Remember to car-pool, boys and girls!
+            }
+            else if (checkItemTypesMatch(contents[i], remoteStack))
+            {
+                int room = max - contents[i].stackSize;
+                if (room >= amtLeft)
+                {
+                    // Space for all, so toss it in.
+                    contents[i].stackSize += amtLeft;
+                    remoteStack.stackSize -= amtLeft;
+                    if (remoteStack.stackSize <= 0)
+                        remote.setInventorySlotContents(slot, null);
+                    return;
+                }
+                else
+                {
+                    // Room for some of it, so add what we can, then keep looking.
+                    contents[i].stackSize += room;
+                    remoteStack.stackSize -= room;
+                    amtLeft -= room;
+                }
+            }
+        }
+        
+        if (amtLeft > 0 && delayedDestination >= 0)
+        {
+            // Not enough room in existing stacks, so transfer whatever's left to a new one.
+            contents[delayedDestination] = remoteStack;
+            remote.setInventorySlotContents(slot, null);
+        }
+    }
+
+    protected void addItemToRemote(int slot, IInventory remote, int amount)
+    {
+        int max = remoteSnapshot[slot].getMaxStackSize();
+        int amtNeeded = amount;
+        if (amtNeeded > max)
+            amtNeeded = max;
+
+        for (int i = 0; i < 18; i++) // Scan Output section as well in case desired items were removed for being in the wrong slot
+        {
+            if (contents[i] != null && checkItemTypesMatch(contents[i], remoteSnapshot[slot]))
+            {
+                if (contents[i].stackSize > amtNeeded)
+                {
+                    // Found enough to meet the quota, so shift it on over.
+                    if (remote.getStackInSlot(slot) == null)
+                    {
+                        // It's currently empty, so split stack and move new stack of amtNeeded into remote slot.
+                        ItemStack extra = contents[i].splitStack(amtNeeded);
+                        remote.setInventorySlotContents(slot, extra);
+                    }
+                    else
+                    {
+                        // There's already some present, so transfer the amount from one stack to the other.
+                        contents[i].stackSize -= amtNeeded;
+                        remote.getStackInSlot(slot).stackSize += amtNeeded;
+                    }
+                    return;
+                }
+                else
+                {
+                    // Decrease amtNeeded by stackSize, move stack into remote slot, and continue searching.
+                    amtNeeded -= contents[i].stackSize;
+                    remote.setInventorySlotContents(slot, contents[i]);
+                    contents[i] = null;
+                }
+            }
+        }
     }
 
     public boolean checkInvalidSnapshot()
@@ -448,7 +629,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         lastTileEntity = null;
         hasSnapshot = false;
         targetTileName = "none";
-        remoteItems = null;
+        remoteSnapshot = null;
         remoteNumSlots = 0;
     }
     
@@ -458,84 +639,58 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         super.updateEntity();
         if(!Utils.isClient(worldObj))
         {
-            /*
-             * See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
-             */
+            // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
             if (!tileLoaded)
             {
                 System.out.println("tileLoaded false, running onLoad");
                 this.onLoad();
             }
 
-            /*
-             * Need to update this function to properly reference remote NBTTags and block ID to verify
-             * if our block is still the same and store that information in our own NBTTag to compare
-             * after we are saved to disk and reloaded (server restart, player quit SSP, chunk unload
-             * etc)
-             * 
-             * String NBTTagKeyID = (String)classToNameMap.get(remoteTile.getClass());
-             * get remote name
-             * and x,y,z and store it in our own tag to match on load
-             */
-            
-            /*
-             * check if one of the blocks next to us or us is getting power from a neighboring block. 
-             */
-            
+            // Check if one of the blocks next to us or us is getting power from a neighboring block. 
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
-            /*
-             * If we're not powered, set the previousPoweredState to false
-             */
+            // If we're not powered, set the previousPoweredState to false
             if (!isPowered)
             {
                 previousPoweredState = false;
             }
 
-            /*
-             * If we are powered and the previous power state is false, it's time to go to
+            /* If we are powered and the previous power state is false, it's time to go to
              * work. We test it this way so that we only trigger our work state once
              * per redstone power state cycle (pulse).
              */
             if (isPowered && !previousPoweredState)
             {
-                //We're powered now, set the state flag to true
+                // We're powered now, set the state flag to true
                 previousPoweredState = true;
                 System.out.println("Powered");
 
-                //grab TileEntity at front face
+                // grab TileEntity at front face
                 TileEntity tile = getTileAtFrontFace();
                 
-                //Verify that the tile we got back exists and implements IInventory            
+                // Verify that the tile we got back exists and implements IInventory            
                 if (tile != null && tile instanceof IInventory)
                 {
-                    /*
-                     * Code here deals with the adjacent inventory
-                     */
+                    // Code here deals with the adjacent inventory
                     System.out.println("Chest Found!");
 
-                    /*
-                     * Check if our snapshot is considered valid and/or the tile we just got doesn't
-                     * match the one we had prior.
-                     */
+                    // Check if our snapshot is considered valid and/or the tile we just got doesn't
+                    // match the one we had prior.
                     if (!hasSnapshot || checkInvalidSnapshot())
                     {
                         System.out.println("Taking snapshot");
-                        /*
-                         * Take a snapshot of the remote inventory, set the lastEntity to the current
-                         * remote entity and set the snapshot flag to true
-                         */
+
+                        // Take a snapshot of the remote inventory, set the lastEntity to the current
+                        // remote entity and set the snapshot flag to true
                         clearSnapshot();
-                        remoteItems = takeSnapShot(tile);
+                        remoteSnapshot = takeSnapShot(tile);
                         lastTileEntity = tile;
                         hasSnapshot = true;
                     }
                     else
                     {
-                        /*
-                         * If we've made it here, it's time to stock the remote inventory
-                         */
-                        stockInventory(tile);
+                        // If we've made it here, it's time to stock the remote inventory
+                        stockInventory((IInventory)tile);
                     }
                 }
                 else
