@@ -229,7 +229,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteItems[j].itemID);
                     }
                 }
-                //System.out.println("ReadNBT Remote ItemID: "+remoteItems[0].itemID);
             }
         }
     }
@@ -265,7 +264,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 {
                     if (this.remoteItems[i] != null)
                     {
-                        System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteItems[i].itemID);
+                        System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteItems[i].itemID+" StackSize: "+this.remoteItems[i].stackSize+" meta: "+this.remoteItems[i].getItemDamage());
                         NBTTagCompound remoteItems1 = new NBTTagCompound();
                         remoteItems1.setByte("Slot", (byte)i);
                         this.remoteItems[i].writeToNBT(remoteItems1);
@@ -365,18 +364,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
          */
         this.targetTileName = tile.getClass().getName();
-        // System.out.println("StackSize: "+returnCopy[0].stackSize);
         return returnCopy;
     }
 
-    public void storeRemoteInventory(TileEntity tile, int hash)
-    {
-        if(!Utils.isClient(worldObj))
-        {
-            
-        }
-    }
-    
     public boolean stockInventory(TileEntity tile, ItemStack itemstack[])
     {
         /*
@@ -459,30 +449,32 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!Utils.isClient(worldObj))
         {
             TileEntity tile = getTileAtFrontFace();
-            if (tile != null)
+            if (tile == null)
+            {
+                System.out.println("onUpdate clear, tile = null");
+                clearSnapshot();
+            }
+            else
             {
                 String tempName = tile.getClass().getName();
                 if (!tempName.equals(targetTileName))
                 {
                     clearSnapshot();
-                    System.out.println("onUpdate clear, tname="+tempName+" tarname="+targetTileName);
+                    System.out.println("onUpdate clear-TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
                     return;
                 }
                 else if (tile != lastTileEntity)
                 {
                     clearSnapshot();
-                    System.out.println("onUpdate clear, tileEntity does not match lastTileEntity");
+                    System.out.println("onUpdate clear-tileEntity does not match lastTileEntity");
                     return;
                 }
-                else
+                else if (((IInventory)tile).getSizeInventory() != ((IInventory)lastTileEntity).getSizeInventory())
                 {
+                    clearSnapshot();
+                    System.out.println("onUpdate clear, tileEntity inventory size does not match lastTileEntity inventory size");
                     return;
                 }
-            }
-            else
-            {
-                System.out.println("onUpdate clear, tile = null");
-                clearSnapshot();
             }
         }
     }
@@ -562,16 +554,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                      * Check if our snapshot is considered valid and/or the tile we just got doesn't
                      * match the one we had prior.
                      */
-                    if (!getSnapshotState() || tile != lastTileEntity)
+                    if (!getSnapshotState() || tile != lastTileEntity || ((IInventory)tile).getSizeInventory() != ((IInventory)lastTileEntity).getSizeInventory())
                     {
                         System.out.println("Taking snapshot");
                         /*
                          * Take a snapshot of the remote inventory, set the lastEntity to the current
                          * remote entity and set the snapshot flag to true
                          */
+                        clearSnapshot();
                         this.remoteItems = takeSnapShot(tile);
-                        // System.out.println("StackSizeRR: "+remoteItems[0].stackSize);
-                        // System.out.println("OnUpdateRemote ItemID: "+remoteItems[0].itemID);
                         lastTileEntity = tile;
                         snapShotState = true;
                     }
