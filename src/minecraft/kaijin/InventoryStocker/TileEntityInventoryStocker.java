@@ -424,7 +424,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     continue; // Slot is and should be empty. Next!
 
                 // Slot is empty but shouldn't be. Add what belongs there.
-                addItemToRemote(slot, tile);
+                addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
             }
             else
             {
@@ -433,7 +433,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 {
                     // Nope! Slot should be empty. Need to remove this.
                     // Call helper function to do that here, and then
-                    removeItemFromRemote(slot, tile);
+                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
                     continue; // move on to next slot!
                 }
                 
@@ -441,14 +441,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 if (checkItemTypesMatch(i, s))
                 {
                     // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
-                    adjustRemoteStackSize(slot, tile);
+                    int amtNeeded = remoteSnapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
+                    if (amtNeeded > 0)
+                    {
+                        addItemToRemote(slot, tile, amtNeeded);
+                    }
+                    else if (amtNeeded < 0)
+                    {
+                        removeItemFromRemote(slot, tile, -amtNeeded);
+                    }
+                    // else the size is already the same and we've nothing to do. Hooray!
                 }
                 else
                 {
                     // Wrong item type in slot! Try to remove what doesn't belong and add what does.
-                    removeItemFromRemote(slot, tile);
+                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
                     if (tile.getStackInSlot(slot) == null)
-                        addItemToRemote(slot, tile);
+                        addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
                 }
 
                 
@@ -479,7 +488,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
     
-    protected void removeItemFromRemote(int slot, IInventory remote)
+    protected void removeItemFromRemote(int slot, IInventory remote, int amount)
     {
         // Find room in output grid
         // Use checkItemTypesMatch on any existing contents to see if the new output will stack
@@ -490,7 +499,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if (remoteStack == null)
             return;
         int max = remoteStack.getMaxStackSize();
-        int amtLeft = remoteStack.stackSize;
+        int amtLeft = amount;
         if (amtLeft > max)
             amtLeft = max;
 
@@ -532,10 +541,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
-    protected void addItemToRemote(int slot, IInventory remote)
+    protected void addItemToRemote(int slot, IInventory remote, int amount)
     {
         int max = remoteSnapshot[slot].getMaxStackSize();
-        int amtNeeded = remoteSnapshot[slot].stackSize;
+        int amtNeeded = amount;
         if (amtNeeded > max)
             amtNeeded = max;
 
@@ -571,27 +580,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
-    protected void adjustRemoteStackSize(int slot, IInventory remote)
-    {
-        int max = remoteSnapshot[slot].getMaxStackSize();
-        int amtNeeded = remoteSnapshot[slot].stackSize - remote.getStackInSlot(slot).stackSize;
-
-        if (amtNeeded > 0)
-        {
-            // Transfer enough into the remote stack to make it match.
-            // TODO
-        }
-        else if (amtNeeded < 0)
-        {
-           amtNeeded = -amtNeeded; // Switch it to positive
-           // Transfer enough out of the remote stack to make it match.
-           // TODO
-        }
-        // else the sizes match and we have nothing to do! Hooray!
-    }
-
-    // protected int getItemQuantityAvailable(
-            
     public boolean checkInvalidSnapshot()
     {
         /*
