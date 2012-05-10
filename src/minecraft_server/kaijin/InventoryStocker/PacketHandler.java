@@ -27,5 +27,6 @@ public class PacketHandler implements IPacketHandler
         {
             ex.printStackTrace();
         }
+        ((NetServerHandler)network.getNetHandler()).getPlayerEntity();
     }
 }

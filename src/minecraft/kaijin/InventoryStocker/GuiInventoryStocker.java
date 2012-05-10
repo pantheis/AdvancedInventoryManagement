@@ -64,15 +64,20 @@ public class GuiInventoryStocker extends GuiContainer
         int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiTex);
-        int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
-        int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
         this.drawTexturedModalRect(XOffset, YOffset, 0, 0, this.xSize, this.ySize);
 
         //GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
         //button definition is the full one with width and height
         //defining button below, setting it look enabled and drawing it
         //If you make changes to the button state, you must call .drawButton(mc, XOffset, YOffset)
-        button = new GuiButton(0, (this.width /2)-40, YOffset-20, 80, 20, "Clear Snapshot");
+        if (this.tile.validSnapshot())
+        {
+            button = new GuiButton(0, (this.width /2)-40, YOffset-20, 80, 20, "Clear Snapshot");
+        }
+        else
+        {
+            button = new GuiButton(0, (this.width /2)-40, YOffset-20, 80, 20, "Take Snapshot");
+        }
         button.enabled = true;
         button.drawButton(mc, XOffset, YOffset);
     }
@@ -89,7 +94,9 @@ public class GuiInventoryStocker extends GuiContainer
                 this.actionPerformed(button);
             }
         }
+        super.mouseClicked(par1, par2, par3);
     }
+  
     
     /*
      * This function actually handles what happens when you click on a button, by ID
@@ -105,8 +112,16 @@ public class GuiInventoryStocker extends GuiContainer
         }
         if (button.id == 0)
         {
-            System.out.println("Button Pressed, invalidating snapshot");
-            this.tile.clearSnapshot();
+            if (this.tile.validSnapshot())
+            {
+                System.out.println("Button Pressed, invalidating snapshot");
+                this.tile.clearSnapshot();                
+            }
+            else
+            {
+                System.out.println("Button Pressed, taking snapshot");
+                this.tile.guiTakeSnapshot();
+            }
         }
     }
 }

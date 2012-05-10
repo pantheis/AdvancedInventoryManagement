@@ -12,6 +12,29 @@ import net.minecraft.src.forge.IPacketHandler;
 
 public class PacketHandler implements IPacketHandler
 {
+
+    /*
+     * example code to reference
+    @Override
+    public void onPacketData(NetworkManager network, String channel, byte[] bytes)
+    {
+            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(bytes));
+            int coords[] = new int[3];
+            try
+            {
+                    for(int i = 0; i < 3; i++)
+                    {
+                            coords[i] = dataStream.readInt();
+                    }
+            }
+            catch(IOException e)
+            {
+                    e.printStackTrace();
+            }
+            causeFuseSoundAt(ModLoader.getMinecraftInstance().theWorld, coords[0], coords[1], coords[2]);
+    }
+    */
+    
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
     {
