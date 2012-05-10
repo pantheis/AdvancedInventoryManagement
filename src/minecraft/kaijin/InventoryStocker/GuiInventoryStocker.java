@@ -12,10 +12,6 @@ public class GuiInventoryStocker extends GuiContainer
     // last button clicked
     private GuiButton selectedButton = null;
     
-    //making these class wide
-    int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
-    int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
-
     // define button class wide
     private GuiButton button = null;
 
@@ -26,6 +22,7 @@ public class GuiInventoryStocker extends GuiContainer
         this.tile = tileentityinventorystocker;
         xSize = 176;
         ySize = 168;
+        button = new GuiButton(0, 0, 0, 40, 16, "");
     }
 
     /**
@@ -39,7 +36,7 @@ public class GuiInventoryStocker extends GuiContainer
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
         
         //Add snapshot text
-        this.fontRenderer.drawString("Snapshot:", 65, 25, 4210752);
+        //this.fontRenderer.drawString("Snapshot:", 65, 25, 4210752);
 
         /*
          * validate snapshot state and display valid or invalid
@@ -47,12 +44,11 @@ public class GuiInventoryStocker extends GuiContainer
          */
         if (this.tile.validSnapshot())
         {
-
-            this.fontRenderer.drawString("Valid", 70, 35, 0x007500);
+            this.fontRenderer.drawString("Ready", 70, 20, 0x0000FF);
         }
         else
         {
-            this.fontRenderer.drawString("Invalid", 70, 35, 0xFF0000);
+            this.fontRenderer.drawString("Not Ready", 65, 20, 0xFF0000);
         }
     }
 
@@ -64,16 +60,18 @@ public class GuiInventoryStocker extends GuiContainer
         int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiTex);
-        int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
-        int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
-        this.drawTexturedModalRect(XOffset, YOffset, 0, 0, this.xSize, this.ySize);
+        int XOffset = (width - xSize) / 2; // X offset = Half the difference between screen width and GUI width
+        int YOffset = (height - ySize) / 2; // Y offset = half the difference between screen height and GUI height
+        this.drawTexturedModalRect(XOffset, YOffset, 0, 0, xSize, ySize);
 
         //GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
         //button definition is the full one with width and height
         //defining button below, setting it look enabled and drawing it
         //If you make changes to the button state, you must call .drawButton(mc, XOffset, YOffset)
-        button = new GuiButton(0, (this.width /2)-40, YOffset-20, 80, 20, "Clear Snapshot");
+        button.xPosition = (this.width / 2) - 20;
+        button.yPosition = YOffset + 53;
         button.enabled = true;
+        button.displayString = this.tile.validSnapshot() ? "Clear" : "Scan";
         button.drawButton(mc, XOffset, YOffset);
     }
 
@@ -90,7 +88,6 @@ public class GuiInventoryStocker extends GuiContainer
             }
         }
         super.mouseClicked(par1, par2, par3);
-
     }
     
     /*
@@ -107,8 +104,17 @@ public class GuiInventoryStocker extends GuiContainer
         }
         if (button.id == 0)
         {
-            System.out.println("Button Pressed, invalidating snapshot");
-            this.tile.clearSnapshot();
+            if (this.tile.validSnapshot())
+            {
+                System.out.println("Button Pressed, invalidating snapshot");
+                this.tile.clearSnapshot();
+            }
+            else
+            {
+                System.out.println("Button Pressed, take snapshot here");
+                this.tile.takeSnapshot();
+                
+            }
         }
     }
 }

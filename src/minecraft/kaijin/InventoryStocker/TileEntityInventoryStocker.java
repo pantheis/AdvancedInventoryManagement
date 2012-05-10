@@ -350,52 +350,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // TODO Auto-generated method stub
     }
 
-    public ItemStack[] takeSnapShot(TileEntity tile)
-    {
-        /*
-         * This function will take a snapshot the IInventory of the TileEntity passed to it
-         * and return it as a new ItemStack. This will be a copy of the remote inventory as
-         * it looks when this function is called.
-         *
-         * It will check that the TileEntity passed to it actually implements IInventory and
-         * return null if it does not.
-         */
-        if (!(tile instanceof IInventory))
-        {
-            return null;
-        }
-
-        // Get number of slots in the remote inventory
-        this.remoteNumSlots = ((IInventory)tile).getSizeInventory();
-        ItemStack tempCopy;
-        ItemStack returnCopy[] = new ItemStack[this.remoteNumSlots];
-
-        // Iterate through remote slots and make a copy of it
-        for (int i = 0; i < this.remoteNumSlots; i++)
-        {
-            tempCopy = ((IInventory)tile).getStackInSlot(i);
-
-            if (tempCopy == null)
-            {
-                returnCopy[i] = null;
-            }
-            else
-            {
-                returnCopy[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
-
-                if (tempCopy.stackTagCompound != null)
-                {
-                    returnCopy[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
-                }
-            }
-        }
-        /*
-         *  get remote entity class name and store it as targetTile, which also ends up being stored in our
-         *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
-         */
-        this.targetTileName = tile.getClass().getName();
-        return returnCopy;
-    }
 
     public boolean inputGridIsEmpty()
     {
@@ -668,46 +622,99 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 previousPoweredState = true;
                 System.out.println("Powered");
 
-                // grab TileEntity at front face
-                TileEntity tile = getTileAtFrontFace();
-                
-                // Verify that the tile we got back exists and implements IInventory            
-                if (tile != null && tile instanceof IInventory)
-                {
-                    // Code here deals with the adjacent inventory
-                    System.out.println("Chest Found!");
+                // Try to take a snapshot
+                takeSnapshot();
+            }
+        }
+    }
 
-                    // Check if our snapshot is considered valid and/or the tile we just got doesn't
-                    // match the one we had prior.
-                    if (!hasSnapshot || checkInvalidSnapshot())
-                    {
-                        System.out.println("Taking snapshot");
+    private void takeSnapshot()
+    {
+        // grab TileEntity at front face
+        TileEntity tile = getTileAtFrontFace();
+        
+        // Verify that the tile we got back exists and implements IInventory            
+        if (tile != null && tile instanceof IInventory)
+        {
+            // Code here deals with the adjacent inventory
+            System.out.println("Chest Found!");
 
-                        // Take a snapshot of the remote inventory, set the lastEntity to the current
-                        // remote entity and set the snapshot flag to true
-                        clearSnapshot();
-                        remoteSnapshot = takeSnapShot(tile);
-                        lastTileEntity = tile;
-                        hasSnapshot = true;
-                    }
-                    else
-                    {
-                        // If we've made it here, it's time to stock the remote inventory
-                        stockInventory((IInventory)tile);
-                    }
-                }
-                else
+            // Check if our snapshot is considered valid and/or the tile we just got doesn't
+            // match the one we had prior.
+            if (!hasSnapshot || checkInvalidSnapshot())
+            {
+                System.out.println("Taking snapshot");
+
+                // Take a snapshot of the remote inventory, set the lastEntity to the current
+                // remote entity and set the snapshot flag to true
+                clearSnapshot();
+                remoteSnapshot = takeSnapshotOf(tile);
+                lastTileEntity = tile;
+                hasSnapshot = true;
+            }
+            else
+            {
+                // If we've made it here, it's time to stock the remote inventory
+                stockInventory((IInventory)tile);
+            }
+        }
+        else
+        {
+            /*
+             * This code deals with us not getting a valid tile entity from
+             * the getTileAtFrontFace code. This can happen because there is no
+             * detected tileentity (returned false), or the tileentity that was returned
+             * does not implement IInventory. We will clear the last snapshot.
+             */
+            clearSnapshot();
+            System.out.println("entityUpdate snapshot clear");
+        }
+    }
+
+    public ItemStack[] takeSnapshotOf(TileEntity tile)
+    {
+        /*
+         * This function will take a snapshot the IInventory of the TileEntity passed to it
+         * and return it as a new ItemStack. This will be a copy of the remote inventory as
+         * it looks when this function is called.
+         *
+         * It will check that the TileEntity passed to it actually implements IInventory and
+         * return null if it does not.
+         */
+        if (!(tile instanceof IInventory))
+        {
+            return null;
+        }
+
+        // Get number of slots in the remote inventory
+        this.remoteNumSlots = ((IInventory)tile).getSizeInventory();
+        ItemStack tempCopy;
+        ItemStack returnCopy[] = new ItemStack[this.remoteNumSlots];
+
+        // Iterate through remote slots and make a copy of it
+        for (int i = 0; i < this.remoteNumSlots; i++)
+        {
+            tempCopy = ((IInventory)tile).getStackInSlot(i);
+
+            if (tempCopy == null)
+            {
+                returnCopy[i] = null;
+            }
+            else
+            {
+                returnCopy[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
+
+                if (tempCopy.stackTagCompound != null)
                 {
-                    /*
-                     * This code deals with us not getting a valid tile entity from
-                     * the getTileAtFrontFace code. This can happen because there is no
-                     * detected tileentity (returned false), or the tileentity that was returned
-                     * does not implement IInventory. We will clear the last snapshot.
-                     */
-                    clearSnapshot();
-                    System.out.println("entityUpdate snapshot clear");
+                    returnCopy[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
                 }
             }
         }
+        /*
+         *  get remote entity class name and store it as targetTile, which also ends up being stored in our
+         *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
+         */
+        this.targetTileName = tile.getClass().getName();
+        return returnCopy;
     }
 }
