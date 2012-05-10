@@ -136,6 +136,12 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         return new TileEntityInventoryStocker();
     }
 
+    @Override
+    public boolean canProvidePower()
+    {
+        return true;
+    }
+
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
      * their own) Args: x, y, z, neighbor blockID
