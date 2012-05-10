@@ -12,10 +12,6 @@ public class GuiInventoryStocker extends GuiContainer
     // last button clicked
     private GuiButton selectedButton = null;
     
-    //making these class wide
-    int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
-    int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
-
     // define button class wide
     private GuiButton button = null;
 
@@ -64,6 +60,8 @@ public class GuiInventoryStocker extends GuiContainer
         int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiTex);
+        int XOffset = (this.width - this.xSize) / 2; // X offset = Half the difference between screen width and GUI width
+        int YOffset = (this.height - this.ySize) / 2; // Y offset = half the difference between screen height and GUI height
         this.drawTexturedModalRect(XOffset, YOffset, 0, 0, this.xSize, this.ySize);
 
         //GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
