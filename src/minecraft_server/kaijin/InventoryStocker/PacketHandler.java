@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
+import kaijin.InventoryStocker.*;
 
 public class PacketHandler implements IPacketHandler
 {
@@ -16,16 +17,12 @@ public class PacketHandler implements IPacketHandler
         try
         {
             // NetClientHandler net = (NetClientHandler)network.getNetHandler();
-            int packetID = stream.read();
 
-            if (packetID == 0) // Figure out what ID or IDs to use, not to mention how to set up a packet properly
-            {
-                // TODO Auto-generated method stub
-            }
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
+        ((NetServerHandler)network.getNetHandler()).getPlayerEntity();
     }
 }

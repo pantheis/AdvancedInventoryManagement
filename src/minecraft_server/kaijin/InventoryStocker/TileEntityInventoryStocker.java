@@ -14,9 +14,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private boolean previousPoweredState = false;
     private boolean hasSnapshot = false;
     private boolean tileLoaded = false;
+    private boolean guiTakeSnapshot = false;
 
     //other privates
     private TileEntity lastTileEntity = null;
+    public TileEntity tileFrontFace = null;
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
 
@@ -36,7 +38,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         return hasSnapshot;
     }
-   
+    
+    public void guiTakeSnapshot()
+    {
+        guiTakeSnapshot = true;
+    }
+    
     public int getStartInventorySide(int i)
     {
         // Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -110,7 +117,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 x++;
                 break;
         }
-
         return worldObj.getBlockTileEntity(x, y, z);
     }
 
@@ -353,12 +359,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public ItemStack[] takeSnapShot(TileEntity tile)
     {
         /*
-         * This function will take a snapshot the IInventory of the TileEntity passed to it
-         * and return it as a new ItemStack. This will be a copy of the remote inventory as
-         * it looks when this function is called.
+         * This function will take a snapshot the IInventory of the TileEntity passed to it.
+         * This will be a copy of the remote inventory as it looks when this function is called.
          *
          * It will check that the TileEntity passed to it actually implements IInventory and
-         * return null if it does not.
+         * return doing false if it does not.
+         * 
+         * Will return true if it successfully took a snapshot
          */
         if (!(tile instanceof IInventory))
         {
@@ -649,6 +656,25 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 this.onLoad();
             }
 
+            /*
+             * Check if the GUI is asking us to take a snapshot, if so, clear the existing snapshot
+             * and take a new one
+             */
+            if (guiTakeSnapshot)
+            {
+                System.out.println("GUI take snapshot request");
+                TileEntity tile = getTileAtFrontFace();
+                if (tile != null && tile instanceof IInventory)
+                {
+                    System.out.println("GUI: No snapshot-taking snapshot");
+                    clearSnapshot();
+                    remoteSnapshot = takeSnapShot(tile);
+                    lastTileEntity = tile;
+                    hasSnapshot = true;
+                    guiTakeSnapshot = false;
+                }
+            }
+            
             // Check if one of the blocks next to us or us is getting power from a neighboring block. 
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
@@ -657,11 +683,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 previousPoweredState = false;
             }
-
+            
             /* If we are powered and the previous power state is false, it's time to go to
              * work. We test it this way so that we only trigger our work state once
              * per redstone power state cycle (pulse).
              */
+            
             if (isPowered && !previousPoweredState)
             {
                 // We're powered now, set the state flag to true
@@ -681,14 +708,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     // match the one we had prior.
                     if (!hasSnapshot || checkInvalidSnapshot())
                     {
-                        System.out.println("Taking snapshot");
-
-                        // Take a snapshot of the remote inventory, set the lastEntity to the current
-                        // remote entity and set the snapshot flag to true
+                        System.out.println("Redstone pulse: No snapshot-taking snapshot");
                         clearSnapshot();
                         remoteSnapshot = takeSnapShot(tile);
                         lastTileEntity = tile;
                         hasSnapshot = true;
+
                     }
                     else
                     {

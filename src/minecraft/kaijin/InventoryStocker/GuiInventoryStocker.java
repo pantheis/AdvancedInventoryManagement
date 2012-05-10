@@ -89,6 +89,7 @@ public class GuiInventoryStocker extends GuiContainer
         }
         super.mouseClicked(par1, par2, par3);
     }
+  
     
     /*
      * This function actually handles what happens when you click on a button, by ID
@@ -111,9 +112,8 @@ public class GuiInventoryStocker extends GuiContainer
             }
             else
             {
-                System.out.println("Button Pressed, take snapshot here");
-                this.tile.takeSnapshot();
-                
+                System.out.println("Button Pressed, taking snapshot");
+                this.tile.guiTakeSnapshot();
             }
         }
     }
