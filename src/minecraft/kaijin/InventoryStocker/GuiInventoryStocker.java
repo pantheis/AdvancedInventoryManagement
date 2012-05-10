@@ -31,7 +31,7 @@ public class GuiInventoryStocker extends GuiContainer
     protected void drawGuiContainerForegroundLayer()
     {
         this.fontRenderer.drawString("Input", 8, 6, 4210752);
-        this.fontRenderer.drawString(this.tile.getInvName(), 70, 6, 4210752);
+        this.fontRenderer.drawString(this.tile.getInvName(), 68, 6, 4210752);
         this.fontRenderer.drawString("Output", 116, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
         
