@@ -139,7 +139,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     @Override
     public boolean canProvidePower()
     {
-        return true;
+        return true; // Will appear to connect to RedPower wires and such.
     }
 
     /**

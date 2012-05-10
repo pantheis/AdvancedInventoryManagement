@@ -22,7 +22,7 @@ public class GuiInventoryStocker extends GuiContainer
         this.tile = tileentityinventorystocker;
         xSize = 176;
         ySize = 168;
-        button = new GuiButton(0, 0, 0, 40, 16, "");
+        button = new GuiButton(0, 0, 0, 40, 20, "");
     }
 
     /**
@@ -44,18 +44,18 @@ public class GuiInventoryStocker extends GuiContainer
          */
         if (this.tile.validSnapshot())
         {
-            this.fontRenderer.drawString("Ready", 70, 20, 0x0000FF);
+            this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
         }
         else
         {
-            this.fontRenderer.drawString("Not Ready", 65, 20, 0xFF0000);
+            this.fontRenderer.drawString("Not Ready", 63, 20, 0xFF0000);
         }
     }
 
     /**
      * Draw the background layer for the GuiContainer (everything behind the items)
      */
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
     {
         int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -69,10 +69,9 @@ public class GuiInventoryStocker extends GuiContainer
         //defining button below, setting it look enabled and drawing it
         //If you make changes to the button state, you must call .drawButton(mc, XOffset, YOffset)
         button.xPosition = (this.width / 2) - 20;
-        button.yPosition = YOffset + 53;
-        button.enabled = true;
+        button.yPosition = YOffset + 43;
         button.displayString = this.tile.validSnapshot() ? "Clear" : "Scan";
-        button.drawButton(mc, XOffset, YOffset);
+        button.drawButton(mc, mouseX, mouseY);
     }
 
     //Copied mouseClicked function to get our button to make the "click" noise when clicked
@@ -107,7 +106,7 @@ public class GuiInventoryStocker extends GuiContainer
         {
             if (this.tile.validSnapshot())
             {
-                System.out.println("Button Pressed, invalidating snapshot");
+                System.out.println("Button Pressed, clearing snapshot");
                 this.tile.guiClearSnapshot();
             }
             else
