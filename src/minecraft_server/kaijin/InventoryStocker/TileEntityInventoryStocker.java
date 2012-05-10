@@ -34,6 +34,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
+    public boolean setSnapshotState(boolean state)
+    {
+        hasSnapshot = state;
+        return hasSnapshot;
+    }
+    
     public boolean validSnapshot()
     {
         return hasSnapshot;
@@ -41,9 +47,37 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     
     public void guiTakeSnapshot()
     {
-        guiTakeSnapshot = true;
+        if(!Utils.isClient(worldObj))
+        {
+            guiTakeSnapshot = true;
+        }
+        else
+        {
+            //send packet to server asking for it to take a snapshot            
+        }
+    }
+
+    public void guiClearSnapshot()
+    {
+        if(!Utils.isClient(worldObj))
+        {
+            clearSnapshot();
+        }
+        else
+        {
+            //send packet to server asking for it to clear the snapshot
+        }
     }
     
+    public void clearSnapshot()
+    {
+        lastTileEntity = null;
+        hasSnapshot = false;
+        targetTileName = "none";
+        remoteSnapshot = null;
+        remoteNumSlots = 0;
+    }
+
     public int getStartInventorySide(int i)
     {
         // Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -418,63 +452,62 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     protected void stockInventory(IInventory tile)
     {
-        /*
-         * outline what needs to happen here
-         */
-        // boolean inputIsEmpty = inputGridIsEmpty();
-
         int startSlot = 0;
         int endSlot = startSlot + tile.getSizeInventory();
-        
-        for (int slot = startSlot; slot < endSlot; slot++)
-        {
-            ItemStack i = tile.getStackInSlot(slot);
-            ItemStack s = remoteSnapshot[slot];
-            if (i == null)
-            {
-                if (s == null)
-                    continue; // Slot is and should be empty. Next!
 
-                // Slot is empty but shouldn't be. Add what belongs there.
-                addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
-            }
-            else
+        boolean workDone;
+        // Now makes two passes through the target and snapshot to help with 'item in wrong slot' adjustments
+        do
+        {
+            workDone = false;
+            for (int slot = startSlot; slot < endSlot; slot++)
             {
-                // Slot is occupied. Figure out if contents belong there.
-                if (s == null)
+                ItemStack i = tile.getStackInSlot(slot);
+                ItemStack s = remoteSnapshot[slot];
+                if (i == null)
                 {
-                    // Nope! Slot should be empty. Need to remove this.
-                    // Call helper function to do that here, and then
-                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
-                    continue; // move on to next slot!
-                }
-                
-                // Compare contents of slot between remote inventory and snapshot.
-                if (checkItemTypesMatch(i, s))
-                {
-                    // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
-                    int amtNeeded = remoteSnapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
-                    if (amtNeeded > 0)
-                    {
-                        addItemToRemote(slot, tile, amtNeeded);
-                    }
-                    else if (amtNeeded < 0)
-                    {
-                        removeItemFromRemote(slot, tile, -amtNeeded);
-                    }
-                    // else the size is already the same and we've nothing to do. Hooray!
+                    if (s == null)
+                        continue; // Slot is and should be empty. Next!
+    
+                    // Slot is empty but shouldn't be. Add what belongs there.
+                    workDone = addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
                 }
                 else
                 {
-                    // Wrong item type in slot! Try to remove what doesn't belong and add what does.
-                    removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
-                    if (tile.getStackInSlot(slot) == null)
-                        addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
-                }
-
-                
-            }
-        }
+                    // Slot is occupied. Figure out if contents belong there.
+                    if (s == null)
+                    {
+                        // Nope! Slot should be empty. Need to remove this.
+                        // Call helper function to do that here, and then
+                        workDone = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+                        continue; // move on to next slot!
+                    }
+                    
+                    // Compare contents of slot between remote inventory and snapshot.
+                    if (checkItemTypesMatch(i, s))
+                    {
+                        // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
+                        int amtNeeded = remoteSnapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
+                        if (amtNeeded > 0)
+                        {
+                            workDone = addItemToRemote(slot, tile, amtNeeded);
+                        }
+                        else if (amtNeeded < 0)
+                        {
+                            workDone = removeItemFromRemote(slot, tile, -amtNeeded);
+                        }
+                        // else the size is already the same and we've nothing to do. Hooray!
+                    }
+                    else
+                    {
+                        // Wrong item type in slot! Try to remove what doesn't belong and add what does.
+                        workDone = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+                        if (tile.getStackInSlot(slot) == null)
+                            workDone = addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
+                    }
+                } // else
+            } // for slot
+        } while (workDone);
     }
 
     // Test if two item stacks' types match, while ignoring damage level if needed.  
@@ -498,16 +531,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
     
-    protected void removeItemFromRemote(int slot, IInventory remote, int amount)
+    protected boolean removeItemFromRemote(int slot, IInventory remote, int amount)
     {
         // Find room in output grid
         // Use checkItemTypesMatch on any existing contents to see if the new output will stack
         // If all existing ItemStacks become full, and there is no room left for a new stack,
         // leave the untransferred remainder in the remote inventory.
         
+        boolean partialMove = false;
         ItemStack remoteStack = remote.getStackInSlot(slot);
         if (remoteStack == null)
-            return;
+            return false;
         int max = remoteStack.getMaxStackSize();
         int amtLeft = amount;
         if (amtLeft > max)
@@ -531,7 +565,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     remoteStack.stackSize -= amtLeft;
                     if (remoteStack.stackSize <= 0)
                         remote.setInventorySlotContents(slot, null);
-                    return;
+                    return true;
                 }
                 else
                 {
@@ -539,6 +573,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     contents[i].stackSize += room;
                     remoteStack.stackSize -= room;
                     amtLeft -= room;
+                    partialMove = true;
                 }
             }
         }
@@ -548,11 +583,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             // Not enough room in existing stacks, so transfer whatever's left to a new one.
             contents[delayedDestination] = remoteStack;
             remote.setInventorySlotContents(slot, null);
+            return true;
         }
+        return partialMove;
     }
 
-    protected void addItemToRemote(int slot, IInventory remote, int amount)
+    protected boolean addItemToRemote(int slot, IInventory remote, int amount)
     {
+        boolean partialMove = false;
         int max = remoteSnapshot[slot].getMaxStackSize();
         int amtNeeded = amount;
         if (amtNeeded > max)
@@ -562,32 +600,50 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             if (contents[i] != null && checkItemTypesMatch(contents[i], remoteSnapshot[slot]))
             {
-                if (contents[i].stackSize > amtNeeded)
+                if (remote.getStackInSlot(slot) == null)
                 {
-                    // Found enough to meet the quota, so shift it on over.
-                    if (remote.getStackInSlot(slot) == null)
+                    // It's currently empty, so toss what we can into remote slot.
+                    if (contents[i].stackSize > amtNeeded)
                     {
-                        // It's currently empty, so split stack and move new stack of amtNeeded into remote slot.
+                        // Found more than enough to meet the quota, so shift it on over.
                         ItemStack extra = contents[i].splitStack(amtNeeded);
                         remote.setInventorySlotContents(slot, extra);
+                        return true;
                     }
                     else
                     {
-                        // There's already some present, so transfer the amount from one stack to the other.
-                        contents[i].stackSize -= amtNeeded;
-                        remote.getStackInSlot(slot).stackSize += amtNeeded;
+                        amtNeeded -= contents[i].stackSize;
+                        remote.setInventorySlotContents(slot, contents[i]);
+                        contents[i] = null;
+                        if (amtNeeded <= 0)
+                            return true;
+                        partialMove = true;
                     }
-                    return;
                 }
                 else
                 {
-                    // Decrease amtNeeded by stackSize, move stack into remote slot, and continue searching.
-                    amtNeeded -= contents[i].stackSize;
-                    remote.setInventorySlotContents(slot, contents[i]);
-                    contents[i] = null;
-                }
-            }
-        }
+                    // There's already some present, so transfer from one stack to the other.
+                    if (contents[i].stackSize > amtNeeded)
+                    {
+                        // More than enough here, just add and subtract.
+                        contents[i].stackSize -= amtNeeded;
+                        remote.getStackInSlot(slot).stackSize += amtNeeded;
+                        return true;
+                    }
+                    else
+                    {
+                        // This stack matches or is smaller than what we need. Consume it entirely.
+                        amtNeeded -= contents[i].stackSize;
+                        remote.getStackInSlot(slot).stackSize += contents[i].stackSize;
+                        contents[i] = null;
+                        if (amtNeeded <= 0)
+                            return true;
+                        partialMove = true;
+                    }
+                } // else
+            } // if
+        } // for
+        return partialMove;
     }
 
     public boolean checkInvalidSnapshot()
@@ -632,15 +688,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             if (checkInvalidSnapshot())
                 clearSnapshot();
         }
-    }
-    
-    public void clearSnapshot()
-    {
-        lastTileEntity = null;
-        hasSnapshot = false;
-        targetTileName = "none";
-        remoteSnapshot = null;
-        remoteNumSlots = 0;
     }
     
     @Override

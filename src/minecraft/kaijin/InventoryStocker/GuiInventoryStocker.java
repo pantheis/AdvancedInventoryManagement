@@ -108,7 +108,7 @@ public class GuiInventoryStocker extends GuiContainer
             if (this.tile.validSnapshot())
             {
                 System.out.println("Button Pressed, invalidating snapshot");
-                this.tile.clearSnapshot();
+                this.tile.guiClearSnapshot();
             }
             else
             {

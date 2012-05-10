@@ -9,28 +9,6 @@ import kaijin.InventoryStocker.*;
 
 public class PacketHandler implements IPacketHandler
 {
-    /*
-     * example code to reference
-    @Override
-    public void onPacketData(NetworkManager network, String channel, byte[] bytes)
-    {
-            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(bytes));
-            int coords[] = new int[3];
-            try
-            {
-                    for(int i = 0; i < 3; i++)
-                    {
-                            coords[i] = dataStream.readInt();
-                    }
-            }
-            catch(IOException e)
-            {
-                    e.printStackTrace();
-            }
-            causeFuseSoundAt(ModLoader.getMinecraftInstance().theWorld, coords[0], coords[1], coords[2]);
-    }
-    */
-    
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
     {
@@ -55,7 +33,18 @@ public class PacketHandler implements IPacketHandler
             int x = packet[1]; int y = packet[2]; int z = packet[3]; boolean isValid = (packet[4] == 0 ? false : true);
             TileEntity tile = ModLoader.getMinecraftInstance().theWorld.getBlockTileEntity(x, y, z);
             //check if the tile we're looking at is an Inventory Stocker tile
-            //call a function on that tile to let it know if it has a valid state server side or not
+            if (tile instanceof TileEntityInventoryStocker)
+            {
+                //call a function on that tile to let it know if it has a valid state server side or not
+                if (isValid)
+                {
+                    ((TileEntityInventoryStocker)tile).setSnapshotState(true);
+                }
+                else
+                {
+                    ((TileEntityInventoryStocker)tile).setSnapshotState(false);
+                }
+            }
         }
     }
 }
