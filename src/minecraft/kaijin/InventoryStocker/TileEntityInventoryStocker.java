@@ -32,6 +32,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
+    public boolean validSnapshot()
+    {
+        return hasSnapshot;
+    }
+    
     public int getStartInventorySide(int i)
     {
         // Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
