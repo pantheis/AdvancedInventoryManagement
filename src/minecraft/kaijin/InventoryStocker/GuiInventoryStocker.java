@@ -89,6 +89,8 @@ public class GuiInventoryStocker extends GuiContainer
                 this.actionPerformed(button);
             }
         }
+        super.mouseClicked(par1, par2, par3);
+
     }
     
     /*
