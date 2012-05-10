@@ -34,10 +34,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
-    public boolean setSnapshotState(boolean state)
+    public void setSnapshotState(boolean state)
     {
-        hasSnapshot = state;
-        return hasSnapshot;
+        if(!Utils.isClient(worldObj))
+        {
+            this.hasSnapshot = state;
+        }
+        else
+        {
+            //send packet to server asking for it to take a snapshot
+        }
     }
     
     public boolean validSnapshot()
