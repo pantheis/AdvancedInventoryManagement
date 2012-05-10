@@ -34,6 +34,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
+    public void setSnapshotState(boolean state)
+    {
+        if(!Utils.isClient(worldObj))
+        {
+            this.hasSnapshot = state;
+        }
+        else
+        {
+            //send packet to server asking for it to take a snapshot
+        }
+    }
+    
     public boolean validSnapshot()
     {
         return hasSnapshot;
@@ -41,9 +53,37 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     
     public void guiTakeSnapshot()
     {
-        guiTakeSnapshot = true;
+        if(!Utils.isClient(worldObj))
+        {
+            guiTakeSnapshot = true;
+        }
+        else
+        {
+            //send packet to server asking for it to take a snapshot            
+        }
+    }
+
+    public void guiClearSnapshot()
+    {
+        if(!Utils.isClient(worldObj))
+        {
+            clearSnapshot();
+        }
+        else
+        {
+            //send packet to server asking for it to clear the snapshot
+        }
     }
     
+    public void clearSnapshot()
+    {
+        lastTileEntity = null;
+        hasSnapshot = false;
+        targetTileName = "none";
+        remoteSnapshot = null;
+        remoteNumSlots = 0;
+    }
+
     public int getStartInventorySide(int i)
     {
         // Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -654,15 +694,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             if (checkInvalidSnapshot())
                 clearSnapshot();
         }
-    }
-    
-    public void clearSnapshot()
-    {
-        lastTileEntity = null;
-        hasSnapshot = false;
-        targetTileName = "none";
-        remoteSnapshot = null;
-        remoteNumSlots = 0;
     }
     
     @Override
