@@ -715,6 +715,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
              */
             if (guiTakeSnapshot)
             {
+                guiTakeSnapshot = false;
                 System.out.println("GUI take snapshot request");
                 TileEntity tile = getTileAtFrontFace();
                 if (tile != null && tile instanceof IInventory)
@@ -724,12 +725,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     remoteSnapshot = takeSnapShot(tile);
                     lastTileEntity = tile;
                     hasSnapshot = true;
-                    guiTakeSnapshot = false;
-                }
-                else
-                {
-                    //no valid tile, abort scan request
-                    guiTakeSnapshot = false;
                 }
             }
             
