@@ -44,12 +44,12 @@ public class PacketHandler implements IPacketHandler
                 if (snapShot)
                 {
                     //take a snapshot request from client
-                    ((TileEntityInventoryStocker)tile).setSnapshotState(true);
+                    ((TileEntityInventoryStocker)tile).setSnapshotStateServer(true);
                 }
                 else
                 {
                     //clear a snapshot request from client
-                    ((TileEntityInventoryStocker)tile).setSnapshotState(false);
+                    ((TileEntityInventoryStocker)tile).setSnapshotStateServer(false);
                 }
             }
         }

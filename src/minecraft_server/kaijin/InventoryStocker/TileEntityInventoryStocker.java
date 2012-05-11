@@ -46,6 +46,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
     
+    public void setSnapshotStateServer(boolean state)
+    {
+            this.hasSnapshot = state;
+    }
+    
     public boolean validSnapshot()
     {
         return hasSnapshot;

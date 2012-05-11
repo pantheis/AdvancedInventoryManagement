@@ -1,5 +1,7 @@
 package kaijin.InventoryStocker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
@@ -36,13 +38,24 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void setSnapshotState(boolean state)
     {
-        if(!Utils.isClient(worldObj))
+        if(Utils.isClient(worldObj))
         {
             this.hasSnapshot = state;
         }
-        else
+    }
+    
+    public void setSnapshotStateServer(boolean state)
+    {
+        if(!Utils.isClient(worldObj))
         {
-            //send packet to server asking for it to take a snapshot
+            if(state)
+            {
+                guiTakeSnapshot = true;
+            }
+            else if(!state)
+            {
+                clearSnapshot();
+            }
         }
     }
     
