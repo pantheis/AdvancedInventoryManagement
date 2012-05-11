@@ -53,22 +53,22 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         switch (side)
         {
             case 0: // Front
-                return 1;
+                return 2;
 
             case 1: // Back
-                return 0;
-
-            case 2:
-            case 3:
+            case 2: // Top
+            case 3: // Bottom
                 if (dir < 2)
                 {
+                    // use side texture due to vertical orientation
                     return 16;
                 }
 
-                return 18;
+                // use top and bottom
+                return 16;
 
-            case 4:
-            case 5:
+            case 4: // Left side
+            case 5: // Right side
             default:
                 return 16;
         }
