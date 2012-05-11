@@ -726,6 +726,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     hasSnapshot = true;
                     guiTakeSnapshot = false;
                 }
+                else
+                {
+                    //no valid tile, abort scan request
+                    guiTakeSnapshot = false;
+                }
             }
             
             // Check if one of the blocks next to us or us is getting power from a neighboring block. 
