@@ -1,5 +1,9 @@
 package kaijin.InventoryStocker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
@@ -34,21 +38,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
-    public void setSnapshotState(boolean state)
+    public void recvSnapshotRequestClient(boolean state)
     {
         if(!Utils.isClient(worldObj))
         {
-            this.hasSnapshot = state;
+            if(state)
+            {
+                guiTakeSnapshot = true;
+            }
+            else if(!state)
+            {
+                clearSnapshot();
+            }
         }
-        else
-        {
-            //send packet to server asking for it to take a snapshot
-        }
-    }
-    
-    public void setSnapshotStateServer(boolean state)
-    {
-            this.hasSnapshot = state;
     }
     
     public boolean validSnapshot()
@@ -56,30 +58,41 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return hasSnapshot;
     }
     
-    public void guiTakeSnapshot()
+    private void sendSnapshotStateClient(boolean state)
     {
-        if(!Utils.isClient(worldObj))
+        /*
+         * network code goes here to send snapshot state to all clients
+         * in the has GUI open list
+         */
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try
         {
-            guiTakeSnapshot = true;
+            data.writeInt(0);
+            data.writeInt(this.xCoord);
+            data.writeInt(this.yCoord);
+            data.writeInt(this.zCoord);
+            data.writeBoolean(state);
         }
-        else
+        catch(IOException e)
         {
-            //send packet to server asking for it to take a snapshot            
+                e.printStackTrace();
         }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.data = bytes.toByteArray();
+        packet.length = packet.data.length;
+        
+        /*
+         * change the following packet to send to all players with the GUI for this tileentity open
+         * instead of to the entire server
+         */
+        
+
+        ModLoader.getMinecraftServerInstance().configManager.sendPacketToAllPlayers(packet);
     }
 
-    public void guiClearSnapshot()
-    {
-        if(!Utils.isClient(worldObj))
-        {
-            clearSnapshot();
-        }
-        else
-        {
-            //send packet to server asking for it to clear the snapshot
-        }
-    }
-    
     public void clearSnapshot()
     {
         lastTileEntity = null;
@@ -87,6 +100,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         targetTileName = "none";
         remoteSnapshot = null;
         remoteNumSlots = 0;
+        sendSnapshotStateClient(false);
     }
 
     public int getStartInventorySide(int i)
@@ -730,6 +744,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     lastTileEntity = tile;
                     hasSnapshot = true;
                     guiTakeSnapshot = false;
+                    /*
+                     * server has no GUI, but this code works for our purposes.
+                     * We need to send the successful snapshot state flag here
+                     * to all clients that have the GUI open using the function
+                     * below. Setting parameter to true will set a valid snapshot,
+                     * setting it to false will send an invalid snapshot
+                     */
+                    sendSnapshotStateClient(true);
+                    
                 }
                 else
                 {

@@ -2,6 +2,8 @@ package kaijin.InventoryStocker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
 import kaijin.InventoryStocker.*;
@@ -47,26 +49,39 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
     
-    public void setSnapshotStateServer(boolean state)
-    {
-        if(!Utils.isClient(worldObj))
-        {
-            if(state)
-            {
-                guiTakeSnapshot = true;
-            }
-            else if(!state)
-            {
-                clearSnapshot();
-            }
-        }
-    }
-    
     public boolean validSnapshot()
     {
         return hasSnapshot;
     }
-    
+
+    private void sendSnapshotRequestServer(boolean state)
+    {
+        /*
+         * network code goes here to send snapshot state to server
+         */
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try
+        {
+            data.writeInt(0);
+            data.writeInt(this.xCoord);
+            data.writeInt(this.yCoord);
+            data.writeInt(this.zCoord);
+            data.writeBoolean(state);
+        }
+        catch(IOException e)
+        {
+                e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.data = bytes.toByteArray();
+        packet.length = packet.data.length;
+
+        ModLoader.sendPacket(packet);
+    }
+
     public void guiTakeSnapshot()
     {
         if(!Utils.isClient(worldObj))
@@ -75,7 +90,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
         else
         {
-            //send packet to server asking for it to take a snapshot            
+            sendSnapshotRequestServer(true);
         }
     }
 
@@ -87,7 +102,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
         else
         {
-            //send packet to server asking for it to clear the snapshot
+            sendSnapshotRequestServer(false);
         }
     }
     
