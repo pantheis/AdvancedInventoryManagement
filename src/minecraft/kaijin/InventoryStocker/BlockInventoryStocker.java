@@ -28,7 +28,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         switch (i)
         {
             case 0: // Bottom
-                return 0;
+                return 16;
 
             case 1: // Top
                 return 0;
@@ -44,37 +44,30 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int m)
+    public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
     {
+        int m = blocks.getBlockMetadata(x, y, z);
         int dir = m & 7;
         int side = Utils.lookupRotatedSide(i, dir);
         int powered = (m & 8) >> 3;
 
         // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-        switch (side)
+        if (side == 0) // Front
         {
-            case 0: // Front
-                int time = (int)ModLoader.getMinecraftInstance().theWorld.getWorldTime();
-                return 2 + powered * ((time & 4) >> 2) * (((time & 8) >> 3) + 1); // But it doesn't update the texture every frame or tick! :(
-
-            case 1: // Back
-                return 32 + powered;
-            case 2: // Top
-            case 3: // Bottom
-                if (dir < 2)
-                {
-                    // use side texture due to vertical orientation
-                    return 16 + powered;
-                }
-
-                // use top and bottom
-                return 16 + powered;
-
-            case 4: // Left side
-            case 5: // Right side
-            default:
-                return 16 + powered;
+            World world = ModLoader.getMinecraftInstance().theWorld;
+            int time = (int)world.getWorldTime();
+            return 2 + powered * (((time >> 2) & 3) + 1);
         }
+        
+        TileEntity tile = blocks.getBlockTileEntity(x, y, z);
+        int open = tile instanceof TileEntityInventoryStocker ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
+
+        if (side == 1) // Back
+        {
+            return 32 + powered + open;
+        }
+
+        return 16 + powered + open; // Top, Bottom, Left, Right
     }
 
     private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
