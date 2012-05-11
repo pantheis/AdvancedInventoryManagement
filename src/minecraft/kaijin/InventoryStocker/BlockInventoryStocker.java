@@ -48,29 +48,31 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     {
         int dir = m & 7;
         int side = Utils.lookupRotatedSide(i, dir);
-        // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
+        int powered = (m & 8) >> 3;
 
+        // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
         switch (side)
         {
             case 0: // Front
                 return 2;
 
             case 1: // Back
+                return 32 + powered;
             case 2: // Top
             case 3: // Bottom
                 if (dir < 2)
                 {
                     // use side texture due to vertical orientation
-                    return 16;
+                    return 16 + powered;
                 }
 
                 // use top and bottom
-                return 16;
+                return 16 + powered;
 
             case 4: // Left side
             case 5: // Right side
             default:
-                return 16;
+                return 16 + powered;
         }
     }
 

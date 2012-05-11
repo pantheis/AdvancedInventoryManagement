@@ -728,6 +728,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
              */
             if (guiTakeSnapshot)
             {
+                guiTakeSnapshot = false;
                 System.out.println("GUI take snapshot request");
                 TileEntity tile = getTileAtFrontFace();
                 if (tile != null && tile instanceof IInventory)
@@ -737,22 +738,22 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     remoteSnapshot = takeSnapShot(tile);
                     lastTileEntity = tile;
                     hasSnapshot = true;
-                    guiTakeSnapshot = false;
-                }
-                else
-                {
-                    //no valid tile, abort scan request
-                    guiTakeSnapshot = false;
                 }
             }
             
             // Check if one of the blocks next to us or us is getting power from a neighboring block. 
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-
             // If we're not powered, set the previousPoweredState to false
-            if (!isPowered)
+            if (!isPowered && previousPoweredState)
             {
+                // Lost power.
                 previousPoweredState = false;
+
+                // Shut off glowing light textures.
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta &= 7; // Clear bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                
             }
             
             /* If we are powered and the previous power state is false, it's time to go to
@@ -764,7 +765,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 // We're powered now, set the state flag to true
                 previousPoweredState = true;
-                System.out.println("Powered");
+                
+                // Turn on das blinkenlights!
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta |= 8; // Set bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
 
                 // grab TileEntity at front face
                 TileEntity tile = getTileAtFrontFace();
