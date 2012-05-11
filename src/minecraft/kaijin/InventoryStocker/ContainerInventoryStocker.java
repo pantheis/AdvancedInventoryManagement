@@ -7,9 +7,9 @@ import kaijin.InventoryStocker.*;
 public class ContainerInventoryStocker extends Container
 {
     private IInventory playerinventory;
-    private IInventory inventorystockerinventory;
+    private TileEntityInventoryStocker inventorystockerinventory;
 
-    public ContainerInventoryStocker(IInventory playerinventory, IInventory inventorystockerinventory)
+    public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory)
     {
         this.playerinventory = playerinventory;
         this.inventorystockerinventory = inventorystockerinventory;
@@ -85,6 +85,7 @@ public class ContainerInventoryStocker extends Container
 
         return var2;
     }
+    
     /**
      * Callback for when the crafting gui is closed.
      */

@@ -3,6 +3,7 @@ package kaijin.InventoryStocker;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
@@ -25,6 +26,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public TileEntity tileFrontFace = null;
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
+    List remoteUsers = null;
 
     @Override
     public boolean canUpdate()
@@ -38,6 +40,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         this.clearSnapshot();
     }
 
+    public void entityOpenList(List crafters)
+    {
+        this.remoteUsers = crafters;
+    }
+    
     public void recvSnapshotRequestClient(boolean state)
     {
         if(!Utils.isClient(worldObj))
@@ -58,7 +65,41 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return hasSnapshot;
     }
     
-    private void sendSnapshotStateClient(boolean state)
+    public void sendSnapshotStateClient(String playerName)
+    {
+        /*
+         * network code goes here to send snapshot state to the client that just opened
+         * the GUI
+         */
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try
+        {
+            data.writeInt(0);
+            data.writeInt(this.xCoord);
+            data.writeInt(this.yCoord);
+            data.writeInt(this.zCoord);
+            data.writeBoolean(this.hasSnapshot);
+        }
+        catch(IOException e)
+        {
+                e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.data = bytes.toByteArray();
+        packet.length = packet.data.length;
+        
+        /*
+         * change the following packet to send to all players with the GUI for this tileentity open
+         * instead of to the entire server
+         */
+        ModLoader.getMinecraftServerInstance().configManager.sendPacketToPlayer(playerName, packet);
+    }
+
+    
+    private void sendSnapshotStateClients(boolean state)
     {
         /*
          * network code goes here to send snapshot state to all clients
@@ -88,9 +129,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          * change the following packet to send to all players with the GUI for this tileentity open
          * instead of to the entire server
          */
-        
-
-        ModLoader.getMinecraftServerInstance().configManager.sendPacketToAllPlayers(packet);
+        if (this.remoteUsers != null)
+        {
+            for (int i = 0; i < this.remoteUsers.size(); ++i)
+            {
+                ModLoader.getMinecraftServerInstance().configManager.sendPacketToPlayer((((EntityPlayerMP)remoteUsers.get(i)).username), packet);
+            }
+        }
+        // ModLoader.getMinecraftServerInstance().configManager.sendPacketToAllPlayers(packet);
     }
 
     public void clearSnapshot()
@@ -100,7 +146,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         targetTileName = "none";
         remoteSnapshot = null;
         remoteNumSlots = 0;
-        sendSnapshotStateClient(false);
+        sendSnapshotStateClients(false);
     }
 
     public int getStartInventorySide(int i)
@@ -751,7 +797,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                      * below. Setting parameter to true will set a valid snapshot,
                      * setting it to false will send an invalid snapshot
                      */
-                    sendSnapshotStateClient(true);
+                    sendSnapshotStateClients(true);
                     
                 }
                 else
