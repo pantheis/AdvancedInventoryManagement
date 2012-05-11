@@ -24,6 +24,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
 
+    private boolean doorState[];
+    
     @Override
     public boolean canUpdate()
     {
@@ -34,6 +36,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         this.contents = new ItemStack [this.getSizeInventory()];
         this.clearSnapshot();
+        doorState = new boolean[6];
     }
 
     public void setSnapshotState(boolean state)
@@ -97,6 +100,74 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         remoteNumSlots = 0;
     }
 
+    public void onUpdate()
+    {
+        if(!Utils.isClient(worldObj))
+        {
+            if (checkInvalidSnapshot())
+                clearSnapshot();
+        }
+        
+        // Check adjacent blocks for tubes or pipes and update list accordingly
+        updateDoorStates();
+    }
+    
+    private void updateDoorStates()
+    {
+        doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
+        doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
+        doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
+        doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
+        doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
+        doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
+    }
+
+    private boolean findTubeOrPipeAt(int x, int y, int z)
+    {
+        /*
+         * RedPower connections:
+         *
+         * Meta  Tile Entity
+         * 8     eloraam.machine.TileTube
+         * 9     eloraam.machine.TileRestrictTube
+         * 10    eloraam.machine.TileRedstoneTube
+         *
+         * All are block class: eloraam.base.BlockMicro
+         * 
+         * Buildcraft connections:
+         *
+         * Block class: buildcraft.transport.BlockGenericPipe
+         *
+         * Unable to distinguish water and power pipes from transport pipes.
+         * Would Buildcraft API help?
+         */
+        int ID = worldObj.getBlockId(x, y, z);
+        if (ID > 0)
+        {
+            String type = Block.blocksList[ID].getClass().toString();
+            if (type.endsWith("GenericPipe"))
+            {
+                // Buildcraft Pipe
+                // Until more specific matching of transport pipes can be performed, simply assume a connection.
+                return true;
+            }
+            else if (type.endsWith("eloraam.base.BlockMicro"))
+            {
+                // RedPower Tube test
+                int m = worldObj.getBlockMetadata(x, y, z);
+
+                return (m >= 8) && (m <= 10);
+            }
+        }
+        return false;
+    }
+
+    public boolean doorOpenOnSide(int i)
+    {
+        // Return whether the neighboring block is a tube or pipe
+        return doorState[i];
+    }
+
     public int getStartInventorySide(int i)
     {
         // Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -127,6 +198,38 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         int dir = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 7;
         return Utils.lookupRotatedSide(side, dir);
+    }
+
+    public int getBlockIDAtFace(int i)
+    {
+        int x = xCoord;
+        int y = yCoord;
+        int z = zCoord;
+
+        switch (i)
+        {
+            case 0:
+                y--;
+                break;
+            case 1:
+                y++;
+                break;
+            case 2:
+                z--;
+                break;
+            case 3:
+                z++;
+                break;
+            case 4:
+                x--;
+                break;
+            case 5:
+                x++;
+                break;
+            default:
+                return 0;
+        }
+        return worldObj.getBlockId(x, y, z);
     }
 
     public TileEntity getTileAtFrontFace()
@@ -169,6 +272,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             case 5:
                 x++;
                 break;
+                
+            default:
+                return null;
         }
         return worldObj.getBlockTileEntity(x, y, z);
     }
@@ -700,15 +806,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
-    public void onUpdate()
-    {
-        if(!Utils.isClient(worldObj))
-        {
-            if (checkInvalidSnapshot())
-                clearSnapshot();
-        }
-    }
-    
     @Override
     public void updateEntity()
     {
