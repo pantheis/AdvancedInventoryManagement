@@ -730,6 +730,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             
             // Check if one of the blocks next to us or us is getting power from a neighboring block. 
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            
+            if (isPowered)
+            {
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+            }
+            
             // If we're not powered, set the previousPoweredState to false
             if (!isPowered && previousPoweredState)
             {
@@ -740,7 +746,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
                 meta &= 7; // Clear bit 4
                 worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
             }
             
             /* If we are powered and the previous power state is false, it's time to go to
@@ -757,6 +763,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
                 meta |= 8; // Set bit 4
                 worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
 
                 // grab TileEntity at front face
                 TileEntity tile = getTileAtFrontFace();

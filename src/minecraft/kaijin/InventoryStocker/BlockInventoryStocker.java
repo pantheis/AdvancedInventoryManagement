@@ -54,7 +54,8 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         switch (side)
         {
             case 0: // Front
-                return 2;
+                int time = (int)ModLoader.getMinecraftInstance().theWorld.getWorldTime();
+                return 2 + powered * ((time & 4) >> 2) * (((time & 8) >> 3) + 1); // But it doesn't update the texture every frame or tick! :(
 
             case 1: // Back
                 return 32 + powered;
