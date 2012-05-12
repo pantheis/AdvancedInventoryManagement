@@ -85,7 +85,7 @@ public class ContainerInventoryStocker extends Container
 
         return var2;
     }
-
+    
     /**
      * Callback for when the crafting gui is closed.
      */

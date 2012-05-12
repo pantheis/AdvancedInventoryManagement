@@ -11,7 +11,7 @@ public class GuiInventoryStocker extends GuiContainer
     TileEntityInventoryStocker tile;
     // last button clicked
     private GuiButton selectedButton = null;
-
+    
     // define button class wide
     private GuiButton button = null;
 
@@ -34,7 +34,7 @@ public class GuiInventoryStocker extends GuiContainer
         this.fontRenderer.drawString(this.tile.getInvName(), 68, 6, 4210752);
         this.fontRenderer.drawString("Output", 116, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-
+        
         //Add snapshot text
         //this.fontRenderer.drawString("Snapshot:", 65, 25, 4210752);
 
@@ -63,6 +63,7 @@ public class GuiInventoryStocker extends GuiContainer
         int XOffset = (width - xSize) / 2; // X offset = Half the difference between screen width and GUI width
         int YOffset = (height - ySize) / 2; // Y offset = half the difference between screen height and GUI height
         this.drawTexturedModalRect(XOffset, YOffset, 0, 0, xSize, ySize);
+
         //GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
         //button definition is the full one with width and height
         //defining button below, setting it look enabled and drawing it
@@ -85,10 +86,10 @@ public class GuiInventoryStocker extends GuiContainer
                 this.actionPerformed(button);
             }
         }
-
         super.mouseClicked(par1, par2, par3);
     }
-
+  
+    
     /*
      * This function actually handles what happens when you click on a button, by ID
      * This needs to be expanded to handle the situation where we are in SMP by sending and receiving
@@ -101,7 +102,6 @@ public class GuiInventoryStocker extends GuiContainer
         {
             return;
         }
-
         if (button.id == 0)
         {
             if (this.tile.validSnapshot())

@@ -144,13 +144,12 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     {
         super.onNeighborBlockChange(world, x, y, z, blockID);
         TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-
         if (tile != null)
         {
             tile.onUpdate();
         }
     }
-
+    
     public void onBlockPlaced(World world, int x, int y, int z, int facing)
     {
         // TileEntity tile = world.getBlockTileEntity(x, y, z);

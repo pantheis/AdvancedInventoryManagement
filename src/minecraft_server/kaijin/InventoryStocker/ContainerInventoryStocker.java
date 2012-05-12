@@ -89,13 +89,14 @@ public class ContainerInventoryStocker extends Container
 
         return var2;
     }
-
+    
     public void onCraftGuiOpened(ICrafting par1ICrafting)
     {
         super.onCraftGuiOpened(par1ICrafting);
         guiPlayerList.add(((EntityPlayerMP)par1ICrafting).username);
         inventorystockerinventory.sendSnapshotStateClient(((EntityPlayerMP)par1ICrafting).username);
         inventorystockerinventory.entityOpenList(guiPlayerList);
+        
     }
     /**
      * Callback for when the crafting gui is closed.
@@ -103,7 +104,6 @@ public class ContainerInventoryStocker extends Container
     public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
     {
         super.onCraftGuiClosed(par1EntityPlayer);
-
         if (guiPlayerList.contains(par1EntityPlayer.username))
         {
             guiPlayerList.remove(par1EntityPlayer.username);
