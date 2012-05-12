@@ -58,7 +58,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
             int time = (int)world.getWorldTime();
             return 2 + powered * (((time >> 2) & 3) + 1);
         }
-        
+
         TileEntity tile = blocks.getBlockTileEntity(x, y, z);
         int open = tile instanceof TileEntityInventoryStocker ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
 
@@ -146,12 +146,13 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     {
         super.onNeighborBlockChange(world, x, y, z, blockID);
         TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+
         if (tile != null)
         {
             tile.onUpdate();
         }
     }
-    
+
     public void onBlockPlaced(World world, int x, int y, int z, int facing)
     {
         // TileEntity tile = world.getBlockTileEntity(x, y, z);

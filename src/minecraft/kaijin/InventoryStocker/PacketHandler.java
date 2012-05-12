@@ -23,26 +23,26 @@ public class PacketHandler implements IPacketHandler
      *             byte 2: y location of TileEntity
      *             byte 3: z location of TileEntity
      *             byte 4: boolean request, false = clear snapshot, true = take snapshot
-     *         
+     *
      *         Server:
      *         0=
      *             byte 1: x location of TileEntity
      *             byte 2: y location of TileEntity
      *             byte 3: z location of TileEntity
      *             byte 4: boolean information, false = no valid snapshot, true = valid snapshot
-     *             
+     *
      *         1=
      *             byte 1: boolean powered: send powered state to client for texture animation, false = unpowered, true = powered
-     *             
+     *
      * remaining bytes: data for packet
      */
-    
+
     //This is the listen function to obtain data FROM the server TO the client
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
     {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
-        
+
         try
         {
             this.packetType = stream.readInt();
@@ -55,10 +55,12 @@ public class PacketHandler implements IPacketHandler
         {
             ex.printStackTrace();
         }
+
         // assign packet out to x,y,z,isValid to make it easier
         if (this.packetType == 0)
         {
             TileEntity tile = ModLoader.getMinecraftInstance().theWorld.getBlockTileEntity(x, y, z);
+
             //check if the tile we're looking at is an Inventory Stocker tile
             if (tile instanceof TileEntityInventoryStocker)
             {
