@@ -910,7 +910,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         lastTileEntity = tile;
                         hasSnapshot = true;
                         */
-
                     }
                     else
                     {
