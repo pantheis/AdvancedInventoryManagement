@@ -3,7 +3,10 @@ package kaijin.InventoryStocker;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
@@ -26,7 +29,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public TileEntity tileFrontFace = null;
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
-    List remoteUsers = null;
+    private List<String> remoteUsers = new ArrayList<String>();
 
     @Override
     public boolean canUpdate()
@@ -133,7 +136,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             for (int i = 0; i < this.remoteUsers.size(); ++i)
             {
-                ModLoader.getMinecraftServerInstance().configManager.sendPacketToPlayer((((EntityPlayerMP)remoteUsers.get(i)).username), packet);
+                ModLoader.getMinecraftServerInstance().configManager.sendPacketToPlayer(remoteUsers.get(i), packet);
             }
         }
         // ModLoader.getMinecraftServerInstance().configManager.sendPacketToAllPlayers(packet);
@@ -840,11 +843,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     // match the one we had prior.
                     if (!hasSnapshot || checkInvalidSnapshot())
                     {
-                        System.out.println("Redstone pulse: No snapshot-taking snapshot");
+                        System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                        /*
                         clearSnapshot();
                         remoteSnapshot = takeSnapShot(tile);
                         lastTileEntity = tile;
                         hasSnapshot = true;
+                        */
 
                     }
                     else

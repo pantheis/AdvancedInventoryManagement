@@ -903,11 +903,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     // match the one we had prior.
                     if (!hasSnapshot || checkInvalidSnapshot())
                     {
-                        System.out.println("Redstone pulse: No snapshot-taking snapshot");
+                        System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                        /*
                         clearSnapshot();
                         remoteSnapshot = takeSnapShot(tile);
                         lastTileEntity = tile;
                         hasSnapshot = true;
+                        */
 
                     }
                     else
