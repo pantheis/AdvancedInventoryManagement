@@ -931,5 +931,36 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
         }
+        
+        /*
+         * texture animation somewhat working in SMP with the code below. Front face animation is broken
+         * but the lights do turn on and off
+         */
+        else if(Utils.isClient(worldObj))
+        {
+            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            if (!isPowered && previousPoweredState)
+            {
+                // Lost power.
+                previousPoweredState = false;
+
+                // Shut off glowing light textures.
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta &= 7; // Clear bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+            }
+            if (isPowered && !previousPoweredState)
+            {
+                // We're powered now, set the state flag to true
+                previousPoweredState = true;
+                
+                // Turn on das blinkenlights!
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta |= 8; // Set bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+            }
+        }
     }
 }
