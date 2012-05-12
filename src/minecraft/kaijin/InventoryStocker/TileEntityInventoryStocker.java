@@ -802,6 +802,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         else
         {
             String tempName = tile.getClass().getName();
+            String tempInvSize = ("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
+            System.out.println(tempInvSize);
             if (!tempName.equals(targetTileName))
             {
                 System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
