@@ -14,28 +14,60 @@ public class PacketHandler implements IPacketHandler
     int y = 0;
     int z = 0;
     boolean snapShot = false;
-    
-    // This is the listen function to obtain data FROM the client TO the server
+
+    /*
+     * Packet format:
+     * byte 0: Packet Type
+     *     Currently available packet types
+     *         Client:
+     *         0=
+     *             byte 1: x location of TileEntity
+     *             byte 2: y location of TileEntity
+     *             byte 3: z location of TileEntity
+     *             byte 4: boolean request, false = clear snapshot, true = take snapshot
+     *         
+     *         Server:
+     *         0=
+     *             byte 1: x location of TileEntity
+     *             byte 2: y location of TileEntity
+     *             byte 3: z location of TileEntity
+     *             byte 4: boolean information, false = no valid snapshot, true = valid snapshot
+     *             
+     * remaining bytes: data for packet
+     */
+
+    //This is the listen function to obtain data FROM the client TO the server
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
     {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
-        
-        //grab the first four bytes from the incoming packet
+        //Read the first int to determine packet type
         try
         {
             this.packetType = stream.readInt();
-            this.x = stream.readInt();
-            this.y = stream.readInt();
-            this.z = stream.readInt();
-            this.snapShot = stream.readBoolean();
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
-        if (packetType == 0)
+        /*
+         * each packet type needs to implement an if and then whatever other read functions it needs
+         * complete with try/catch blocks
+         */
+        if (this.packetType == 0)
         {
+            try
+            {
+                this.x = stream.readInt();
+                this.y = stream.readInt();
+                this.z = stream.readInt();
+                this.snapShot = stream.readBoolean();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
             //server side needs to grab the world entity
             World world = ((NetServerHandler)network.getNetHandler()).getPlayerEntity().worldObj;
             TileEntity tile = world.getBlockTileEntity(x, y, z);

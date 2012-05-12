@@ -23,57 +23,6 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         return "/kaijin/InventoryStocker/terrain.png";
     }
 
-    public int getBlockTextureFromSide(int i)
-    {
-        switch (i)
-        {
-            case 0: // Bottom
-                return 0;
-
-            case 1: // Top
-                return 0;
-
-            case 2: // North
-                return 16;
-
-            case 3: // South
-                return 16;
-
-            default: // 4-5 West-East
-                return 16;
-        }
-    }
-
-    public int getBlockTextureFromSideAndMetadata(int i, int m)
-    {
-        int dir = m & 7;
-        int side = Utils.lookupRotatedSide(i, dir);
-        // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-
-        switch (side)
-        {
-            case 0: // Front
-                return 1;
-
-            case 1: // Back
-                return 0;
-
-            case 2:
-            case 3:
-                if (dir < 2)
-                {
-                    return 16;
-                }
-
-                return 18;
-
-            case 4:
-            case 5:
-            default:
-                return 16;
-        }
-    }
-
     private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
     {
         if (player.rotationPitch > 45D)
@@ -134,6 +83,12 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     public TileEntity getBlockEntity()
     {
         return new TileEntityInventoryStocker();
+    }
+
+    @Override
+    public boolean canProvidePower()
+    {
+        return true; // Will appear to connect to RedPower wires and such.
     }
 
     /**

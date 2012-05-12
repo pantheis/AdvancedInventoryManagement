@@ -13,6 +13,7 @@ public class PacketHandler implements IPacketHandler
     int y = 0;
     int z = 0;
     boolean snapShot = false;
+    
     /*
      * Packet format:
      * byte 0: Packet Type
@@ -31,9 +32,6 @@ public class PacketHandler implements IPacketHandler
      *             byte 3: z location of TileEntity
      *             byte 4: boolean information, false = no valid snapshot, true = valid snapshot
      *             
-     *         1=
-     *             byte 1: boolean powered: send powered state to client for texture animation, false = unpowered, true = powered
-     *             
      * remaining bytes: data for packet
      */
     
@@ -43,22 +41,33 @@ public class PacketHandler implements IPacketHandler
     public void onPacketData(NetworkManager network, String channel, byte[] data)
     {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
-        
+        //Read the first int to determine packet type
         try
         {
             this.packetType = stream.readInt();
-            this.x = stream.readInt();
-            this.y = stream.readInt();
-            this.z = stream.readInt();
-            this.snapShot = stream.readBoolean();
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
-        // assign packet out to x,y,z,isValid to make it easier
+        /*
+         * each packet type needs to implement an if and then whatever other read functions it needs
+         * complete with try/catch blocks
+         */
         if (this.packetType == 0)
         {
+            try
+            {
+                this.x = stream.readInt();
+                this.y = stream.readInt();
+                this.z = stream.readInt();
+                this.snapShot = stream.readBoolean();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
             TileEntity tile = ModLoader.getMinecraftInstance().theWorld.getBlockTileEntity(x, y, z);
             //check if the tile we're looking at is an Inventory Stocker tile
             if (tile instanceof TileEntityInventoryStocker)

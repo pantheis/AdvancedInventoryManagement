@@ -61,7 +61,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         
         TileEntity tile = blocks.getBlockTileEntity(x, y, z);
         int open = tile instanceof TileEntityInventoryStocker ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
-
+        
         if (side == 1) // Back
         {
             return 32 + powered + open;

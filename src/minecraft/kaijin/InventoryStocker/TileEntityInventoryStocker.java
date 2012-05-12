@@ -825,6 +825,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void updateEntity()
     {
         super.updateEntity();
+        if(Utils.isClient(worldObj))
+        {
+            //Check the door states client side in SMP here
+            updateDoorStates();
+        }
         if(!Utils.isClient(worldObj))
         {
             // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
@@ -904,13 +909,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     if (!hasSnapshot || checkInvalidSnapshot())
                     {
                         System.out.println("Redstone pulse: No valid snapshot, doing nothing");
-                        /*
                         clearSnapshot();
+                        /*
                         remoteSnapshot = takeSnapShot(tile);
                         lastTileEntity = tile;
                         hasSnapshot = true;
                         */
-
                     }
                     else
                     {
