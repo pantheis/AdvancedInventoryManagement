@@ -827,11 +827,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void updateEntity()
     {
         super.updateEntity();
-        if(Utils.isClient(worldObj))
-        {
-            //Check the door states client side in SMP here
-            updateDoorStates();
-        }
         if(!Utils.isClient(worldObj))
         {
             // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
@@ -942,8 +937,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          * texture animation somewhat working in SMP with the code below. Front face animation is broken
          * but the lights do turn on and off
          */
-        else if(Utils.isClient(worldObj))
+        else
         {
+            updateDoorStates();
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
             if (!isPowered && previousPoweredState)
             {
