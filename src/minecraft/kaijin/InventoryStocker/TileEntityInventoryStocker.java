@@ -596,7 +596,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         int endSlot = startSlot + tile.getSizeInventory();
 
         boolean workDone;
-        // Now makes two passes through the target and snapshot to help with 'item in wrong slot' adjustments
+        int pass = 0;
+        
+        // Now makes multiple passes through the target and snapshot to help with 'item in wrong slot' adjustments
         do
         {
             workDone = false;
@@ -647,7 +649,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     }
                 } // else
             } // for slot
-        } while (workDone);
+            pass++;
+        } while (workDone && pass < 100);
     }
 
     // Test if two item stacks' types match, while ignoring damage level if needed.  
@@ -831,8 +834,37 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             //Check the door states client side in SMP here
             updateDoorStates();
+
+            /*
+             * texture animation somewhat working in SMP with the code below. Front face animation is broken
+             * but the lights do turn on and off
+             */
+            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            if (!isPowered && previousPoweredState)
+            {
+                // Lost power.
+                previousPoweredState = false;
+
+                // Shut off glowing light textures.
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta &= 7; // Clear bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+            }
+            if (isPowered && !previousPoweredState)
+            {
+                // We're powered now, set the state flag to true
+                previousPoweredState = true;
+                
+                // Turn on das blinkenlights!
+                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+                meta |= 8; // Set bit 4
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+            }
+
         }
-        if(!Utils.isClient(worldObj))
+        else // if (!Utils.isClient(worldObj))
         {
             // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
             if (!tileLoaded)
@@ -938,35 +970,5 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
         }
         
-        /*
-         * texture animation somewhat working in SMP with the code below. Front face animation is broken
-         * but the lights do turn on and off
-         */
-        else if(Utils.isClient(worldObj))
-        {
-            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-            if (!isPowered && previousPoweredState)
-            {
-                // Lost power.
-                previousPoweredState = false;
-
-                // Shut off glowing light textures.
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta &= 7; // Clear bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-            }
-            if (isPowered && !previousPoweredState)
-            {
-                // We're powered now, set the state flag to true
-                previousPoweredState = true;
-                
-                // Turn on das blinkenlights!
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta |= 8; // Set bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-            }
-        }
     }
 }
