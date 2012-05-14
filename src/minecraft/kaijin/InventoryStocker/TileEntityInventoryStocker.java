@@ -79,9 +79,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
 
-        //ModLoader.sendPacket(packet);
-        //I think the following is actually a better way to do it
-        ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
+        ModLoader.sendPacket(packet);
     }
 
     public void guiTakeSnapshot()
