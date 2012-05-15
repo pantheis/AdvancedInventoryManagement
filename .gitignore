@@ -1,12 +1,2 @@
-*
-!.gitignore
-!src
-!src/minecraft
-!src/minecraft/kaijin
-!src/minecraft/kaijin/InventoryStocker
-!src/minecraft/kaijin/InventoryStocker/*
-!src/minecraft_server
-!src/minecraft_server/kaijin
-!src/minecraft_server/kaijin/InventoryStocker
-!src/minecraft_server/kaijin/InventoryStocker/*
-thumbs.db
+/CATEGORY
+Thumbs.db
