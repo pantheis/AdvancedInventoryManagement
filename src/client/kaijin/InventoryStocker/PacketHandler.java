@@ -35,7 +35,6 @@ public class PacketHandler implements IPacketHandler
      * remaining bytes: data for packet
      */
     
-    
     //This is the listen function to obtain data FROM the server TO the client
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
