@@ -604,7 +604,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         int endSlot = startSlot + tile.getSizeInventory();
 
         boolean workDone;
-        // Now makes two passes through the target and snapshot to help with 'item in wrong slot' adjustments
+        int pass = 0;
+        
+        // Now makes multiple passes through the target and snapshot to help with 'item in wrong slot' adjustments
         do
         {
             workDone = false;
@@ -655,7 +657,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     }
                 } // else
             } // for slot
-        } while (workDone);
+            pass++;
+        } while (workDone && pass < 100);
     }
 
     // Test if two item stacks' types match, while ignoring damage level if needed.  
@@ -833,104 +836,102 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void updateEntity()
     {
         super.updateEntity();
-        if(!Utils.isClient(worldObj))
-        {
-            // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
-            if (!tileLoaded)
-            {
-                System.out.println("tileLoaded false, running onLoad");
-                this.onLoad();
-            }
 
-            /*
-             * Check if the GUI is asking us to take a snapshot, if so, clear the existing snapshot
-             * and take a new one
-             */
-            if (guiTakeSnapshot)
+        // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+        if (!tileLoaded)
+        {
+            System.out.println("tileLoaded false, running onLoad");
+            this.onLoad();
+        }
+
+        /*
+         * Check if the GUI is asking us to take a snapshot, if so, clear the existing snapshot
+         * and take a new one
+         */
+        if (guiTakeSnapshot)
+        {
+            TileEntity tile = getTileAtFrontFace();
+            if (tile != null && tile instanceof IInventory)
             {
-                TileEntity tile = getTileAtFrontFace();
-                if (tile != null && tile instanceof IInventory)
+                clearSnapshot();
+                remoteSnapshot = takeSnapShot(tile);
+                lastTileEntity = tile;
+                hasSnapshot = true;
+                guiTakeSnapshot = false;
+                /*
+                 * server has no GUI, but this code works for our purposes.
+                 * We need to send the successful snapshot state flag here
+                 * to all clients that have the GUI open using the function
+                 * below. Setting parameter to true will set a valid snapshot,
+                 * setting it to false will send an invalid snapshot
+                 */
+                sendSnapshotStateClients(true);
+                
+            }
+            else
+            {
+                //no valid tile, abort scan request
+                guiTakeSnapshot = false;
+            }
+        }
+
+        // Check if one of the blocks next to us or us is getting power from a neighboring block. 
+        boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+
+        // If we're not powered, set the previousPoweredState to false
+        if (!isPowered)
+        {
+            previousPoweredState = false;
+        }
+
+        /* If we are powered and the previous power state is false, it's time to go to
+         * work. We test it this way so that we only trigger our work state once
+         * per redstone power state cycle (pulse).
+         */
+
+        if (isPowered && !previousPoweredState)
+        {
+            // We're powered now, set the state flag to true
+            previousPoweredState = true;
+            System.out.println("Powered");
+
+            // grab TileEntity at front face
+            TileEntity tile = getTileAtFrontFace();
+            
+            // Verify that the tile we got back exists and implements IInventory            
+            if (tile != null && tile instanceof IInventory)
+            {
+                // Code here deals with the adjacent inventory
+                System.out.println("Chest Found!");
+
+                // Check if our snapshot is considered valid and/or the tile we just got doesn't
+                // match the one we had prior.
+                if (!hasSnapshot || checkInvalidSnapshot())
                 {
+                    System.out.println("Redstone pulse: No valid snapshot, doing nothing");
                     clearSnapshot();
+                    /*
                     remoteSnapshot = takeSnapShot(tile);
                     lastTileEntity = tile;
                     hasSnapshot = true;
-                    guiTakeSnapshot = false;
-                    /*
-                     * server has no GUI, but this code works for our purposes.
-                     * We need to send the successful snapshot state flag here
-                     * to all clients that have the GUI open using the function
-                     * below. Setting parameter to true will set a valid snapshot,
-                     * setting it to false will send an invalid snapshot
-                     */
-                    sendSnapshotStateClients(true);
-                    
+                    */
                 }
                 else
                 {
-                    //no valid tile, abort scan request
-                    guiTakeSnapshot = false;
+                    // If we've made it here, it's time to stock the remote inventory
+                    stockInventory((IInventory)tile);
                 }
             }
-            
-            // Check if one of the blocks next to us or us is getting power from a neighboring block. 
-            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-
-            // If we're not powered, set the previousPoweredState to false
-            if (!isPowered)
+            else
             {
-                previousPoweredState = false;
-            }
-            
-            /* If we are powered and the previous power state is false, it's time to go to
-             * work. We test it this way so that we only trigger our work state once
-             * per redstone power state cycle (pulse).
-             */
-            
-            if (isPowered && !previousPoweredState)
-            {
-                // We're powered now, set the state flag to true
-                previousPoweredState = true;
-                System.out.println("Powered");
-
-                // grab TileEntity at front face
-                TileEntity tile = getTileAtFrontFace();
-                
-                // Verify that the tile we got back exists and implements IInventory            
-                if (tile != null && tile instanceof IInventory)
-                {
-                    // Code here deals with the adjacent inventory
-                    System.out.println("Chest Found!");
-
-                    // Check if our snapshot is considered valid and/or the tile we just got doesn't
-                    // match the one we had prior.
-                    if (!hasSnapshot || checkInvalidSnapshot())
-                    {
-                        System.out.println("Redstone pulse: No valid snapshot, doing nothing");
-                        clearSnapshot();
-                        /*
-                        remoteSnapshot = takeSnapShot(tile);
-                        lastTileEntity = tile;
-                        hasSnapshot = true;
-                        */
-                    }
-                    else
-                    {
-                        // If we've made it here, it's time to stock the remote inventory
-                        stockInventory((IInventory)tile);
-                    }
-                }
-                else
-                {
-                    /*
-                     * This code deals with us not getting a valid tile entity from
-                     * the getTileAtFrontFace code. This can happen because there is no
-                     * detected tileentity (returned false), or the tileentity that was returned
-                     * does not implement IInventory. We will clear the last snapshot.
-                     */
-                    clearSnapshot();
-                    System.out.println("entityUpdate snapshot clear");
-                }
+                /*
+                 * This code deals with us not getting a valid tile entity from
+                 * the getTileAtFrontFace code. This can happen because there is no
+                 * detected tileentity (returned false), or the tileentity that was returned
+                 * does not implement IInventory. We will clear the last snapshot.
+                 */
+                clearSnapshot();
+                System.out.println("entityUpdate snapshot clear");
             }
         }
     }
