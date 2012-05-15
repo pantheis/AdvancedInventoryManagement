@@ -2,7 +2,14 @@ Inventory Stocker
 
 The goal of this project is to design a new block that will allow the player to take a snapshot of a directly attached storage block and then use an internal input buffer inventory to attempt to keep the attached storage block's storage setup exactly as it was when the snapshot was taken.
 
-The Inventory Stocker will have an output storage buffer that it will store things removed from the attached storage that do not match the snapshot.
+The Inventory Stocker has an output storage buffer that it will store things removed from the attached storage that do not match the snapshot, accessible from the sides of the block. It also has an input buffer to accept items from outside (accessible via the back of the block only).
 
-The input and output buffers will be accessible via a GUI interface by the player, or via ISidedInventory (sides to be determined, but probably input left, output right) so that RedPower tubes and Buildcraft Pipes should attach to it.
+The input and output buffers are also accessible via a GUI interface by the player. The GUI is used to display the state of the snapshot, take a snapshot and clear a snapshot.
 
+The Inventory Stocker is somewhat intelligent on the state of the remote inventory and will automatically invalidate its snapshot under a number of conditions.
+
+The Inventory Stocker can detect Redpower Tubes and Buildcraft Pipes and change the side textures to show an open port, making it fit right in with your existing machines.
+
+There are still a number of known limitations / bugs that have yet to be resolved. Check the Issues section on https://github.com/pantheis/InventoryStocker for information.
+
+Source code is available at the above URL as well and is not included in the compiled ZIPs to keep them clean and neat looking.
