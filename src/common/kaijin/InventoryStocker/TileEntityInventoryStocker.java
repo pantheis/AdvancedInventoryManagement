@@ -3,6 +3,8 @@ package kaijin.InventoryStocker;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
@@ -19,15 +21,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private boolean hasSnapshot = false;
     private boolean tileLoaded = false;
     private boolean guiTakeSnapshot = false;
+    private boolean guiClearSnapshot = false;
 
     //other privates
     private TileEntity lastTileEntity = null;
     public TileEntity tileFrontFace = null;
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
+    private List<String> remoteUsers = new ArrayList<String>();
 
     private boolean doorState[];
-    
+
     @Override
     public boolean canUpdate()
     {
@@ -43,15 +47,80 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void setSnapshotState(boolean state)
     {
-        if(Utils.isClient(worldObj))
+        if(CommonProxy.isClient(worldObj))
         {
             this.hasSnapshot = state;
+        }
+    }
+    
+    public void entityOpenList(List crafters)
+    {
+        this.remoteUsers = crafters;
+    }
+    
+    public void recvSnapshotRequest(boolean state)
+    {
+        if(state)
+        {
+            System.out.println("GUI: take snapshot request");
+            guiTakeSnapshot = true;
+        }
+        else
+        {
+            System.out.println("GUI: clear snapshot request");
+            guiClearSnapshot = true;
         }
     }
     
     public boolean validSnapshot()
     {
         return hasSnapshot;
+    }
+
+    private Packet250CustomPayload createSnapshotPacket()
+    {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try
+        {
+            data.writeInt(0);
+            data.writeInt(this.xCoord);
+            data.writeInt(this.yCoord);
+            data.writeInt(this.zCoord);
+            data.writeBoolean(hasSnapshot);
+        }
+        catch(IOException e)
+        {
+                e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.data = bytes.toByteArray();
+        packet.length = packet.data.length;
+        return packet;
+    }
+
+    public void sendSnapshotStateClient(String playerName)
+    {
+        // Send snapshot state to the client that just opened the GUI
+        Packet250CustomPayload packet = createSnapshotPacket();
+
+        CommonProxy.sendPacketToPlayer(playerName, packet);
+    }
+
+    private void sendSnapshotStateClients()
+    {
+        // Send snapshot state to all clients in the GUI open list
+        Packet250CustomPayload packet = createSnapshotPacket();
+
+        if (this.remoteUsers != null)
+        {
+            for (int i = 0; i < this.remoteUsers.size(); ++i)
+            {
+                CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
+            }
+        }
     }
 
     private void sendSnapshotRequestServer(boolean state)
@@ -79,30 +148,30 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
 
-        ModLoader.sendPacket(packet);
+        CommonProxy.sendPacketToServer(packet);
     }
 
     public void guiTakeSnapshot()
     {
-        if(!Utils.isClient(worldObj))
+        if(CommonProxy.isClient(worldObj))
         {
-            guiTakeSnapshot = true;
+            sendSnapshotRequestServer(true);
         }
         else
         {
-            sendSnapshotRequestServer(true);
+            guiTakeSnapshot = true;
         }
     }
 
     public void guiClearSnapshot()
     {
-        if(!Utils.isClient(worldObj))
+        if(CommonProxy.isClient(worldObj))
         {
-            clearSnapshot();
+            sendSnapshotRequestServer(false);
         }
         else
         {
-            sendSnapshotRequestServer(false);
+            guiClearSnapshot = true;
         }
     }
     
@@ -113,18 +182,25 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         targetTileName = "none";
         remoteSnapshot = null;
         remoteNumSlots = 0;
+        if (CommonProxy.isServer())
+        {
+            sendSnapshotStateClients();
+        }
     }
 
     public void onUpdate()
     {
-        if(!Utils.isClient(worldObj))
+        if(!CommonProxy.isClient(worldObj))
         {
             if (checkInvalidSnapshot())
                 clearSnapshot();
         }
-        
-        // Check adjacent blocks for tubes or pipes and update list accordingly
-        updateDoorStates();
+
+        if (!CommonProxy.isServer())
+        {
+            // Check adjacent blocks for tubes or pipes and update list accordingly
+            updateDoorStates();
+        }
     }
     
     private void updateDoorStates()
@@ -368,7 +444,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
-        if(!Utils.isClient(worldObj))
+        if(!CommonProxy.isClient(worldObj))
         {
             super.readFromNBT(nbttagcompound);
             //read extra NBT stuff here
@@ -423,7 +499,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
-        if(!Utils.isClient(worldObj))
+        if(!CommonProxy.isClient(worldObj))
         {
             super.writeToNBT(nbttagcompound);
             NBTTagList nbttaglist = new NBTTagList();
@@ -477,7 +553,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          * if we should have a valid inventory or not. It will set the lastTileEntity and
          * hasSnapshot state. The actual remoteInventory object will be loaded (or not) via the NBT calls.
          */
-        if(!Utils.isClient(worldObj))
+        if(!CommonProxy.isClient(worldObj))
         {
             tileLoaded = true;
             System.out.println("onLoad, remote inv size = " + remoteNumSlots);
@@ -520,30 +596,24 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
     }
 
-    public void openChest()
-    {
-        // TODO Auto-generated method stub
-    }
+    public void openChest() {}
 
-    public void closeChest()
-    {
-        // TODO Auto-generated method stub
-    }
+    public void closeChest() {}
 
-    public ItemStack[] takeSnapShot(TileEntity tile)
+    public boolean takeSnapShot(TileEntity tile)
     {
         /*
-         * This function will take a snapshot the IInventory of the TileEntity passed to it.
+         * This function will take a snapshot of the IInventory of the TileEntity passed to it.
          * This will be a copy of the remote inventory as it looks when this function is called.
          *
          * It will check that the TileEntity passed to it actually implements IInventory and
-         * return doing false if it does not.
+         * return false doing nothing if it does not.
          * 
-         * Will return true if it successfully took a snapshot
+         * Will return true if it successfully took a snapshot.
          */
         if (!(tile instanceof IInventory))
         {
-            return null;
+            return false;
         }
 
         // Get number of slots in the remote inventory
@@ -572,10 +642,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
         /*
          *  get remote entity class name and store it as targetTile, which also ends up being stored in our
-         *  own NBT tables so our tile will remember what was there being chunk unloads/restarts/etc
+         *  own NBT tables so our tile will remember what was there after chunk unloads/restarts/etc
          */
         this.targetTileName = tile.getClass().getName();
-        return returnCopy;
+        remoteSnapshot = returnCopy;
+        lastTileEntity = tile;
+        hasSnapshot = true;
+        return true;
     }
 
     public boolean inputGridIsEmpty()
@@ -791,46 +864,57 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public boolean checkInvalidSnapshot()
     {
-        /*
-         * Will check if our snapshot should be invalidated, returns true if snapshot is invalid
-         * false otherwise.
-         */
-
+        // Will check if our snapshot should be invalidated.
+        // Returns true if snapshot is invalid, false otherwise.
         TileEntity tile = getTileAtFrontFace();
         if (tile == null)
         {
             System.out.println("Invalid: Tile = null");
             return true;
         }
-        else
+        String tempName = tile.getClass().getName();
+        if (!tempName.equals(targetTileName))
         {
-            String tempName = tile.getClass().getName();
-            String tempInvSize = ("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
-            System.out.println(tempInvSize);
-            if (!tempName.equals(targetTileName))
-            {
-                System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
-                return true;
-            }
-            else if (tile != lastTileEntity)
-            {
-                System.out.println("Invalid: tileEntity does not match lastTileEntity");
-                return true;
-            }
-            else if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
-            {
-                System.out.println("Invalid: tileEntity inventory size has changed");
-                return true;
-            }
+            System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
+            return true;
+        }
+        if (tile != lastTileEntity)
+        {
+            System.out.println("Invalid: tileEntity does not match lastTileEntity");
+            return true;
+        }
+        if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
+        {
+            System.out.println("Invalid: tileEntity inventory size has changed");
+            System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
+            return true;
         }
         return false;
+    }
+
+    private void lightsOff()
+    {
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+        meta &= 7; // Clear bit 4
+        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+        worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+    }
+
+    private void lightsOn()
+    {
+        // Turn on das blinkenlights!
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
+        meta |= 8; // Set bit 4
+        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
+        worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        if(Utils.isClient(worldObj))
+
+        if(CommonProxy.isClient(worldObj))
         {
             //Check the door states client side in SMP here
             updateDoorStates();
@@ -846,129 +930,131 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 previousPoweredState = false;
 
                 // Shut off glowing light textures.
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta &= 7; // Clear bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+                lightsOff();
             }
-            if (isPowered && !previousPoweredState)
+            else if (isPowered && !previousPoweredState)
             {
                 // We're powered now, set the state flag to true
                 previousPoweredState = true;
                 
                 // Turn on das blinkenlights!
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta |= 8; // Set bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+                lightsOn();
             }
+            return;
+        } // if(CommonProxy.isClient(worldObj))
 
-        }
-        else // if (!Utils.isClient(worldObj))
+        // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+        if (!tileLoaded)
         {
-            // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
-            if (!tileLoaded)
-            {
-                System.out.println("tileLoaded false, running onLoad");
-                this.onLoad();
-            }
+            System.out.println("tileLoaded false, running onLoad");
+            this.onLoad();
+        }
 
-            /*
-             * Check if the GUI is asking us to take a snapshot, if so, clear the existing snapshot
-             * and take a new one
-             */
-            if (guiTakeSnapshot)
+        // Check if the GUI or a client is asking us to take a snapshot
+        // if so, clear the existing snapshot and take a new one
+        if (guiTakeSnapshot)
+        {
+            guiTakeSnapshot = false;
+            System.out.println("GUI take snapshot request");
+            TileEntity tile = getTileAtFrontFace();
+            if (tile != null && tile instanceof IInventory)
             {
-                guiTakeSnapshot = false;
-                System.out.println("GUI take snapshot request");
-                TileEntity tile = getTileAtFrontFace();
-                if (tile != null && tile instanceof IInventory)
+                if (takeSnapShot(tile))
                 {
-                    System.out.println("GUI: No snapshot-taking snapshot");
-                    clearSnapshot();
-                    remoteSnapshot = takeSnapShot(tile);
-                    lastTileEntity = tile;
-                    hasSnapshot = true;
-                }
-            }
-            
-            // Check if one of the blocks next to us or us is getting power from a neighboring block. 
-            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-            
-            if (isPowered)
-            {
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-            }
-            
-            // If we're not powered, set the previousPoweredState to false
-            if (!isPowered && previousPoweredState)
-            {
-                // Lost power.
-                previousPoweredState = false;
-
-                // Shut off glowing light textures.
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta &= 7; // Clear bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-            }
-            
-            /* If we are powered and the previous power state is false, it's time to go to
-             * work. We test it this way so that we only trigger our work state once
-             * per redstone power state cycle (pulse).
-             */
-            
-            if (isPowered && !previousPoweredState)
-            {
-                // We're powered now, set the state flag to true
-                previousPoweredState = true;
-                
-                // Turn on das blinkenlights!
-                int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-                meta |= 8; // Set bit 4
-                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-                worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-
-                // grab TileEntity at front face
-                TileEntity tile = getTileAtFrontFace();
-                
-                // Verify that the tile we got back exists and implements IInventory            
-                if (tile != null && tile instanceof IInventory)
-                {
-                    // Code here deals with the adjacent inventory
-                    System.out.println("Chest Found!");
-
-                    // Check if our snapshot is considered valid and/or the tile we just got doesn't
-                    // match the one we had prior.
-                    if (!hasSnapshot || checkInvalidSnapshot())
+                    if (CommonProxy.isServer())
                     {
-                        System.out.println("Redstone pulse: No valid snapshot, doing nothing");
-                        clearSnapshot();
-                        /*
-                        remoteSnapshot = takeSnapShot(tile);
-                        lastTileEntity = tile;
-                        hasSnapshot = true;
-                        */
-                    }
-                    else
-                    {
-                        // If we've made it here, it's time to stock the remote inventory
-                        stockInventory((IInventory)tile);
+                        // server has no GUI, but this code works for our purposes.
+                        // We need to send the snapshot state flag here to all clients that have the GUI open
+                        sendSnapshotStateClients();
                     }
                 }
                 else
                 {
-                    /*
-                     * This code deals with us not getting a valid tile entity from
-                     * the getTileAtFrontFace code. This can happen because there is no
-                     * detected tileentity (returned false), or the tileentity that was returned
-                     * does not implement IInventory. We will clear the last snapshot.
-                     */
                     clearSnapshot();
-                    System.out.println("entityUpdate snapshot clear");
                 }
             }
         }
-        
+
+        // Check if a snapshot clear has been requested
+        if (guiClearSnapshot)
+        {
+            guiClearSnapshot = false;
+            clearSnapshot();
+        }
+
+        // Check if one of the blocks next to us or us is getting power from a neighboring block. 
+        boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+
+        // This allows client-side animation of texture over time, which would not happen without updating the block
+        if (isPowered && !CommonProxy.isServer())
+        {
+            worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+        }
+
+        // If we're not powered, set the previousPoweredState to false
+        if (!isPowered && previousPoweredState)
+        {
+            // Lost power.
+            previousPoweredState = false;
+
+            if (!CommonProxy.isServer())
+            {
+                // Shut off glowing light textures.
+                lightsOff();
+            }
+        }
+
+        // If we are powered and the previous power state is false, it's time to go to
+        // work. We test it this way so that we only trigger our work state once
+        // per redstone power state cycle (pulse).
+        if (isPowered && !previousPoweredState)
+        {
+            // We're powered now, set the state flag to true
+            previousPoweredState = true;
+            System.out.println("Powered");
+
+            if (!CommonProxy.isServer())
+            {
+                // Turn on das blinkenlights!
+                lightsOn();
+            }
+
+            // grab TileEntity at front face
+            TileEntity tile = getTileAtFrontFace();
+            
+            // Verify that the tile we got back exists and implements IInventory            
+            if (tile != null && tile instanceof IInventory)
+            {
+                // Code here deals with the adjacent inventory
+                // System.out.println("Chest Found!");
+
+                // Check if our snapshot is considered valid, the tile we just got doesn't
+                // match the one we had prior, or if no snapshot exists. 
+                if (!hasSnapshot || checkInvalidSnapshot())
+                {
+                    System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                    if (hasSnapshot)
+                        clearSnapshot();
+                    // Used to take a new snapshot here, but that behavior has been removed
+                }
+                else
+                {
+                    // If we've made it here, it's time to stock the remote inventory
+                    stockInventory((IInventory)tile);
+                }
+            }
+            else
+            {
+                /*
+                 * This code deals with us not getting a valid tile entity from
+                 * the getTileAtFrontFace code. This can happen because there is no
+                 * detected tileentity (returned false), or the tileentity that was returned
+                 * does not implement IInventory. We will clear the last snapshot.
+                 */
+                if (hasSnapshot)
+                    clearSnapshot();
+                System.out.println("entityUpdate snapshot clear");
+            }
+        }
     }
 }

@@ -51,15 +51,15 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         int side = Utils.lookupRotatedSide(i, dir);
         int powered = (m & 8) >> 3;
 
+        TileEntity tile = blocks.getBlockTileEntity(x, y, z);
+
         // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
         if (side == 0) // Front
         {
-            World world = ModLoader.getMinecraftInstance().theWorld;
-            int time = (int)world.getWorldTime();
+            int time = (int)tile.worldObj.getWorldTime();
             return 2 + powered * (((time >> 2) & 3) + 1);
         }
         
-        TileEntity tile = blocks.getBlockTileEntity(x, y, z);
         int open = tile instanceof TileEntityInventoryStocker ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
         
         if (side == 1) // Back
@@ -95,7 +95,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
     {
-        // Prevent GUI popup and handle block rotation
+        // Prevent GUI pop-up and handle block rotation
         if (entityplayer.isSneaking())
         {
             if (entityplayer.getCurrentEquippedItem() == null)
@@ -118,7 +118,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
             return false;
         }
 
-        if (!Utils.isClient(world))
+        if (!CommonProxy.isClient(world))
         {
             entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
         }

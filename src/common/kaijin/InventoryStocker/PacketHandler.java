@@ -12,8 +12,8 @@ public class PacketHandler implements IPacketHandler
     int x = 0;
     int y = 0;
     int z = 0;
-    boolean snapShot = false;
-    
+    boolean snapshot = false;
+
     /*
      * Packet format:
      * byte 0: Packet Type
@@ -34,7 +34,7 @@ public class PacketHandler implements IPacketHandler
      *             
      * remaining bytes: data for packet
      */
-    
+
     //This is the listen function to obtain data FROM the server TO the client
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] data)
@@ -60,25 +60,29 @@ public class PacketHandler implements IPacketHandler
                 this.x = stream.readInt();
                 this.y = stream.readInt();
                 this.z = stream.readInt();
-                this.snapShot = stream.readBoolean();
+                this.snapshot = stream.readBoolean();
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
 
-            TileEntity tile = ModLoader.getMinecraftInstance().theWorld.getBlockTileEntity(x, y, z);
+            World world = CommonProxy.PacketHandlerGetWorld(network);
+            TileEntity tile = world.getBlockTileEntity(x, y, z);
+
             //check if the tile we're looking at is an Inventory Stocker tile
             if (tile instanceof TileEntityInventoryStocker)
             {
                 //call a function on that tile to let it know if it has a valid state server side or not
-                if (snapShot)
+                if(CommonProxy.isClient(tile.worldObj))
                 {
-                    ((TileEntityInventoryStocker)tile).setSnapshotState(true);
+                    //snapshot state message from server
+                    ((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
                 }
                 else
                 {
-                    ((TileEntityInventoryStocker)tile).setSnapshotState(false);
+                    //take or clear a snapshot request from client
+                    ((TileEntityInventoryStocker)tile).recvSnapshotRequest(snapshot);
                 }
             }
         }

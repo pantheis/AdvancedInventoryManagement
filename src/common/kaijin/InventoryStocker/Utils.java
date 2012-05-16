@@ -6,11 +6,6 @@ import net.minecraft.src.*;
 
 public class Utils
 {
-    public static boolean isClient(World world)
-    {
-        return false;
-    }
-
     //JUST in case we need it
     public byte[] hashSHA1(String tilename)
     {
@@ -44,7 +39,7 @@ public class Utils
         //System.out.println("Hex format : " + hexString.toString());
         return byteData;
     }
-
+    
     public static void dropItems(World world, ItemStack stack, int i, int j, int k)
     {
         float f1 = 0.7F;
@@ -74,7 +69,7 @@ public class Utils
     {
         TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-        if (tile instanceof IInventory && !isClient(world))
+        if (tile instanceof IInventory && !CommonProxy.isClient(world))
         {
             dropItems(world, (IInventory) tile, i, j, k);
         }
