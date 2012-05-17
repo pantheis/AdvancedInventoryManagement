@@ -6,8 +6,17 @@ import net.minecraft.src.*;
 
 public class Utils
 {
+    /*
+     * Set the mod version here and it'll update in both client and server mod_ files
+     */
+
+    public static String getVersion()
+    {
+        return "0.3.0";
+    }
+
     //JUST in case we need it
-    public byte[] hashSHA1(String tilename)
+    public String hashSHA1(String tilename)
     {
         MessageDigest md = null;
         try {
@@ -37,7 +46,7 @@ public class Utils
             hexString.append(hex);
         }
         //System.out.println("Hex format : " + hexString.toString());
-        return byteData;
+        return hexString.toString();
     }
     
     public static void dropItems(World world, ItemStack stack, int i, int j, int k)
