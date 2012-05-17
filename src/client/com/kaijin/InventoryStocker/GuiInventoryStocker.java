@@ -59,7 +59,7 @@ public class GuiInventoryStocker extends GuiContainer
      */
     protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
     {
-        int GuiTex = this.mc.renderEngine.getTexture("/kaijin/InventoryStocker/stocker.png");
+        int GuiTex = this.mc.renderEngine.getTexture("/com/kaijin/InventoryStocker/gui/stocker.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiTex);
         int XOffset = (width - xSize) / 2; // X offset = Half the difference between screen width and GUI width
