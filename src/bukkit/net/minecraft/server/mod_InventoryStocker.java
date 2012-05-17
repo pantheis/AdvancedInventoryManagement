@@ -1,14 +1,14 @@
 package net.minecraft.server;
 
-import forge.Configuration;
-import forge.MinecraftForge;
-import forge.NetworkMod;
-import java.io.File;
-
 import com.kaijin.InventoryStocker.BlockInventoryStocker;
 import com.kaijin.InventoryStocker.ConnectionHandler;
 import com.kaijin.InventoryStocker.GuiHandlerInventoryStocker;
 import com.kaijin.InventoryStocker.TileEntityInventoryStocker;
+import com.kaijin.InventoryStocker.Utils;
+import forge.Configuration;
+import forge.MinecraftForge;
+import forge.NetworkMod;
+import java.io.File;
 
 public class mod_InventoryStocker extends NetworkMod
 {
@@ -31,6 +31,7 @@ public class mod_InventoryStocker extends NetworkMod
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.DIRT});
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"IWI", "PRP", "IWI", 'I', Item.IRON_INGOT, 'W', Block.WOOD, 'P', Block.PISTON, 'R', Item.REDSTONE});
         MinecraftForge.setGuiHandler(instance, new GuiHandlerInventoryStocker());
+        Utils.init();
     }
 
     public static int configurationProperties()
@@ -43,7 +44,7 @@ public class mod_InventoryStocker extends NetworkMod
 
     public String getVersion()
     {
-        return "0.2.5";
+        return Utils.getVersion();
     }
 
     public boolean clientSideRequired()

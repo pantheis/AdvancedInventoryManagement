@@ -5,12 +5,26 @@ import java.security.NoSuchAlgorithmException;
 import net.minecraft.server.EntityItem;
 import net.minecraft.server.IInventory;
 import net.minecraft.server.ItemStack;
+import net.minecraft.server.ModLoader;
 import net.minecraft.server.TileEntity;
 import net.minecraft.server.World;
 
 public class Utils
 {
-    public byte[] hashSHA1(String var1)
+    public static String getVersion()
+    {
+        return "0.3.0";
+    }
+
+    public static void init()
+    {
+        if (CommonProxy.isServer())
+        {
+            ModLoader.getLogger().info("InventoryStocker v" + getVersion() + " loaded.");
+        }
+    }
+
+    public String hashSHA1(String var1)
     {
         MessageDigest var2 = null;
 
@@ -46,7 +60,7 @@ public class Utils
             var9.append(var7);
         }
 
-        return var3;
+        return var9.toString();
     }
 
     public static void dropItems(World var0, ItemStack var1, int var2, int var3, int var4)

@@ -18,6 +18,14 @@ public class Utils
         return "0.3.0";
     }
 
+    public static void init()
+    {
+        if (CommonProxy.isServer())
+        {
+            ModLoader.getLogger().info ("InventoryStocker v" + getVersion()+ " loaded.");
+        }
+    }
+    
     //JUST in case we need it
     public String hashSHA1(String tilename)
     {
