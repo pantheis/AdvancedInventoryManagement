@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import java.util.ArrayList;
 import java.util.List;

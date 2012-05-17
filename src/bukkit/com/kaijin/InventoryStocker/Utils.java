@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

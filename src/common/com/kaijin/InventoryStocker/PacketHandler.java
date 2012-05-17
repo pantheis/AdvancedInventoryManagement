@@ -1,10 +1,12 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+
+import com.kaijin.InventoryStocker.*;
+
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
-import kaijin.InventoryStocker.*;
 
 public class PacketHandler implements IPacketHandler
 {

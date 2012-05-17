@@ -1,10 +1,12 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import net.minecraft.src.forge.*;
 import java.util.*;
+
+import com.kaijin.InventoryStocker.*;
+
 import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
-import kaijin.InventoryStocker.*;
 
 public class BlockInventoryStocker extends BlockContainer implements ITextureProvider
 {

@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import forge.IGuiHandler;
 import net.minecraft.server.EntityHuman;

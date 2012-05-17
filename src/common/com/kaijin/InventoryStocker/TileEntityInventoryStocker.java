@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kaijin.InventoryStocker.*;
+
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
-import kaijin.InventoryStocker.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {

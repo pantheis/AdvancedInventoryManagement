@@ -1,8 +1,9 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
+
+import com.kaijin.InventoryStocker.*;
 
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
-import kaijin.InventoryStocker.*;
 
 public class GuiHandlerInventoryStocker implements IGuiHandler
 {
@@ -22,6 +23,6 @@ public class GuiHandlerInventoryStocker implements IGuiHandler
             return null;
         }
 
-        return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
+        return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
     }
 }

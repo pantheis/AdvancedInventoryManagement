@@ -3,8 +3,10 @@ package net.minecraft.src;
 import net.minecraft.src.forge.*;
 import java.io.File;
 import java.util.*;
+
+import com.kaijin.InventoryStocker.*;
+
 import net.minecraft.server.*;
-import kaijin.InventoryStocker.*;
 
 public class mod_InventoryStocker extends NetworkMod
 {

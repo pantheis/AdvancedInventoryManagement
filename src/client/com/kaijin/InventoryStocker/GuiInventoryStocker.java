@@ -1,9 +1,11 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import org.lwjgl.opengl.GL11;
+
+import com.kaijin.InventoryStocker.*;
+
 import net.minecraft.src.*;
 import net.minecraft.src.forge.*;
-import kaijin.InventoryStocker.*;
 
 public class GuiInventoryStocker extends GuiContainer
 {

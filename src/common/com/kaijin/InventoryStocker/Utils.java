@@ -1,7 +1,10 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import com.kaijin.InventoryStocker.CommonProxy;
+
 import net.minecraft.src.*;
 
 public class Utils

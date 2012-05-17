@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import forge.ISidedInventory;
 import java.io.ByteArrayOutputStream;

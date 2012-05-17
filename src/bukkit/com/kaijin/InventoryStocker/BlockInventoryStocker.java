@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import forge.ITextureProvider;
 import java.util.ArrayList;

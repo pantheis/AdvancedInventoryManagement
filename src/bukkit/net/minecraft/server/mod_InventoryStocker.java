@@ -4,10 +4,11 @@ import forge.Configuration;
 import forge.MinecraftForge;
 import forge.NetworkMod;
 import java.io.File;
-import kaijin.InventoryStocker.BlockInventoryStocker;
-import kaijin.InventoryStocker.ConnectionHandler;
-import kaijin.InventoryStocker.GuiHandlerInventoryStocker;
-import kaijin.InventoryStocker.TileEntityInventoryStocker;
+
+import com.kaijin.InventoryStocker.BlockInventoryStocker;
+import com.kaijin.InventoryStocker.ConnectionHandler;
+import com.kaijin.InventoryStocker.GuiHandlerInventoryStocker;
+import com.kaijin.InventoryStocker.TileEntityInventoryStocker;
 
 public class mod_InventoryStocker extends NetworkMod
 {

@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import forge.IPacketHandler;
 import java.io.ByteArrayInputStream;

@@ -1,4 +1,4 @@
-package kaijin.InventoryStocker;
+package com.kaijin.InventoryStocker;
 
 import net.minecraft.server.ModLoader;
 import net.minecraft.server.NetServerHandler;
