@@ -13,3 +13,4 @@ The Inventory Stocker can detect Redpower Tubes and Buildcraft Pipes and change 
 There are still a number of known limitations / bugs that have yet to be resolved. Check the Issues section on https://github.com/pantheis/InventoryStocker for information.
 
 Source code is available at the above URL as well and is not included in the compiled ZIPs to keep them clean and neat looking.
+Bukkit source is now available. Don't know how often it will be updated. It's a bit of a pain to get it.
