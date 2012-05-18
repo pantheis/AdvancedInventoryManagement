@@ -1,16 +1,13 @@
 package net.minecraft.src;
 
-import net.minecraft.src.forge.*;
 import java.io.File;
 import java.util.*;
-
+import net.minecraft.src.forge.*;
 import com.kaijin.InventoryStocker.*;
-
-import net.minecraft.server.*;
 
 public class mod_InventoryStocker extends NetworkMod
 {
-    static Configuration configuration = new Configuration(new File("config/InventoryStocker.cfg"));
+    static Configuration configuration = CommonProxy.getConfiguration();
     static int InventoryStockerBlockID = configurationProperties();
     public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
 
@@ -30,7 +27,11 @@ public class mod_InventoryStocker extends NetworkMod
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
         ModLoader.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"IWI", "PRP", "IWI", 'I', Item.ingotIron, 'W', Block.planks, 'P', Block.pistonBase, 'R', Item.redstone});
         MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
-        Utils.init();
+        CommonProxy.load();
+        if (CommonProxy.isServer())
+        {
+            ModLoader.getLogger().info ("InventoryStocker v" + getVersion() + " loaded.");
+        }
     }
 
     public static int configurationProperties()
@@ -40,15 +41,21 @@ public class mod_InventoryStocker extends NetworkMod
         configuration.save();
         return InventoryStockerBlockID;
     }
+
+    @Override
     public String getVersion()
     {
-        return Utils.getVersion();
+        return "0.3.0";
     }
-    @Override public boolean clientSideRequired()
+
+    @Override
+    public boolean clientSideRequired()
     {
         return true;
     }
-    @Override public boolean serverSideRequired()
+
+    @Override
+    public boolean serverSideRequired()
     {
         return false;
     }
