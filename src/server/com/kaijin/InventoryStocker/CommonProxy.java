@@ -1,9 +1,21 @@
 package com.kaijin.InventoryStocker;
 
+import java.io.File;
 import net.minecraft.src.*;
+import net.minecraft.src.forge.Configuration;
 
 public class CommonProxy
 {
+    public static void load()
+    {
+        ModLoader.getLogger().info ("InventoryStocker v" + mod_InventoryStocker.instance.getVersion() + " loaded.");
+    }
+
+    public static Configuration getConfiguration()
+    {
+        return new Configuration(new File("config/InventoryStocker.cfg"));
+    }
+
     public static World PacketHandlerGetWorld(NetworkManager network)
     {
         //server side needs to grab the world entity
