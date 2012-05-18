@@ -8,7 +8,7 @@ import com.kaijin.InventoryStocker.*;
 import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
 
-public class BlockInventoryStocker extends BlockContainer implements ITextureProvider
+public class BlockInventoryStocker extends Block implements ITextureProvider
 {
     public BlockInventoryStocker(int i, int j)
     {
@@ -22,7 +22,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 
     public String getTextureFile()
     {
-        return "/kaijin/InventoryStocker/terrain.png";
+        return "/com/kaijin/InventoryStocker/textures/terrain.png";
     }
 
     public int getBlockTextureFromSide(int i)
@@ -129,7 +129,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
     }
 
     @Override
-    public TileEntity getBlockEntity()
+    public TileEntity getTileEntity(int metadata)
     {
         return new TileEntityInventoryStocker();
     }
@@ -140,6 +140,12 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         return true; // Will appear to connect to RedPower wires and such.
     }
 
+    @Override
+    public boolean hasTileEntity(int metadata)
+    {
+        return true;
+    }
+    
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
      * their own) Args: x, y, z, neighbor blockID
