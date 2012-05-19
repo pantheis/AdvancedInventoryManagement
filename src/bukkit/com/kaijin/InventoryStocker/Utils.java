@@ -2,28 +2,9 @@ package com.kaijin.InventoryStocker;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import net.minecraft.server.EntityItem;
-import net.minecraft.server.IInventory;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.ModLoader;
-import net.minecraft.server.TileEntity;
-import net.minecraft.server.World;
 
 public class Utils
 {
-    public static String getVersion()
-    {
-        return "0.3.0";
-    }
-
-    public static void init()
-    {
-        if (CommonProxy.isServer())
-        {
-            ModLoader.getLogger().info("InventoryStocker v" + getVersion() + " loaded.");
-        }
-    }
-
     public String hashSHA1(String var1)
     {
         MessageDigest var2 = null;
@@ -61,40 +42,6 @@ public class Utils
         }
 
         return var9.toString();
-    }
-
-    public static void dropItems(World var0, ItemStack var1, int var2, int var3, int var4)
-    {
-        float var5 = 0.7F;
-        double var6 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
-        double var8 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
-        double var10 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
-        EntityItem var12 = new EntityItem(var0, (double)var2 + var6, (double)var3 + var8, (double)var4 + var10, var1);
-        var12.pickupDelay = 10;
-        var0.addEntity(var12);
-    }
-
-    public static void dropItems(World var0, IInventory var1, int var2, int var3, int var4)
-    {
-        for (int var5 = 0; var5 < var1.getSize(); ++var5)
-        {
-            ItemStack var6 = var1.getItem(var5);
-
-            if (var6 != null && var6.count > 0)
-            {
-                dropItems(var0, var1.getItem(var5).cloneItemStack(), var2, var3, var4);
-            }
-        }
-    }
-
-    public static void preDestroyBlock(World var0, int var1, int var2, int var3)
-    {
-        TileEntity var4 = var0.getTileEntity(var1, var2, var3);
-
-        if (var4 instanceof IInventory && !CommonProxy.isClient(var0))
-        {
-            dropItems(var0, (IInventory)var4, var1, var2, var3);
-        }
     }
 
     public static int lookupRotatedSide(int var0, int var1)

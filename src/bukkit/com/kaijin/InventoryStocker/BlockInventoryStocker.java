@@ -2,10 +2,12 @@ package com.kaijin.InventoryStocker;
 
 import forge.ITextureProvider;
 import java.util.ArrayList;
-import net.minecraft.server.BlockContainer;
+import net.minecraft.server.Block;
 import net.minecraft.server.EntityHuman;
+import net.minecraft.server.EntityItem;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.IBlockAccess;
+import net.minecraft.server.IInventory;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.Material;
 import net.minecraft.server.MathHelper;
@@ -13,7 +15,7 @@ import net.minecraft.server.TileEntity;
 import net.minecraft.server.World;
 import net.minecraft.server.mod_InventoryStocker;
 
-public class BlockInventoryStocker extends BlockContainer implements ITextureProvider
+public class BlockInventoryStocker extends Block implements ITextureProvider
 {
     public BlockInventoryStocker(int var1, int var2)
     {
@@ -27,7 +29,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
 
     public String getTextureFile()
     {
-        return "/kaijin/InventoryStocker/terrain.png";
+        return "/com/kaijin/InventoryStocker/textures/terrain.png";
     }
 
     /**
@@ -139,10 +141,7 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
         }
     }
 
-    /**
-     * Returns the TileEntity used by this block.
-     */
-    public TileEntity a_()
+    public TileEntity getTileEntity(int var1)
     {
         return new TileEntityInventoryStocker();
     }
@@ -151,6 +150,11 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
      * Can this block provide power. Only wire currently seems to have this change based on its state.
      */
     public boolean isPowerSource()
+    {
+        return true;
+    }
+
+    public boolean hasTileEntity(int var1)
     {
         return true;
     }
@@ -181,7 +185,41 @@ public class BlockInventoryStocker extends BlockContainer implements ITexturePro
      */
     public void remove(World var1, int var2, int var3, int var4)
     {
-        Utils.preDestroyBlock(var1, var2, var3, var4);
+        preDestroyBlock(var1, var2, var3, var4);
         super.remove(var1, var2, var3, var4);
+    }
+
+    public static void dropItems(World var0, ItemStack var1, int var2, int var3, int var4)
+    {
+        float var5 = 0.7F;
+        double var6 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
+        double var8 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
+        double var10 = (double)(var0.random.nextFloat() * var5) + (double)(1.0F - var5) * 0.5D;
+        EntityItem var12 = new EntityItem(var0, (double)var2 + var6, (double)var3 + var8, (double)var4 + var10, var1);
+        var12.pickupDelay = 10;
+        var0.addEntity(var12);
+    }
+
+    public static void dropItems(World var0, IInventory var1, int var2, int var3, int var4)
+    {
+        for (int var5 = 0; var5 < var1.getSize(); ++var5)
+        {
+            ItemStack var6 = var1.getItem(var5);
+
+            if (var6 != null && var6.count > 0)
+            {
+                dropItems(var0, var1.getItem(var5).cloneItemStack(), var2, var3, var4);
+            }
+        }
+    }
+
+    public static void preDestroyBlock(World var0, int var1, int var2, int var3)
+    {
+        TileEntity var4 = var0.getTileEntity(var1, var2, var3);
+
+        if (var4 instanceof IInventory && !CommonProxy.isClient(var0))
+        {
+            dropItems(var0, (IInventory)var4, var1, var2, var3);
+        }
     }
 }
