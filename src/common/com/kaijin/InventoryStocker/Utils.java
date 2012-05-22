@@ -14,7 +14,7 @@ public class Utils
      */
 
     //JUST in case we need it
-    public String hashSHA1(String tilename)
+    public static String hashSHA1(String tilename)
     {
         MessageDigest md = null;
         try {
