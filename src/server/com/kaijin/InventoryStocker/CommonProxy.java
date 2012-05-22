@@ -8,7 +8,7 @@ public class CommonProxy
 {
     public static void load()
     {
-        ModLoader.getLogger().info ("InventoryStocker v" + mod_InventoryStocker.instance.getVersion() + " loaded.");
+
     }
 
     public static Configuration getConfiguration()
