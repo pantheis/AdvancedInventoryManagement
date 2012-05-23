@@ -9,9 +9,11 @@ import net.minecraft.src.*;
 
 public class Utils
 {
-    /*
-     * Set the mod version here and it'll update in both client and server mod_ files
-     */
+    // Set this to true to enable debug output throughout
+    public static boolean isDebug()
+    {
+        return false;
+    }
 
     //JUST in case we need it
     public static String hashSHA1(String tilename)

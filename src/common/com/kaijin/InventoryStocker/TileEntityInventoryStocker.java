@@ -63,12 +63,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         if(state)
         {
-            System.out.println("GUI: take snapshot request");
+            if (Utils.isDebug()) System.out.println("GUI: take snapshot request");
             guiTakeSnapshot = true;
         }
         else
         {
-            System.out.println("GUI: clear snapshot request");
+            if (Utils.isDebug()) System.out.println("GUI: clear snapshot request");
             guiClearSnapshot = true;
         }
     }
@@ -452,7 +452,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             targetTileName = nbttagcompound.getString("targetTileName");
             remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
             
-            System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
+            if (Utils.isDebug()) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
             
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
             NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
@@ -477,7 +477,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
 
             //remote inventory
-            System.out.println("ReadNBT tagRemoteCount: "+nbttagremote.tagCount());
+            if (Utils.isDebug()) System.out.println("ReadNBT tagRemoteCount: "+nbttagremote.tagCount());
             if (nbttagremote.tagCount() != 0)
             {
                 for (int i = 0; i < nbttagremote.tagCount(); ++i)
@@ -488,7 +488,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     if (j >= 0 && j < this.remoteSnapshot.length)
                     {
                         this.remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
-                        System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteSnapshot[j].itemID);
+                        if (Utils.isDebug()) System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteSnapshot[j].itemID);
                     }
                 }
             }
@@ -521,12 +521,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             //remote inventory
             if (this.remoteSnapshot != null)
             {
-                System.out.println("writeNBT Target: "+targetTileName+" remoteInvSize:"+this.remoteSnapshot.length);
+                if (Utils.isDebug()) System.out.println("writeNBT Target: "+targetTileName+" remoteInvSize:"+this.remoteSnapshot.length);
                 for (int i = 0; i < this.remoteSnapshot.length; i++)
                 {
                     if (this.remoteSnapshot[i] != null)
                     {
-                        System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteSnapshot[i].itemID+" StackSize: "+this.remoteSnapshot[i].stackSize+" meta: "+this.remoteSnapshot[i].getItemDamage());
+                        if (Utils.isDebug()) System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteSnapshot[i].itemID+" StackSize: "+this.remoteSnapshot[i].stackSize+" meta: "+this.remoteSnapshot[i].getItemDamage());
                         NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
                         remoteSnapshot1.setByte("Slot", (byte)i);
                         this.remoteSnapshot[i].writeToNBT(remoteSnapshot1);
@@ -536,7 +536,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
             else
             {
-                System.out.println("writeNBT Remote Items is NULL!");
+                if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
             }
                         
             //write stuff to NBT here
@@ -557,11 +557,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!CommonProxy.isClient(worldObj))
         {
             tileLoaded = true;
-            System.out.println("onLoad, remote inv size = " + remoteNumSlots);
+            if (Utils.isDebug()) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
             TileEntity tile = getTileAtFrontFace();
             if (tile == null)
             {
-                System.out.println("onLoad tile = null");
+                if (Utils.isDebug()) System.out.println("onLoad tile = null");
                 clearSnapshot();
             }
             else
@@ -569,13 +569,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 String tempName = tile.getClass().getName();
                 if (tempName.equals(targetTileName) && ((IInventory)tile).getSizeInventory() == remoteNumSlots)
                 {
-                    System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
+                    if (Utils.isDebug()) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
                     lastTileEntity = tile;
                     hasSnapshot = true;
                 }
                 else
                 {
-                    System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
+                    if (Utils.isDebug()) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
                     clearSnapshot();
                 }
             }
@@ -730,10 +730,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     // Test if two item stacks' types match, while ignoring damage level if needed.  
     protected boolean checkItemTypesMatch(ItemStack a, ItemStack b)
     {
-        // System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
-        // System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
-        // System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
-        // System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
+        // if (Utils.isDebug()) System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
+        // if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
+        // if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
+        // if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
 
         if (a.itemID == b.itemID)
         {        
@@ -870,24 +870,24 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         TileEntity tile = getTileAtFrontFace();
         if (tile == null)
         {
-            System.out.println("Invalid: Tile = null");
+            if (Utils.isDebug()) System.out.println("Invalid: Tile = null");
             return true;
         }
         String tempName = tile.getClass().getName();
         if (!tempName.equals(targetTileName))
         {
-            System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
+            if (Utils.isDebug()) System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
             return true;
         }
         if (tile != lastTileEntity)
         {
-            System.out.println("Invalid: tileEntity does not match lastTileEntity");
+            if (Utils.isDebug()) System.out.println("Invalid: tileEntity does not match lastTileEntity");
             return true;
         }
         if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
         {
-            System.out.println("Invalid: tileEntity inventory size has changed");
-            System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
+            if (Utils.isDebug()) System.out.println("Invalid: tileEntity inventory size has changed");
+            if (Utils.isDebug()) System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
             return true;
         }
         return false;
@@ -947,7 +947,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
         if (!tileLoaded)
         {
-            System.out.println("tileLoaded false, running onLoad");
+            if (Utils.isDebug()) System.out.println("tileLoaded false, running onLoad");
             this.onLoad();
         }
 
@@ -956,7 +956,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if (guiTakeSnapshot)
         {
             guiTakeSnapshot = false;
-            System.out.println("GUI take snapshot request");
+            if (Utils.isDebug()) System.out.println("GUI take snapshot request");
             TileEntity tile = getTileAtFrontFace();
             if (tile != null && tile instanceof IInventory)
             {
@@ -1012,7 +1012,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             // We're powered now, set the state flag to true
             previousPoweredState = true;
-            System.out.println("Powered");
+            if (Utils.isDebug()) System.out.println("Powered");
 
             if (!CommonProxy.isServer())
             {
@@ -1027,13 +1027,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             if (tile != null && tile instanceof IInventory)
             {
                 // Code here deals with the adjacent inventory
-                // System.out.println("Chest Found!");
+                // if (Utils.isDebug()) System.out.println("Chest Found!");
 
                 // Check if our snapshot is considered valid, the tile we just got doesn't
                 // match the one we had prior, or if no snapshot exists. 
                 if (!hasSnapshot || checkInvalidSnapshot())
                 {
-                    System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                    if (Utils.isDebug()) System.out.println("Redstone pulse: No valid snapshot, doing nothing");
                     if (hasSnapshot)
                         clearSnapshot();
                     // Used to take a new snapshot here, but that behavior has been removed
@@ -1054,7 +1054,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                  */
                 if (hasSnapshot)
                     clearSnapshot();
-                System.out.println("entityUpdate snapshot clear");
+                if (Utils.isDebug()) System.out.println("entityUpdate snapshot clear");
             }
         }
     }
