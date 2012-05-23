@@ -8,7 +8,7 @@ import com.kaijin.InventoryStocker.*;
 import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
 
-public class BlockInventoryStocker extends Block implements ITextureProvider
+public class BlockInventoryStocker extends Block implements ITextureProvider, IConnectRedstone
 {
     public BlockInventoryStocker(int i, int j)
     {
@@ -138,6 +138,12 @@ public class BlockInventoryStocker extends Block implements ITextureProvider
     public boolean canProvidePower()
     {
         return true; // Will appear to connect to RedPower wires and such.
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int X, int Y, int Z, int direction)
+    {
+        return true;
     }
 
     @Override
