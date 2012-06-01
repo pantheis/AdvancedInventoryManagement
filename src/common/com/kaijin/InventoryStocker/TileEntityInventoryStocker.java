@@ -455,12 +455,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             //read extra NBT stuff here
             targetTileName = nbttagcompound.getString("targetTileName");
             remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
-            
+
             if (Utils.isDebug()) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
-            
+
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
             NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
-            
+
             this.contents = new ItemStack[this.getSizeInventory()];
             this.remoteSnapshot = null;
             if (remoteNumSlots != 0)
@@ -509,7 +509,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             super.writeToNBT(nbttagcompound);
             NBTTagList nbttaglist = new NBTTagList();
             NBTTagList nbttagremote = new NBTTagList();
-            
+
             //our inventory
             for (int i = 0; i < this.contents.length; ++i)
             {
@@ -542,7 +542,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
             }
-                        
+
             //write stuff to NBT here
             nbttagcompound.setTag("Items", nbttaglist);
             nbttagcompound.setTag("remoteSnapshot", nbttagremote);
@@ -798,7 +798,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
         }
-        
+
         if (amtLeft > 0 && delayedDestination >= 0)
         {
             // Not enough room in existing stacks, so transfer whatever's left to a new one.
@@ -917,8 +917,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        super.updateEntity();
-
         if(CommonProxy.isClient(worldObj))
         {
             //Check the door states client side in SMP here
