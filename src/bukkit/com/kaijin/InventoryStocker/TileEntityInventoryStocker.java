@@ -29,6 +29,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
     private List remoteUsers = new ArrayList();
+    private int tickDelay = 1;
+    private int tickTime = 0;
     private boolean[] doorState;
 
     public boolean canUpdate()
@@ -967,14 +969,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             this.updateDoorStates();
             var3 = this.world.isBlockIndirectlyPowered(this.x, this.y, this.z);
 
-            if (!var3 && this.previousPoweredState)
+            if (!var3)
             {
-                this.previousPoweredState = false;
                 this.lightsOff();
             }
-            else if (var3 && !this.previousPoweredState)
+            else if (var3)
             {
-                this.previousPoweredState = true;
                 this.lightsOn();
             }
         }
@@ -1030,19 +1030,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 this.world.k(this.x, this.y, this.z);
             }
 
-            if (!var3 && this.previousPoweredState)
+            if (!var3 && !CommonProxy.isServer())
             {
-                this.previousPoweredState = false;
-
-                if (!CommonProxy.isServer())
-                {
-                    this.lightsOff();
-                }
+                this.lightsOff();
             }
 
-            if (var3 && !this.previousPoweredState)
+            if (var3 && this.tickTime == 0)
             {
-                this.previousPoweredState = true;
+                this.tickTime = this.tickDelay;
 
                 if (Utils.isDebug())
                 {
@@ -1088,18 +1083,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     }
                 }
             }
+            else if (this.tickTime > 0)
+            {
+                --this.tickTime;
+            }
         }
     }
 
     @Override
     public ItemStack[] getContents() {
-        // TODO Auto-generated method stub
         return contents;
     }
 
     @Override
     public void setMaxStackSize(int arg0) {
         // TODO Auto-generated method stub
-        
     }
 }
