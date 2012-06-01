@@ -32,7 +32,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private List<String> remoteUsers = new ArrayList<String>();
 
     //How long (in ticks) to wait between stocking operations
-    private int tickDelay = 1;
+    private int tickDelay = 9;
     private int tickTime = 0;
 
     private boolean doorState[];
@@ -999,6 +999,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             // Lost power.
 //            previousPoweredState = false;
+            
+//            reset tick time on losing power
+            this.tickTime = 0;
 
             if (!CommonProxy.isServer())
             {
