@@ -14,11 +14,13 @@ public class ContainerInventoryStocker extends Container
     private IInventory playerinventory;
     private TileEntityInventoryStocker inventorystockerinventory;
     private List<String> guiPlayerList = new ArrayList<String>();
+    private EntityPlayer human;
 
-    public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory)
+    public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory, EntityPlayer player)
     {
         this.playerinventory = playerinventory;
         this.inventorystockerinventory = inventorystockerinventory;
+        this.human = player;
         int xCol;
         int yRow;
 

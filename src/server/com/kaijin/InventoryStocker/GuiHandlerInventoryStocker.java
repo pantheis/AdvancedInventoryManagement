@@ -23,6 +23,6 @@ public class GuiHandlerInventoryStocker implements IGuiHandler
             return null;
         }
 
-        return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
+        return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
     }
 }

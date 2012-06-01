@@ -15,41 +15,43 @@ public class ContainerInventoryStocker extends Container
     private IInventory playerinventory;
     private TileEntityInventoryStocker inventorystockerinventory;
     private List guiPlayerList = new ArrayList();
+    private EntityHuman human;
 
-    public ContainerInventoryStocker(IInventory var1, TileEntityInventoryStocker var2)
+    public ContainerInventoryStocker(IInventory var1, TileEntityInventoryStocker var2, EntityHuman var3)
     {
         this.playerinventory = var1;
         this.inventorystockerinventory = var2;
-        int var3;
+        this.human = var3;
         int var4;
+        int var5;
 
-        for (var4 = 0; var4 < 3; ++var4)
+        for (var5 = 0; var5 < 3; ++var5)
         {
-            for (var3 = 0; var3 < 3; ++var3)
+            for (var4 = 0; var4 < 3; ++var4)
             {
-                this.a(new Slot(var2, var3 + 3 * var4, 8 + var3 * 18, 18 + var4 * 18));
+                this.a(new Slot(var2, var4 + 3 * var5, 8 + var4 * 18, 18 + var5 * 18));
             }
         }
 
-        for (var4 = 0; var4 < 3; ++var4)
+        for (var5 = 0; var5 < 3; ++var5)
         {
-            for (var3 = 0; var3 < 3; ++var3)
+            for (var4 = 0; var4 < 3; ++var4)
             {
-                this.a(new Slot(var2, 9 + var3 + 3 * var4, 116 + var3 * 18, 18 + var4 * 18));
+                this.a(new Slot(var2, 9 + var4 + 3 * var5, 116 + var4 * 18, 18 + var5 * 18));
             }
         }
 
-        for (var4 = 0; var4 < 3; ++var4)
+        for (var5 = 0; var5 < 3; ++var5)
         {
-            for (var3 = 0; var3 < 9; ++var3)
+            for (var4 = 0; var4 < 9; ++var4)
             {
-                this.a(new Slot(var1, var3 + var4 * 9 + 9, 8 + var3 * 18, 86 + var4 * 18));
+                this.a(new Slot(var1, var4 + var5 * 9 + 9, 8 + var4 * 18, 86 + var5 * 18));
             }
         }
 
-        for (var3 = 0; var3 < 9; ++var3)
+        for (var4 = 0; var4 < 9; ++var4)
         {
-            this.a(new Slot(var1, var3, 8 + var3 * 18, 144));
+            this.a(new Slot(var1, var4, 8 + var4 * 18, 144));
         }
     }
 
@@ -116,5 +118,14 @@ public class ContainerInventoryStocker extends Container
             this.guiPlayerList.remove(var1.name);
             this.inventorystockerinventory.entityOpenList(this.guiPlayerList);
         }
+    }
+    
+    public EntityHuman getPlayer()
+    {
+        return human;
+    }
+    public IInventory getInventory()
+    {
+        return playerinventory;
     }
 }

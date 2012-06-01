@@ -48,7 +48,7 @@ public class mod_InventoryStocker extends NetworkMod
 
     public String getVersion()
     {
-        return "0.3.0";
+        return "0.3.7";
     }
 
     public boolean clientSideRequired()

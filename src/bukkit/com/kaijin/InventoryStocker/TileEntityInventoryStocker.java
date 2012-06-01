@@ -29,6 +29,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private String targetTileName = "none";
     private int remoteNumSlots = 0;
     private List remoteUsers = new ArrayList();
+    private int tickDelay = 1;
+    private int tickTime = 0;
     private boolean[] doorState;
 
     public boolean canUpdate()
@@ -59,12 +61,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         if (var1)
         {
-            System.out.println("GUI: take snapshot request");
+            if (Utils.isDebug())
+            {
+                System.out.println("GUI: take snapshot request");
+            }
+
             this.guiTakeSnapshot = true;
         }
         else
         {
-            System.out.println("GUI: clear snapshot request");
+            if (Utils.isDebug())
+            {
+                System.out.println("GUI: clear snapshot request");
+            }
+
             this.guiClearSnapshot = true;
         }
     }
@@ -430,7 +440,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             super.a(var1);
             this.targetTileName = var1.getString("targetTileName");
             this.remoteNumSlots = var1.getInt("remoteSnapshotSize");
-            System.out.println("ReadNBT: " + this.targetTileName + " remoteInvSize:" + this.remoteNumSlots);
+
+            if (Utils.isDebug())
+            {
+                System.out.println("ReadNBT: " + this.targetTileName + " remoteInvSize:" + this.remoteNumSlots);
+            }
+
             NBTTagList var2 = var1.getList("Items");
             NBTTagList var3 = var1.getList("remoteSnapshot");
             this.contents = new ItemStack[this.getSize()];
@@ -456,7 +471,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
             }
 
-            System.out.println("ReadNBT tagRemoteCount: " + var3.size());
+            if (Utils.isDebug())
+            {
+                System.out.println("ReadNBT tagRemoteCount: " + var3.size());
+            }
 
             if (var3.size() != 0)
             {
@@ -468,7 +486,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     if (var6 >= 0 && var6 < this.remoteSnapshot.length)
                     {
                         this.remoteSnapshot[var6] = ItemStack.a(var5);
-                        System.out.println("ReadNBT Remote Slot: " + var6 + " ItemID: " + this.remoteSnapshot[var6].id);
+
+                        if (Utils.isDebug())
+                        {
+                            System.out.println("ReadNBT Remote Slot: " + var6 + " ItemID: " + this.remoteSnapshot[var6].id);
+                        }
                     }
                 }
             }
@@ -501,13 +523,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
             if (this.remoteSnapshot != null)
             {
-                System.out.println("writeNBT Target: " + this.targetTileName + " remoteInvSize:" + this.remoteSnapshot.length);
+                if (Utils.isDebug())
+                {
+                    System.out.println("writeNBT Target: " + this.targetTileName + " remoteInvSize:" + this.remoteSnapshot.length);
+                }
 
                 for (var4 = 0; var4 < this.remoteSnapshot.length; ++var4)
                 {
                     if (this.remoteSnapshot[var4] != null)
                     {
-                        System.out.println("writeNBT Remote Slot: " + var4 + " ItemID: " + this.remoteSnapshot[var4].id + " StackSize: " + this.remoteSnapshot[var4].count + " meta: " + this.remoteSnapshot[var4].getData());
+                        if (Utils.isDebug())
+                        {
+                            System.out.println("writeNBT Remote Slot: " + var4 + " ItemID: " + this.remoteSnapshot[var4].id + " StackSize: " + this.remoteSnapshot[var4].count + " meta: " + this.remoteSnapshot[var4].getData());
+                        }
+
                         var5 = new NBTTagCompound();
                         var5.setByte("Slot", (byte)var4);
                         this.remoteSnapshot[var4].save(var5);
@@ -515,7 +544,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     }
                 }
             }
-            else
+            else if (Utils.isDebug())
             {
                 System.out.println("writeNBT Remote Items is NULL!");
             }
@@ -532,12 +561,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if (!CommonProxy.isClient(this.world))
         {
             this.tileLoaded = true;
-            System.out.println("onLoad, remote inv size = " + this.remoteNumSlots);
+
+            if (Utils.isDebug())
+            {
+                System.out.println("onLoad, remote inv size = " + this.remoteNumSlots);
+            }
+
             TileEntity var1 = this.getTileAtFrontFace();
 
             if (var1 == null)
             {
-                System.out.println("onLoad tile = null");
+                if (Utils.isDebug())
+                {
+                    System.out.println("onLoad tile = null");
+                }
+
                 this.clearSnapshot();
             }
             else
@@ -546,13 +584,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
                 if (var2.equals(this.targetTileName) && ((IInventory)var1).getSize() == this.remoteNumSlots)
                 {
-                    System.out.println("onLoad, target name=" + var2 + " stored name=" + this.targetTileName + " MATCHED!");
+                    if (Utils.isDebug())
+                    {
+                        System.out.println("onLoad, target name=" + var2 + " stored name=" + this.targetTileName + " MATCHED!");
+                    }
+
                     this.lastTileEntity = var1;
                     this.hasSnapshot = true;
                 }
                 else
                 {
-                    System.out.println("onLoad, target name=" + var2 + " stored name=" + this.targetTileName + " NOT matched.");
+                    if (Utils.isDebug())
+                    {
+                        System.out.println("onLoad, target name=" + var2 + " stored name=" + this.targetTileName + " NOT matched.");
+                    }
+
                     this.clearSnapshot();
                 }
             }
@@ -843,7 +889,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
         if (var1 == null)
         {
-            System.out.println("Invalid: Tile = null");
+            if (Utils.isDebug())
+            {
+                System.out.println("Invalid: Tile = null");
+            }
+
             return true;
         }
         else
@@ -852,18 +902,34 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
             if (!var2.equals(this.targetTileName))
             {
-                System.out.println("Invalid: TileName Mismatched, detected TileName=" + var2 + " expected TileName=" + this.targetTileName);
+                if (Utils.isDebug())
+                {
+                    System.out.println("Invalid: TileName Mismatched, detected TileName=" + var2 + " expected TileName=" + this.targetTileName);
+                }
+
                 return true;
             }
             else if (var1 != this.lastTileEntity)
             {
-                System.out.println("Invalid: tileEntity does not match lastTileEntity");
+                if (Utils.isDebug())
+                {
+                    System.out.println("Invalid: tileEntity does not match lastTileEntity");
+                }
+
                 return true;
             }
             else if (((IInventory)var1).getSize() != this.remoteNumSlots)
             {
-                System.out.println("Invalid: tileEntity inventory size has changed");
-                System.out.println("RemoteInvSize: " + ((IInventory)var1).getSize() + ", Expecting: " + this.remoteNumSlots);
+                if (Utils.isDebug())
+                {
+                    System.out.println("Invalid: tileEntity inventory size has changed");
+                }
+
+                if (Utils.isDebug())
+                {
+                    System.out.println("RemoteInvSize: " + ((IInventory)var1).getSize() + ", Expecting: " + this.remoteNumSlots);
+                }
+
                 return true;
             }
             else
@@ -903,14 +969,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             this.updateDoorStates();
             var3 = this.world.isBlockIndirectlyPowered(this.x, this.y, this.z);
 
-            if (!var3 && this.previousPoweredState)
+            if (!var3)
             {
-                this.previousPoweredState = false;
                 this.lightsOff();
             }
-            else if (var3 && !this.previousPoweredState)
+            else if (var3)
             {
-                this.previousPoweredState = true;
                 this.lightsOn();
             }
         }
@@ -918,14 +982,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             if (!this.tileLoaded)
             {
-                System.out.println("tileLoaded false, running onLoad");
+                if (Utils.isDebug())
+                {
+                    System.out.println("tileLoaded false, running onLoad");
+                }
+
                 this.onLoad();
             }
 
             if (this.guiTakeSnapshot)
             {
                 this.guiTakeSnapshot = false;
-                System.out.println("GUI take snapshot request");
+
+                if (Utils.isDebug())
+                {
+                    System.out.println("GUI take snapshot request");
+                }
+
                 TileEntity var1 = this.getTileAtFrontFace();
 
                 if (var1 != null && var1 instanceof IInventory)
@@ -957,20 +1030,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 this.world.k(this.x, this.y, this.z);
             }
 
-            if (!var3 && this.previousPoweredState)
+            if (!var3 && !CommonProxy.isServer())
             {
-                this.previousPoweredState = false;
-
-                if (!CommonProxy.isServer())
-                {
-                    this.lightsOff();
-                }
+                this.lightsOff();
             }
 
-            if (var3 && !this.previousPoweredState)
+            if (var3 && this.tickTime == 0)
             {
-                this.previousPoweredState = true;
-                System.out.println("Powered");
+                this.tickTime = this.tickDelay;
+
+                if (Utils.isDebug())
+                {
+                    System.out.println("Powered");
+                }
 
                 if (!CommonProxy.isServer())
                 {
@@ -987,7 +1059,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     }
                     else
                     {
-                        System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                        if (Utils.isDebug())
+                        {
+                            System.out.println("Redstone pulse: No valid snapshot, doing nothing");
+                        }
 
                         if (this.hasSnapshot)
                         {
@@ -1002,8 +1077,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         this.clearSnapshot();
                     }
 
-                    System.out.println("entityUpdate snapshot clear");
+                    if (Utils.isDebug())
+                    {
+                        System.out.println("entityUpdate snapshot clear");
+                    }
                 }
+            }
+            else if (this.tickTime > 0)
+            {
+                --this.tickTime;
             }
         }
     }

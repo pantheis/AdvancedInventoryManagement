@@ -17,7 +17,7 @@ public class GuiInventoryStocker extends GuiContainer
     // define button class wide
     private GuiButton button = null;
 
-    public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
+    public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker, EntityPlayer player)
     {
         super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
         this.playerinventory = playerinventory;
@@ -108,12 +108,12 @@ public class GuiInventoryStocker extends GuiContainer
         {
             if (this.tile.validSnapshot())
             {
-                System.out.println("Button Pressed, clearing snapshot");
+                if (Utils.isDebug()) System.out.println("Button Pressed, clearing snapshot");
                 this.tile.guiClearSnapshot();
             }
             else
             {
-                System.out.println("Button Pressed, taking snapshot");
+                if (Utils.isDebug()) System.out.println("Button Pressed, taking snapshot");
                 this.tile.guiTakeSnapshot();
             }
         }

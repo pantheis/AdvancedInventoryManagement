@@ -5,43 +5,48 @@ import java.security.NoSuchAlgorithmException;
 
 public class Utils
 {
-    public String hashSHA1(String var1)
+    public static boolean isDebug()
     {
-        MessageDigest var2 = null;
+        return false;
+    }
+
+    public static String hashSHA1(String var0)
+    {
+        MessageDigest var1 = null;
 
         try
         {
-            var2 = MessageDigest.getInstance("SHA-256");
+            var1 = MessageDigest.getInstance("SHA-256");
         }
-        catch (NoSuchAlgorithmException var8)
+        catch (NoSuchAlgorithmException var7)
         {
-            var8.printStackTrace();
-        }
-
-        var2.update(var1.getBytes());
-        byte[] var3 = var2.digest();
-        StringBuffer var4 = new StringBuffer();
-
-        for (int var5 = 0; var5 < var3.length; ++var5)
-        {
-            var4.append(Integer.toString((var3[var5] & 255) + 256, 16).substring(1));
+            var7.printStackTrace();
         }
 
-        StringBuffer var9 = new StringBuffer();
+        var1.update(var0.getBytes());
+        byte[] var2 = var1.digest();
+        StringBuffer var3 = new StringBuffer();
 
-        for (int var6 = 0; var6 < var3.length; ++var6)
+        for (int var4 = 0; var4 < var2.length; ++var4)
         {
-            String var7 = Integer.toHexString(255 & var3[var6]);
+            var3.append(Integer.toString((var2[var4] & 255) + 256, 16).substring(1));
+        }
 
-            if (var7.length() == 1)
+        StringBuffer var8 = new StringBuffer();
+
+        for (int var5 = 0; var5 < var2.length; ++var5)
+        {
+            String var6 = Integer.toHexString(255 & var2[var5]);
+
+            if (var6.length() == 1)
             {
-                var9.append('0');
+                var8.append('0');
             }
 
-            var9.append(var7);
+            var8.append(var6);
         }
 
-        return var9.toString();
+        return var8.toString();
     }
 
     public static int lookupRotatedSide(int var0, int var1)

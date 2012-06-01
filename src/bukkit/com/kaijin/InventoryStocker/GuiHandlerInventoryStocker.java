@@ -16,7 +16,7 @@ public class GuiHandlerInventoryStocker implements IGuiHandler
         else
         {
             TileEntity var7 = var3.getTileEntity(var4, var5, var6);
-            return !(var7 instanceof TileEntityInventoryStocker) ? null : new ContainerInventoryStocker(var2.inventory, (TileEntityInventoryStocker)var7);
+            return !(var7 instanceof TileEntityInventoryStocker) ? null : new ContainerInventoryStocker(var2.inventory, (TileEntityInventoryStocker)var7, var2);
         }
     }
 }
