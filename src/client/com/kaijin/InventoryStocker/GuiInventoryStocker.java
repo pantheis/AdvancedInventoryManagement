@@ -17,7 +17,7 @@ public class GuiInventoryStocker extends GuiContainer
     // define button class wide
     private GuiButton button = null;
 
-    public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
+    public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker, EntityPlayer player)
     {
         super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
         this.playerinventory = playerinventory;

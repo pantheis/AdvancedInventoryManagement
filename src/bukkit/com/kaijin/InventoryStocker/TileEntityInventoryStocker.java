@@ -1092,11 +1092,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     @Override
     public ItemStack[] getContents() {
+        // TODO Auto-generated method stub
         return contents;
     }
 
     @Override
     public void setMaxStackSize(int arg0) {
         // TODO Auto-generated method stub
+        
     }
 }
