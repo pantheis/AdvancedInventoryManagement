@@ -45,7 +45,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "0.3.5";
+        return "0.3.7";
     }
 
     @Override
