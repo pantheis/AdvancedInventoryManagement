@@ -31,6 +31,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private int remoteNumSlots = 0;
     private List<String> remoteUsers = new ArrayList<String>();
 
+    //How long (in ticks) to wait between stocking operations
+    private int tickDelay = 1;
+    private int tickTime = 0;
+
     private boolean doorState[];
 
     @Override
@@ -925,18 +929,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
              * but the lights do turn on and off
              */
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-            if (!isPowered && previousPoweredState)
+            if (!isPowered)
             {
                 // Lost power.
-                previousPoweredState = false;
+//                previousPoweredState = false;
 
                 // Shut off glowing light textures.
                 lightsOff();
             }
-            else if (isPowered && !previousPoweredState)
+            else if (isPowered)
             {
                 // We're powered now, set the state flag to true
-                previousPoweredState = true;
+//                previousPoweredState = true;
                 
                 // Turn on das blinkenlights!
                 lightsOn();
@@ -993,10 +997,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         // If we're not powered, set the previousPoweredState to false
-        if (!isPowered && previousPoweredState)
+        if (!isPowered)
         {
             // Lost power.
-            previousPoweredState = false;
+//            previousPoweredState = false;
 
             if (!CommonProxy.isServer())
             {
@@ -1008,10 +1012,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // If we are powered and the previous power state is false, it's time to go to
         // work. We test it this way so that we only trigger our work state once
         // per redstone power state cycle (pulse).
-        if (isPowered && !previousPoweredState)
+        if (isPowered && this.tickTime == 0)
         {
+            this.tickTime = this.tickDelay;
             // We're powered now, set the state flag to true
-            previousPoweredState = true;
+//            previousPoweredState = true;
             if (Utils.isDebug()) System.out.println("Powered");
 
             if (!CommonProxy.isServer())
@@ -1056,6 +1061,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     clearSnapshot();
                 if (Utils.isDebug()) System.out.println("entityUpdate snapshot clear");
             }
+        }
+        else if (this.tickTime > 0)
+        {
+            this.tickTime--;
         }
     }
 }
