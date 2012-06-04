@@ -13,29 +13,34 @@ import net.minecraft.src.forge.*;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
-    //ItemStack privates
     private ItemStack contents[];
     private ItemStack remoteSnapshot[];
+    private ItemStack extendedChestSnapshot[];
 
-    //Boolean privates
-    private boolean previousPoweredState = false;
-    private boolean hasSnapshot = false;
-    private boolean tileLoaded = false;
     private boolean guiTakeSnapshot = false;
     private boolean guiClearSnapshot = false;
-
-    //other privates
+    private boolean tileLoaded = false;
+    private boolean previousPoweredState = false;
+    
+    private boolean hasSnapshot = false;
+    private boolean reactorWorkaround = false;
+    private int reactorWidth = 0;
     private TileEntity lastTileEntity = null;
-    public TileEntity tileFrontFace = null;
-    private String targetTileName = "none";
+    private TileEntity tileFrontFace = null;
+    private TileEntityChest extendedChest = null;
     private int remoteNumSlots = 0;
+    private String targetTileName = "none";
     private List<String> remoteUsers = new ArrayList<String>();
+
+    final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
+    final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
 
     //How long (in ticks) to wait between stocking operations
     private int tickDelay = 9;
     private int tickTime = 0;
 
     private boolean doorState[];
+
 
     @Override
     public boolean canUpdate()
@@ -45,8 +50,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public TileEntityInventoryStocker()
     {
-        this.contents = new ItemStack [this.getSizeInventory()];
-        this.clearSnapshot();
+        contents = new ItemStack [this.getSizeInventory()];
+        clearSnapshot();
         doorState = new boolean[6];
     }
 
@@ -96,7 +101,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
         catch(IOException e)
         {
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         Packet250CustomPayload packet = new Packet250CustomPayload();
@@ -187,6 +192,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         targetTileName = "none";
         remoteSnapshot = null;
         remoteNumSlots = 0;
+        extendedChest = null;
+        extendedChestSnapshot = null;
+        reactorWorkaround = false;
+        reactorWidth = 0;
         if (CommonProxy.isServer())
         {
             sendSnapshotStateClients();
@@ -452,36 +461,40 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!CommonProxy.isClient(worldObj))
         {
             super.readFromNBT(nbttagcompound);
-            //read extra NBT stuff here
+
+            // Read extra NBT stuff here
             targetTileName = nbttagcompound.getString("targetTileName");
             remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
+            reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
+            reactorWidth = nbttagcompound.getInteger("reactorWidth");
+            boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
 
             if (Utils.isDebug()) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
 
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
             NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
 
-            this.contents = new ItemStack[this.getSizeInventory()];
-            this.remoteSnapshot = null;
+            contents = new ItemStack[this.getSizeInventory()];
+            remoteSnapshot = null;
             if (remoteNumSlots != 0)
             {
-                this.remoteSnapshot = new ItemStack[remoteNumSlots];
+                remoteSnapshot = new ItemStack[remoteNumSlots];
             }
 
-            //our inventory
+            // Our inventory
             for (int i = 0; i < nbttaglist.tagCount(); ++i)
             {
                 NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
                 int j = nbttagcompound1.getByte("Slot") & 255;
 
-                if (j >= 0 && j < this.contents.length)
+                if (j >= 0 && j < contents.length)
                 {
-                    this.contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                    contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
                 }
             }
 
-            //remote inventory
-            if (Utils.isDebug()) System.out.println("ReadNBT tagRemoteCount: "+nbttagremote.tagCount());
+            // Remote inventory snapshot
+            if (Utils.isDebug()) System.out.println("ReadNBT tagRemoteCount: " + nbttagremote.tagCount());
             if (nbttagremote.tagCount() != 0)
             {
                 for (int i = 0; i < nbttagremote.tagCount(); ++i)
@@ -489,10 +502,30 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     NBTTagCompound remoteSnapshot1 = (NBTTagCompound)nbttagremote.tagAt(i);
                     int j = remoteSnapshot1.getByte("Slot") & 255;
 
-                    if (j >= 0 && j < this.remoteSnapshot.length)
+                    if (j >= 0 && j < remoteSnapshot.length)
                     {
-                        this.remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
-                        if (Utils.isDebug()) System.out.println("ReadNBT Remote Slot: "+j+" ItemID: "+this.remoteSnapshot[j].itemID);
+                        remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
+                        if (Utils.isDebug()) System.out.println("ReadNBT Remote Slot: " + j + " ItemID: " + remoteSnapshot[j].itemID);
+                    }
+                }
+            }
+
+            // Double chest second inventory snapshot
+            if (extendedChestFlag)
+            {
+                NBTTagList nbttagextended = nbttagcompound.getTagList("extendedSnapshot");
+                if (nbttagextended.tagCount() != 0)
+                {
+                    for (int i = 0; i < nbttagextended.tagCount(); ++i)
+                    {
+                        NBTTagCompound extSnapshot1 = (NBTTagCompound)nbttagextended.tagAt(i);
+                        int j = extSnapshot1.getByte("Slot") & 255;
+
+                        if (j >= 0 && j < extendedChestSnapshot.length)
+                        {
+                            extendedChestSnapshot[j] = ItemStack.loadItemStackFromNBT(extSnapshot1);
+                            if (Utils.isDebug()) System.out.println("ReadNBT Extended Slot: " + j + " ItemID: " + extendedChestSnapshot[j].itemID);
+                        }
                     }
                 }
             }
@@ -507,33 +540,34 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if(!CommonProxy.isClient(worldObj))
         {
             super.writeToNBT(nbttagcompound);
-            NBTTagList nbttaglist = new NBTTagList();
-            NBTTagList nbttagremote = new NBTTagList();
 
-            //our inventory
-            for (int i = 0; i < this.contents.length; ++i)
+            // Our inventory
+            NBTTagList nbttaglist = new NBTTagList();
+            for (int i = 0; i < contents.length; ++i)
             {
                 if (this.contents[i] != null)
                 {
                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                     nbttagcompound1.setByte("Slot", (byte)i);
-                    this.contents[i].writeToNBT(nbttagcompound1);
+                    contents[i].writeToNBT(nbttagcompound1);
                     nbttaglist.appendTag(nbttagcompound1);
                 }
             }
+            nbttagcompound.setTag("Items", nbttaglist);
             
-            //remote inventory
-            if (this.remoteSnapshot != null)
+            // Remote inventory snapshot
+            NBTTagList nbttagremote = new NBTTagList();
+            if (remoteSnapshot != null)
             {
-                if (Utils.isDebug()) System.out.println("writeNBT Target: "+targetTileName+" remoteInvSize:"+this.remoteSnapshot.length);
-                for (int i = 0; i < this.remoteSnapshot.length; i++)
+                if (Utils.isDebug()) System.out.println("writeNBT Target: " + targetTileName + " remoteInvSize:" + remoteSnapshot.length);
+                for (int i = 0; i < remoteSnapshot.length; i++)
                 {
-                    if (this.remoteSnapshot[i] != null)
+                    if (remoteSnapshot[i] != null)
                     {
-                        if (Utils.isDebug()) System.out.println("writeNBT Remote Slot: "+i+" ItemID: "+this.remoteSnapshot[i].itemID+" StackSize: "+this.remoteSnapshot[i].stackSize+" meta: "+this.remoteSnapshot[i].getItemDamage());
+                        if (Utils.isDebug()) System.out.println("writeNBT Remote Slot: " + i + " ItemID: " + remoteSnapshot[i].itemID + " StackSize: " + this.remoteSnapshot[i].stackSize + " meta: " + this.remoteSnapshot[i].getItemDamage());
                         NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
                         remoteSnapshot1.setByte("Slot", (byte)i);
-                        this.remoteSnapshot[i].writeToNBT(remoteSnapshot1);
+                        remoteSnapshot[i].writeToNBT(remoteSnapshot1);
                         nbttagremote.appendTag(remoteSnapshot1);
                     }
                 }
@@ -542,12 +576,31 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
             }
-
-            //write stuff to NBT here
-            nbttagcompound.setTag("Items", nbttaglist);
             nbttagcompound.setTag("remoteSnapshot", nbttagremote);
+
+            if (extendedChest != null)
+            {
+                // Double chest second inventory snapshot
+                NBTTagList nbttagextended = new NBTTagList();
+                for (int i = 0; i < extendedChestSnapshot.length; i++)
+                {
+                    if (extendedChestSnapshot[i] != null)
+                    {
+                        if (Utils.isDebug()) System.out.println("writeNBT Extended Slot: " + i + " ItemID: " + extendedChestSnapshot[i].itemID + " StackSize: " + this.extendedChestSnapshot[i].stackSize + " meta: " + this.extendedChestSnapshot[i].getItemDamage());
+                        NBTTagCompound extSnapshot1 = new NBTTagCompound();
+                        extSnapshot1.setByte("Slot", (byte)i);
+                        extendedChestSnapshot[i].writeToNBT(extSnapshot1);
+                        nbttagremote.appendTag(extSnapshot1);
+                    }
+                }
+                nbttagcompound.setTag("extendedSnapshot", nbttagextended);
+            }
+
             nbttagcompound.setString("targetTileName", targetTileName);
             nbttagcompound.setInteger("remoteSnapshotSize", remoteNumSlots);
+            nbttagcompound.setBoolean("reactorWorkaround", reactorWorkaround);
+            nbttagcompound.setInteger("reactorWidth", reactorWidth);
+            nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
         }
     }
 
@@ -575,6 +628,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 {
                     if (Utils.isDebug()) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
                     lastTileEntity = tile;
+                    if (tile instanceof TileEntityChest)
+                        extendedChest = findDoubleChest();
                     hasSnapshot = true;
                 }
                 else
@@ -621,38 +676,109 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             return false;
         }
 
-        // Get number of slots in the remote inventory
-        this.remoteNumSlots = ((IInventory)tile).getSizeInventory();
         ItemStack tempCopy;
-        ItemStack returnCopy[] = new ItemStack[this.remoteNumSlots];
 
-        // Iterate through remote slots and make a copy of it
-        for (int i = 0; i < this.remoteNumSlots; i++)
+        // Get number of slots in the remote inventory
+        TileEntity core = findReactorCore(tile);
+        if (core != null)
         {
-            tempCopy = ((IInventory)tile).getStackInSlot(i);
+            // IC2 nuclear reactors with under 6 chambers do not correctly report the size of their inventory - it's always 54 regardless.
+            // Instead they internally remap slots in all "nonexistent" columns to the rightmost valid column.
+            // Also, because the inventory contents are listed row by row, correcting the size manually is not sufficient.
+            // The snapshot and stocking loops must skip over the remapped slots on each row to reach the valid slots in the next row.
+            reactorWorkaround = true;
+            reactorWidth = countReactorChambers(core) + 3;
+            remoteNumSlots = 54;
+            remoteSnapshot = new ItemStack[remoteNumSlots];
 
-            if (tempCopy == null)
+            // Iterate through remote slots and make a copy of it
+            for (int row = 0; row < 6; row++)
             {
-                returnCopy[i] = null;
-            }
-            else
-            {
-                returnCopy[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
-
-                if (tempCopy.stackTagCompound != null)
+                // skip the useless mirrored slots
+                for (int i = 0; i < reactorWidth; i++)
                 {
-                    returnCopy[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
+                    // Reactor inventory rows are always 9 wide internally
+                    tempCopy = ((IInventory)tile).getStackInSlot(row * 9 + i);
+                    if (tempCopy == null)
+                    {
+                        remoteSnapshot[row * 9 + i] = null;
+                    }
+                    else
+                    {
+                        remoteSnapshot[row * 9 + i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
+
+                        if (tempCopy.stackTagCompound != null)
+                        {
+                            remoteSnapshot[row * 9 + i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
+                        }
+                    } // else
+                } // for i
+            } // for row
+        } // if (core != null)
+        else
+        {
+            remoteNumSlots = ((IInventory)tile).getSizeInventory();
+            remoteSnapshot = new ItemStack[remoteNumSlots];
+
+            if (tile instanceof TileEntityChest)
+                extendedChest = findDoubleChest();
+
+            if (extendedChest != null)
+            {
+                extendedChestSnapshot = new ItemStack[remoteNumSlots];
+            }
+
+            // Iterate through remote slots and make a copy of it
+            for (int i = 0; i < remoteNumSlots; i++)
+            {
+                tempCopy = ((IInventory)tile).getStackInSlot(i);
+
+                if (tempCopy == null)
+                {
+                    remoteSnapshot[i] = null;
+                }
+                else
+                {
+                    remoteSnapshot[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
+
+                    if (tempCopy.stackTagCompound != null)
+                    {
+                        remoteSnapshot[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
+                    }
                 }
             }
-        }
+
+            if (extendedChest != null)
+            {
+                // More work to do: Record the other half of the double chest too!
+                for (int i = 0; i < remoteNumSlots; i++)
+                {
+                    tempCopy = ((IInventory)extendedChest).getStackInSlot(i);
+                    if (tempCopy == null)
+                    {
+                        extendedChestSnapshot[i] = null;
+                    }
+                    else
+                    {
+                        extendedChestSnapshot[i] = new ItemStack(tempCopy.itemID, tempCopy.stackSize, tempCopy.getItemDamage());
+
+                        if (tempCopy.stackTagCompound != null)
+                        {
+                            extendedChestSnapshot[i].stackTagCompound = (NBTTagCompound)tempCopy.stackTagCompound.copy();
+                        }
+                    }
+                }
+            } // if extendedChest
+        } // else (core == null)
+
         /*
          *  get remote entity class name and store it as targetTile, which also ends up being stored in our
          *  own NBT tables so our tile will remember what was there after chunk unloads/restarts/etc
          */
         this.targetTileName = tile.getClass().getName();
-        remoteSnapshot = returnCopy;
         lastTileEntity = tile;
         hasSnapshot = true;
+        if (Utils.isDebug()) System.out.println("Shapshot taken of targetTileName: " + this.targetTileName);
         return true;
     }
 
@@ -668,67 +794,105 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return true;
     }
 
-    protected void stockInventory(IInventory tile)
+    protected void stockInventory()
     {
         int startSlot = 0;
-        int endSlot = startSlot + tile.getSizeInventory();
+        int endSlot = remoteNumSlots;
 
         boolean workDone;
         int pass = 0;
-        
-        // Now makes multiple passes through the target and snapshot to help with 'item in wrong slot' adjustments
-        do
+
+        // Check special cases first
+        if (reactorWorkaround)
+        {
+            do {
+                workDone = false;
+                for (int row = 0; row < 6; row++)
+                {
+                    for (int col = 0; col < reactorWidth; col++)
+                    {
+                        int slot = row * 9 + col;
+                        workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+                    } // for slot
+                } // for row
+                pass++;
+            } while (workDone && pass < 100);
+        }
+        else if (extendedChest != null)
+        {
+            do {
+                workDone = false;
+                for (int slot = startSlot; slot < endSlot; slot++)
+                {
+                    workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+                }
+                pass++;
+            } while (workDone && pass < 100);
+            pass = 0; // Do it for the second chest inventory as well!
+            do {
+                workDone = false;
+                for (int slot = startSlot; slot < endSlot; slot++)
+                {
+                    workDone = processSlot(slot, extendedChest, extendedChestSnapshot);
+                }
+                pass++;
+            } while (workDone && pass < 100);
+        }
+        else do
         {
             workDone = false;
             for (int slot = startSlot; slot < endSlot; slot++)
             {
-                ItemStack i = tile.getStackInSlot(slot);
-                ItemStack s = remoteSnapshot[slot];
-                if (i == null)
-                {
-                    if (s == null)
-                        continue; // Slot is and should be empty. Next!
-    
-                    // Slot is empty but shouldn't be. Add what belongs there.
-                    workDone = addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
-                }
-                else
-                {
-                    // Slot is occupied. Figure out if contents belong there.
-                    if (s == null)
-                    {
-                        // Nope! Slot should be empty. Need to remove this.
-                        // Call helper function to do that here, and then
-                        workDone = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
-                        continue; // move on to next slot!
-                    }
-                    
-                    // Compare contents of slot between remote inventory and snapshot.
-                    if (checkItemTypesMatch(i, s))
-                    {
-                        // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
-                        int amtNeeded = remoteSnapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
-                        if (amtNeeded > 0)
-                        {
-                            workDone = addItemToRemote(slot, tile, amtNeeded);
-                        }
-                        else if (amtNeeded < 0)
-                        {
-                            workDone = removeItemFromRemote(slot, tile, -amtNeeded);
-                        }
-                        // else the size is already the same and we've nothing to do. Hooray!
-                    }
-                    else
-                    {
-                        // Wrong item type in slot! Try to remove what doesn't belong and add what does.
-                        workDone = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
-                        if (tile.getStackInSlot(slot) == null)
-                            workDone = addItemToRemote(slot, tile, remoteSnapshot[slot].stackSize);
-                    }
-                } // else
-            } // for slot
+                workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+            }
             pass++;
         } while (workDone && pass < 100);
+    }
+
+    protected boolean processSlot(int slot, IInventory tile, ItemStack[] snapshot)
+    {
+        ItemStack i = tile.getStackInSlot(slot);
+        ItemStack s = snapshot[slot];
+        if (i == null)
+        {
+            if (s == null)
+                return false; // Slot is and should be empty. Next!
+
+            // Slot is empty but shouldn't be. Add what belongs there.
+            return addItemToRemote(slot, tile, snapshot[slot].stackSize);
+        }
+        else
+        {
+            // Slot is occupied. Figure out if contents belong there.
+            if (s == null)
+            {
+                // Nope! Slot should be empty. Need to remove this.
+                // Call helper function to do that here, and then move on to next slot
+                return removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+            }
+            
+            // Compare contents of slot between remote inventory and snapshot.
+            if (checkItemTypesMatch(i, s))
+            {
+                // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
+                int amtNeeded = snapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
+                if (amtNeeded > 0)
+                    return addItemToRemote(slot, tile, amtNeeded);
+                if (amtNeeded < 0)
+                    return removeItemFromRemote(slot, tile, -amtNeeded); // Note the negation.
+                // The size is already the same and we've nothing to do. Hooray!
+                return false;
+            }
+            else
+            {
+                // Wrong item type in slot! Try to remove what doesn't belong and add what does.
+                boolean ret;
+                ret = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+                if (tile.getStackInSlot(slot) == null)
+                    ret = addItemToRemote(slot, tile, snapshot[slot].stackSize);
+                return ret;
+            }
+        } // else
     }
 
     // Test if two item stacks' types match, while ignoring damage level if needed.  
@@ -872,29 +1036,166 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // Will check if our snapshot should be invalidated.
         // Returns true if snapshot is invalid, false otherwise.
         TileEntity tile = getTileAtFrontFace();
-        if (tile == null)
+        if (!(tile instanceof IInventory)) // A null pointer will fail this test, so there's no need to independently check it.
         {
-            if (Utils.isDebug()) System.out.println("Invalid: Tile = null");
+            if (Utils.isDebug())
+            {
+                if (tile == null) System.out.println("Invalid snapshot: Tile = null");
+                else System.out.println("Invalid snapshot: tileEntity has no IInventory interface");
+            }
             return true;
         }
+
         String tempName = tile.getClass().getName();
         if (!tempName.equals(targetTileName))
         {
-            if (Utils.isDebug()) System.out.println("Invalid: TileName Mismatched, detected TileName="+tempName+" expected TileName="+targetTileName);
+            if (Utils.isDebug()) System.out.println("Invalid snapshot: TileName Mismatched, detected TileName=" + tempName + " expected TileName=" + targetTileName);
             return true;
         }
+
         if (tile != lastTileEntity)
         {
-            if (Utils.isDebug()) System.out.println("Invalid: tileEntity does not match lastTileEntity");
+            if (Utils.isDebug()) System.out.println("Invalid snapshot: tileEntity does not match lastTileEntity");
             return true;
         }
+
         if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
         {
-            if (Utils.isDebug()) System.out.println("Invalid: tileEntity inventory size has changed");
-            if (Utils.isDebug()) System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
+            if (Utils.isDebug())
+            {
+                System.out.println("Invalid snapshot: tileEntity inventory size has changed");
+                System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
+            }
             return true;
         }
+
+        // Deal with double-chest special case
+        if (tile instanceof TileEntityChest)
+        {
+            // Look for adjacent chest
+            TileEntityChest foundChest = findDoubleChest();
+
+            if (Utils.isDebug())
+            {
+                if (foundChest == null)
+                    System.out.println("Single Wooden Chest Found");
+                else
+                    System.out.println("Double Wooden Chest Found");
+            }
+
+            // Check if it matches previous conditions
+            if (extendedChest != foundChest)
+            {
+                if (Utils.isDebug()) System.out.println("Invalid snapshot: Double chest configuration changed!");
+                return true;
+            }
+        }
+
+        // Deal with nuclear reactor special case
+        if (reactorWorkaround)
+        {
+            TileEntity core = findReactorCore(tile);
+            if (core != null)
+            {
+                int currentWidth = countReactorChambers(core) + 3;
+                if (currentWidth != reactorWidth)
+                {
+                    if (Utils.isDebug()) System.out.println("Invalid snapshot: Reactor size has changed!");
+                    return true;
+                }
+            }
+        }
+        
         return false;
+    }
+
+    private TileEntityChest findDoubleChest()
+    {
+        TileEntity temp;
+        TileEntity front = getTileAtFrontFace();
+        if (front == null) return null;
+
+        temp = worldObj.getBlockTileEntity(front.xCoord + 1, front.yCoord, front.zCoord);
+        if (temp instanceof TileEntityChest)
+            return (TileEntityChest)temp;
+
+        temp = worldObj.getBlockTileEntity(front.xCoord - 1, front.yCoord, front.zCoord);
+        if (temp instanceof TileEntityChest)
+            return (TileEntityChest)temp;
+
+        temp = worldObj.getBlockTileEntity(front.xCoord, front.yCoord, front.zCoord + 1);
+        if (temp instanceof TileEntityChest)
+            return (TileEntityChest)temp;
+
+        temp = worldObj.getBlockTileEntity(front.xCoord, front.yCoord, front.zCoord - 1);
+        if (temp instanceof TileEntityChest)
+            return (TileEntityChest)temp;
+
+        return null;
+    }
+
+    private TileEntity findReactorCore(TileEntity start)
+    {
+        TileEntity temp;
+
+        if (start == null)
+            return null;
+
+        if (start.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return start;
+
+        if (!start.getClass().getSimpleName().endsWith(classnameIC2ReactorChamber))
+            return null;
+        // If it's not a core and it's not a chamber we have no business continuing.
+
+        temp = worldObj.getBlockTileEntity(start.xCoord + 1, start.yCoord, start.zCoord);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        temp = worldObj.getBlockTileEntity(start.xCoord - 1, start.yCoord, start.zCoord);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord, start.zCoord + 1);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord, start.zCoord - 1);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord + 1, start.zCoord);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord - 1, start.zCoord);
+        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+            return temp;
+
+        return null;
+    }
+
+    private int addIfChamber(int x, int y, int z)
+    {
+        TileEntity temp = worldObj.getBlockTileEntity(x, y, z);
+        if (temp != null)
+            return temp.getClass().getSimpleName().endsWith(classnameIC2ReactorChamber) ? 1 : 0;
+        return 0;
+    }
+
+    private int countReactorChambers(TileEntity core)
+    {
+        int count = 0;
+        if (core == null) return 0;
+
+        count += addIfChamber(core.xCoord + 1, core.yCoord, core.zCoord);
+        count += addIfChamber(core.xCoord - 1, core.yCoord, core.zCoord);
+        count += addIfChamber(core.xCoord, core.yCoord, core.zCoord + 1);
+        count += addIfChamber(core.xCoord, core.yCoord, core.zCoord - 1);
+        count += addIfChamber(core.xCoord, core.yCoord + 1, core.zCoord);
+        count += addIfChamber(core.xCoord, core.yCoord - 1, core.zCoord);
+
+        return count;
     }
 
     private void lightsOff()
@@ -929,17 +1230,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
             if (!isPowered)
             {
-                // Lost power.
-//                previousPoweredState = false;
-
                 // Shut off glowing light textures.
                 lightsOff();
             }
             else if (isPowered)
             {
-                // We're powered now, set the state flag to true
-//                previousPoweredState = true;
-                
                 // Turn on das blinkenlights!
                 lightsOn();
             }
@@ -950,7 +1245,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         if (!tileLoaded)
         {
             if (Utils.isDebug()) System.out.println("tileLoaded false, running onLoad");
-            this.onLoad();
+            onLoad();
         }
 
         // Check if the GUI or a client is asking us to take a snapshot
@@ -973,6 +1268,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 }
                 else
                 {
+                    // Failed to get a valid snapshot. Run this just in case to cleanly reset everything.
                     clearSnapshot();
                 }
             }
@@ -985,7 +1281,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             clearSnapshot();
         }
 
-        // Check if one of the blocks next to us or us is getting power from a neighboring block. 
+        // Check if this or one of the blocks next to this is getting power from a neighboring block.
         boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
         // This allows client-side animation of texture over time, which would not happen without updating the block
@@ -994,14 +1290,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
         }
 
-        // If we're not powered, set the previousPoweredState to false
         if (!isPowered)
         {
-            // Lost power.
-//            previousPoweredState = false;
-            
-//            reset tick time on losing power
-            this.tickTime = 0;
+            // Reset tick time on losing power
+            tickTime = 0;
 
             if (!CommonProxy.isServer())
             {
@@ -1010,14 +1302,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
         }
 
-        // If we are powered and the previous power state is false, it's time to go to
-        // work. We test it this way so that we only trigger our work state once
-        // per redstone power state cycle (pulse).
-        if (isPowered && this.tickTime == 0)
+        // If we are powered and previously weren't or timer has expired, it's time to go to work.
+        if (isPowered && tickTime == 0)
         {
-            this.tickTime = this.tickDelay;
-            // We're powered now, set the state flag to true
-//            previousPoweredState = true;
+            tickTime = tickDelay;
             if (Utils.isDebug()) System.out.println("Powered");
 
             if (!CommonProxy.isServer())
@@ -1026,46 +1314,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 lightsOn();
             }
 
-            // grab TileEntity at front face
-            TileEntity tile = getTileAtFrontFace();
-            
-            // Verify that the tile we got back exists and implements IInventory            
-            if (tile != null && tile instanceof IInventory)
+            if (hasSnapshot)
             {
-                // Code here deals with the adjacent inventory
-                // if (Utils.isDebug()) System.out.println("Chest Found!");
-
-                // Check if our snapshot is considered valid, the tile we just got doesn't
-                // match the one we had prior, or if no snapshot exists. 
-                if (!hasSnapshot || checkInvalidSnapshot())
+                // Check for any situation in which the snapshot should be invalidated.
+                if (checkInvalidSnapshot())
                 {
-                    if (Utils.isDebug()) System.out.println("Redstone pulse: No valid snapshot, doing nothing");
-                    if (hasSnapshot)
-                        clearSnapshot();
-                    // Used to take a new snapshot here, but that behavior has been removed
+                    clearSnapshot();
                 }
                 else
                 {
-                    // If we've made it here, it's time to stock the remote inventory
-                    stockInventory((IInventory)tile);
+                    // If we've made it here, it's time to stock the remote inventory.
+                    stockInventory();
                 }
             }
-            else
-            {
-                /*
-                 * This code deals with us not getting a valid tile entity from
-                 * the getTileAtFrontFace code. This can happen because there is no
-                 * detected tileentity (returned false), or the tileentity that was returned
-                 * does not implement IInventory. We will clear the last snapshot.
-                 */
-                if (hasSnapshot)
-                    clearSnapshot();
-                if (Utils.isDebug()) System.out.println("entityUpdate snapshot clear");
-            }
         }
-        else if (this.tickTime > 0)
+        else if (tickTime > 0)
         {
-            this.tickTime--;
+            tickTime--;
         }
     }
 }
