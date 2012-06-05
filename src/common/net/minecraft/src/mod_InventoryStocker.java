@@ -8,7 +8,11 @@ import com.kaijin.InventoryStocker.*;
 public class mod_InventoryStocker extends NetworkMod
 {
     static Configuration configuration = CommonProxy.getConfiguration();
-    static int InventoryStockerBlockID = configurationProperties();
+    static int InventoryStockerBlockID;
+    static public boolean isDebugging;
+    static { configurationProperties(); }
+    
+    
     public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
 
     public static mod_InventoryStocker instance;
@@ -24,28 +28,35 @@ public class mod_InventoryStocker extends NetworkMod
         MinecraftForge.registerConnectionHandler(new ConnectionHandler());
         ModLoader.registerBlock(InventoryStocker);
         ModLoader.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
-        ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
-        ModLoader.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"IWI", "PRP", "IWI", 'I', Item.ingotIron, 'W', Block.planks, 'P', Block.pistonBase, 'R', Item.redstone});
+        if (Utils.isDebug())
+        {
+            ModLoader.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
+        }
+        ModLoader.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
         MinecraftForge.setGuiHandler(this.instance, new GuiHandlerInventoryStocker());
         CommonProxy.load();
         if (CommonProxy.isServer())
         {
             ModLoader.getLogger().info ("InventoryStocker " + getVersion() + " loaded.");
         }
+        if (isDebugging)
+        {
+            ModLoader.getLogger().info("InventoryStocker debugging enabled.");
+        }
     }
 
-    public static int configurationProperties()
+    public static void configurationProperties()
     {
         configuration.load();
         InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 249).value);
+        isDebugging = Boolean.getBoolean(configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value);
         configuration.save();
-        return InventoryStockerBlockID;
     }
 
     @Override
     public String getVersion()
     {
-        return "beta 40 for Minecraft 1.2.5";
+        return "beta 41 for Minecraft 1.2.5";
     }
 
     @Override

@@ -9,10 +9,10 @@ import net.minecraft.src.*;
 
 public class Utils
 {
-    // Set this to true to enable debug output throughout
+    // This is set by a configuration file property debug
     public static boolean isDebug()
     {
-        return false;
+        return mod_InventoryStocker.isDebugging;
     }
 
     //JUST in case we need it
