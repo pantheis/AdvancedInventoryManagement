@@ -249,8 +249,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         int ID = worldObj.getBlockId(x, y, z);
         if (ID > 0)
         {
-            String type = Block.blocksList[ID].getClass().toString();
-            if (type.endsWith("GenericPipe"))
+            String type = Block.blocksList[ID].getClass().getName();
+            if (type.endsWith("BlockGenericPipe"))
             {
                 // Buildcraft Pipe
                 // Until more specific matching of transport pipes can be performed, simply assume a connection.
