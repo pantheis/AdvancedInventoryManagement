@@ -30,7 +30,7 @@ public class mod_InventoryStocker extends NetworkMod
         CommonProxy.load();
         if (CommonProxy.isServer())
         {
-            ModLoader.getLogger().info ("InventoryStocker v" + getVersion() + " loaded.");
+            ModLoader.getLogger().info ("InventoryStocker " + getVersion() + " loaded.");
         }
     }
 
@@ -45,7 +45,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "0.4.0a";
+        return "beta 40 for Minecraft 1.2.5";
     }
 
     @Override
