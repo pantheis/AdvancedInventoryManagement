@@ -513,6 +513,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             // Double chest second inventory snapshot
             if (extendedChestFlag)
             {
+                extendedChestSnapshot = new ItemStack[remoteNumSlots];
                 NBTTagList nbttagextended = nbttagcompound.getTagList("extendedSnapshot");
                 if (nbttagextended.tagCount() != 0)
                 {
