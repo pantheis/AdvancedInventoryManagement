@@ -1137,28 +1137,34 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // If it's not a core and it's not a chamber we have no business continuing.
 
         temp = worldObj.getBlockTileEntity(start.xCoord + 1, start.yCoord, start.zCoord);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         temp = worldObj.getBlockTileEntity(start.xCoord - 1, start.yCoord, start.zCoord);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord, start.zCoord + 1);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord, start.zCoord - 1);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord + 1, start.zCoord);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         temp = worldObj.getBlockTileEntity(start.xCoord, start.yCoord - 1, start.zCoord);
-        if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
-            return temp;
+        if (temp != null)
+            if (temp.getClass().getSimpleName().endsWith(classnameIC2ReactorCore))
+                return temp;
 
         return null;
     }
