@@ -8,7 +8,7 @@ import com.kaijin.InventoryStocker.*;
 import net.minecraft.src.*;
 import net.minecraft.src.mod_InventoryStocker.*;
 
-public class BlockInventoryStocker extends Block implements ITextureProvider
+public class BlockInventoryStocker extends Block implements ITextureProvider, IConnectRedstone
 {
     public BlockInventoryStocker(int i, int j)
     {
@@ -146,7 +146,14 @@ public class BlockInventoryStocker extends Block implements ITextureProvider
     @Override
     public boolean canProvidePower()
     {
+        return false; // Old means of causing visual RedPower wire connections.
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int X, int Y, int Z, int direction)
+    {
         return true; // Will appear to connect to RedPower wires and such.
+        // Currently still causes redstone dust to appear to connect in some cases where it shouldn't; Not our fault.
     }
 
     @Override
