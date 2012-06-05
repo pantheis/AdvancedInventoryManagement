@@ -100,6 +100,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider
         // Prevent GUI pop-up and handle block rotation
         if (entityplayer.isSneaking())
         {
+            // Rotate block if hand is empty
             if (entityplayer.getCurrentEquippedItem() == null)
             {
                 int i = world.getBlockMetadata(x, y, z);
@@ -117,7 +118,15 @@ public class BlockInventoryStocker extends Block implements ITextureProvider
                 world.markBlockNeedsUpdate(x, y, z);
             }
 
+            // Block GUI popup when sneaking
             return false;
+        }
+
+        // Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
+        TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+        if (tile != null)
+        {
+            tile.onUpdate();
         }
 
         if (!CommonProxy.isClient(world))

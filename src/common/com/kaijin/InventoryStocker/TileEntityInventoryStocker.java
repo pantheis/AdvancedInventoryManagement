@@ -723,11 +723,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             if (tile instanceof TileEntityChest)
                 extendedChest = findDoubleChest();
 
-            if (extendedChest != null)
-            {
-                extendedChestSnapshot = new ItemStack[remoteNumSlots];
-            }
-
             // Iterate through remote slots and make a copy of it
             for (int i = 0; i < remoteNumSlots; i++)
             {
@@ -751,6 +746,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             if (extendedChest != null)
             {
                 // More work to do: Record the other half of the double chest too!
+                extendedChestSnapshot = new ItemStack[remoteNumSlots];
                 for (int i = 0; i < remoteNumSlots; i++)
                 {
                     tempCopy = ((IInventory)extendedChest).getStackInSlot(i);
@@ -812,7 +808,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     for (int col = 0; col < reactorWidth; col++)
                     {
                         int slot = row * 9 + col;
-                        workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+                        workDone |= processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
                     } // for slot
                 } // for row
                 pass++;
@@ -824,16 +820,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 workDone = false;
                 for (int slot = startSlot; slot < endSlot; slot++)
                 {
-                    workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
-                }
-                pass++;
-            } while (workDone && pass < 100);
-            pass = 0; // Do it for the second chest inventory as well!
-            do {
-                workDone = false;
-                for (int slot = startSlot; slot < endSlot; slot++)
-                {
-                    workDone = processSlot(slot, extendedChest, extendedChestSnapshot);
+                    workDone |= processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+                    workDone |= processSlot(slot, extendedChest, extendedChestSnapshot); // Concurrent second chest processing, for great justice! (and less looping)
                 }
                 pass++;
             } while (workDone && pass < 100);
@@ -843,7 +831,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             workDone = false;
             for (int slot = startSlot; slot < endSlot; slot++)
             {
-                workDone = processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+                workDone |= processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
             }
             pass++;
         } while (workDone && pass < 100);
@@ -859,7 +847,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 return false; // Slot is and should be empty. Next!
 
             // Slot is empty but shouldn't be. Add what belongs there.
-            return addItemToRemote(slot, tile, snapshot[slot].stackSize);
+            return addItemToRemote(slot, tile, snapshot, snapshot[slot].stackSize);
         }
         else
         {
@@ -877,7 +865,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 // Matched. Compare stack sizes. Try to ensure there's not too much or too little.
                 int amtNeeded = snapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
                 if (amtNeeded > 0)
-                    return addItemToRemote(slot, tile, amtNeeded);
+                    return addItemToRemote(slot, tile, snapshot, amtNeeded);
                 if (amtNeeded < 0)
                     return removeItemFromRemote(slot, tile, -amtNeeded); // Note the negation.
                 // The size is already the same and we've nothing to do. Hooray!
@@ -889,7 +877,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 boolean ret;
                 ret = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
                 if (tile.getStackInSlot(slot) == null)
-                    ret = addItemToRemote(slot, tile, snapshot[slot].stackSize);
+                    ret = addItemToRemote(slot, tile, snapshot, snapshot[slot].stackSize);
                 return ret;
             }
         } // else
@@ -922,7 +910,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // Use checkItemTypesMatch on any existing contents to see if the new output will stack
         // If all existing ItemStacks become full, and there is no room left for a new stack,
         // leave the untransferred remainder in the remote inventory.
-        
+
         boolean partialMove = false;
         ItemStack remoteStack = remote.getStackInSlot(slot);
         if (remoteStack == null)
@@ -973,17 +961,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return partialMove;
     }
 
-    protected boolean addItemToRemote(int slot, IInventory remote, int amount)
+    protected boolean addItemToRemote(int slot, IInventory remote, ItemStack[] snapshot, int amount)
     {
         boolean partialMove = false;
-        int max = remoteSnapshot[slot].getMaxStackSize();
+        int max = snapshot[slot].getMaxStackSize();
         int amtNeeded = amount;
         if (amtNeeded > max)
             amtNeeded = max;
 
         for (int i = 17; i >= 0; i--) // Scan Output section as well in case desired items were removed for being in the wrong slot
         {
-            if (contents[i] != null && checkItemTypesMatch(contents[i], remoteSnapshot[slot]))
+            if (contents[i] != null && checkItemTypesMatch(contents[i], snapshot[slot]))
             {
                 if (remote.getStackInSlot(slot) == null)
                 {
@@ -1036,7 +1024,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // Will check if our snapshot should be invalidated.
         // Returns true if snapshot is invalid, false otherwise.
         TileEntity tile = getTileAtFrontFace();
-        if (!(tile instanceof IInventory)) // A null pointer will fail this test, so there's no need to independently check it.
+        if (!(tile instanceof IInventory)) // A null pointer will fail an instanceof test, so there's no need to independently check it.
         {
             if (Utils.isDebug())
             {
