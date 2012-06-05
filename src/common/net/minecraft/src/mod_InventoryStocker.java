@@ -49,14 +49,14 @@ public class mod_InventoryStocker extends NetworkMod
     {
         configuration.load();
         InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 249).value);
-        isDebugging = Boolean.getBoolean(configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value);
+        isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
         configuration.save();
     }
 
     @Override
     public String getVersion()
     {
-        return "beta 41 for Minecraft 1.2.5";
+        return "beta 42 for Minecraft 1.2.5";
     }
 
     @Override
