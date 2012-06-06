@@ -110,18 +110,22 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         packet.length = packet.data.length;
         return packet;
     }
-
+/**
+ * Sends a snapshot state to the client that just opened the GUI.
+ * @param playerName
+ */
     public void sendSnapshotStateClient(String playerName)
     {
-        // Send snapshot state to the client that just opened the GUI
         Packet250CustomPayload packet = createSnapshotPacket();
 
         CommonProxy.sendPacketToPlayer(playerName, packet);
     }
-
+    
+/**
+ * Send snapshot state to all clients in the GUI open list.
+ */
     private void sendSnapshotStateClients()
     {
-        // Send snapshot state to all clients in the GUI open list
         Packet250CustomPayload packet = createSnapshotPacket();
 
         if (this.remoteUsers != null)
@@ -133,11 +137,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
+/**
+ * Sends a snapshot state request to the server.
+ * @param state
+ */
     private void sendSnapshotRequestServer(boolean state)
     {
-        /*
-         * network code goes here to send snapshot state to server
-         */
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -227,9 +232,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
     }
 
-    private boolean findTubeOrPipeAt(int x, int y, int z)
-    {
-        /*
+/**
+ * @param x
+ * @param y
+ * @param z
+ * @return boolean
+ * <pre>
          * RedPower connections:
          *
          * Meta  Tile Entity
@@ -244,8 +252,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
          * Block class: buildcraft.transport.BlockGenericPipe
          *
          * Unable to distinguish water and power pipes from transport pipes.
-         * Would Buildcraft API help?
-         */
+         * Would Buildcraft API help?</pre>
+ */
+    private boolean findTubeOrPipeAt(int x, int y, int z)
+    {
         int ID = worldObj.getBlockId(x, y, z);
         if (ID > 0)
         {
@@ -267,9 +277,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
+/**
+ * Return whether the neighboring block is a tube or pipe.
+ * @param i
+ * @return boolean
+ */
     public boolean doorOpenOnSide(int i)
     {
-        // Return whether the neighboring block is a tube or pipe
         return doorState[i];
     }
 
@@ -605,13 +619,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
     }
 
-    public void onLoad()
-    {
-        /*
+/**
          * This function fires only once on first load of an instance of our tile and attempts to see
          * if we should have a valid inventory or not. It will set the lastTileEntity and
          * hasSnapshot state. The actual remoteInventory object will be loaded (or not) via the NBT calls.
-         */
+*/
+    public void onLoad()
+    {
         if(!CommonProxy.isClient(worldObj))
         {
             tileLoaded = true;
@@ -660,18 +674,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     public void openChest() {}
 
     public void closeChest() {}
-
-    public boolean takeSnapShot(TileEntity tile)
-    {
-        /*
+/**
+ * 
+ * @param tile
+ * @return boolean<p>
          * This function will take a snapshot of the IInventory of the TileEntity passed to it.
          * This will be a copy of the remote inventory as it looks when this function is called.
-         *
+         * 
          * It will check that the TileEntity passed to it actually implements IInventory and
          * return false doing nothing if it does not.
          * 
          * Will return true if it successfully took a snapshot.
-         */
+ */
+    public boolean takeSnapShot(TileEntity tile)
+    {
         if (!(tile instanceof IInventory))
         {
             return false;
@@ -1020,10 +1036,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return partialMove;
     }
 
+/**
+ * Will check if our snapshot should be invalidated.
+ * Returns true if snapshot is invalid, false otherwise.
+ * @return boolean
+ */
     public boolean checkInvalidSnapshot()
     {
-        // Will check if our snapshot should be invalidated.
-        // Returns true if snapshot is invalid, false otherwise.
+ 
         TileEntity tile = getTileAtFrontFace();
         if (!(tile instanceof IInventory)) // A null pointer will fail an instanceof test, so there's no need to independently check it.
         {
@@ -1098,6 +1118,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         return false;
     }
 
+/**
+ * Will find a double chest
+ * @return TileEntityChest
+ */
     private TileEntityChest findDoubleChest()
     {
         TileEntity temp;

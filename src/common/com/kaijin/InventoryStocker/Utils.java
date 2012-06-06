@@ -15,8 +15,12 @@ public class Utils
         return mod_InventoryStocker.isDebugging;
     }
 
-    //JUST in case we need it
-    public static String hashSHA1(String tilename)
+/**
+ * Returns a SHA-256 hex hash string of the string passed to it
+ * @param string
+ * @return String
+ */
+    public static String hashSHA1(String string)
     {
         MessageDigest md = null;
         try {
@@ -26,7 +30,7 @@ public class Utils
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        md.update(tilename.getBytes());
+        md.update(string.getBytes());
  
         byte byteData[] = md.digest();
 
