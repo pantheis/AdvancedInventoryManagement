@@ -1,0 +1,25 @@
+[
+{
+  "modid": "mod_InventoryStocker",
+  "name": "Inventory Stocker",
+  "description": "The Inventory Stocker is a new block that will allow the player to take a snapshot of a directly attached storage block and then use an internal input buffer inventory to attempt to keep the attached storage block's storage setup exactly as it was when the snapshot was taken.",
+  "version": "Beta 43",
+  "mcversion": "1.2.5",
+  "url": "http://www.kaijin.com/",
+  "updateUrl": "",
+  "authors": [
+    "Tallinu",
+    "Pantheis"
+  ],
+  "credits": "",
+  "logo": "",
+  "screenshots": [
+    "",
+    ""
+  ],
+
+  "dependencies": [
+     "mod_MinecraftForge",
+  ],
+}
+]
