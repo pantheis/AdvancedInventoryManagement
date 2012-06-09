@@ -9,8 +9,8 @@
   "updateUrl": "",
   "authors": [
     "Tallinu",
-    "Pantheis"
-  ],
+    "Pantheis" ],
+
   "credits": "",
   "logo": "",
   "screenshots": [
@@ -20,6 +20,6 @@
 
   "dependencies": [
      "mod_MinecraftForge"
-  ],
+  ]
 }
 ]
