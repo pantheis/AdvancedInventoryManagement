@@ -56,7 +56,7 @@ public class mod_InventoryStocker extends NetworkMod
     @Override
     public String getVersion()
     {
-        return "beta 43 for Minecraft 1.2.5";
+        return "beta 44 for Minecraft 1.2.5";
     }
 
     @Override

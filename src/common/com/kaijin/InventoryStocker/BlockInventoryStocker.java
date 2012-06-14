@@ -128,12 +128,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
         {
             tile.onUpdate();
         }
-
-        if (!CommonProxy.isClient(world))
-        {
-            entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
-        }
-
+        entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
         return true;
     }
 
