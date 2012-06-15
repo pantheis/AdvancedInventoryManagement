@@ -53,6 +53,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
         int side = Utils.lookupRotatedSide(i, dir);
         int powered = (m & 8) >> 3;
 
+        //if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
         TileEntity tile = blocks.getBlockTileEntity(x, y, z);
 
         // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
@@ -62,7 +63,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
             return 2 + powered * (((time >> 2) & 3) + 1);
         }
         
-        int open = tile instanceof TileEntityInventoryStocker ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
+        int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
         
         if (side == 1) // Back
         {
