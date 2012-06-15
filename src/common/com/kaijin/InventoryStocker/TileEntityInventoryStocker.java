@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.*;
 
 import com.kaijin.InventoryStocker.*;
 
@@ -262,6 +263,59 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             String type = Block.blocksList[ID].getClass().getName();
             if (type.endsWith("BlockGenericPipe"))
             {
+                if (Utils.isDebug())
+                {
+                    try {
+                        TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+                        Class cls = tile.getClass();
+                        Field fldpipe = cls.getDeclaredField("pipe");
+                        Object pipeobj = fldpipe.get(tile);
+                        Class pipecls = pipeobj.getClass();
+
+                        Method methlist[] = pipecls.getDeclaredMethods();
+                        Field fieldlist[] = pipecls.getDeclaredFields();
+                        Class[] intfs = pipecls.getInterfaces();
+                        
+                        System.out.println("***METHODS***");
+                        for (int i = 0; i < methlist.length; i++)
+                        {
+                            Method m = methlist[i];
+                            System.out.println("name = " + m.getName());
+                            System.out.println("decl class = " + m.getDeclaringClass());
+                            Class pvec[] = m.getParameterTypes();
+                            for (int j = 0; j < pvec.length; j++)
+                            {
+                                System.out.println("param #" + j + " " + pvec[j]);
+                            }
+                            System.out.println("return type = " + m.getReturnType());
+                            System.out.println("-----");
+                        }
+                        
+                        System.out.println("***FIELDS***");
+                        for (int i = 0; i < fieldlist.length; i++)
+                        {
+                            Field fld = fieldlist[i];
+                            System.out.println("name = " + fld.getName());
+                            System.out.println("decl class = " + fld.getDeclaringClass());
+                            System.out.println("type = " + fld.getType());
+                            int mod = fld.getModifiers();
+                            System.out.println("modifiers = " + Modifier.toString(mod));
+                            System.out.println("-----");
+                        }
+                        
+                        System.out.println("***INTERFACES***");
+                        for (int i = 0; i < intfs.length; i++)
+                        {
+                            System.out.println("Interfaces: " + intfs[i]);
+                        }
+                    }
+                    catch (Throwable e)
+                    {
+                        System.err.println(e);
+                    }
+                    
+                }
+                    
                 // Buildcraft Pipe
                 // Until more specific matching of transport pipes can be performed, simply assume a connection.
                 return true;
