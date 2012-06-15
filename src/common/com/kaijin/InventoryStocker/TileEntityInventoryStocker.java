@@ -589,7 +589,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             }
             else
             {
-                if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
+                // if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
             }
             nbttagcompound.setTag("remoteSnapshot", nbttagremote);
 
@@ -1222,7 +1222,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
         meta &= 7; // Clear bit 4
         worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-        worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
     }
 
     private void lightsOn()
@@ -1231,36 +1231,30 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
         meta |= 8; // Set bit 4
         worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-        worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
     public void updateEntity()
     {
+        // Check if this or one of the blocks next to this is getting power from a neighboring block.
+        boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+
         if(CommonProxy.isClient(worldObj))
         {
             //Check the door states client side in SMP here
             updateDoorStates();
 
-            /*
-             * texture animation somewhat working in SMP with the code below. Front face animation is broken
-             * but the lights do turn on and off
-             */
-            boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-            if (!isPowered)
+            if (isPowered)
             {
-                // Shut off glowing light textures.
-                lightsOff();
+                // This allows client-side animation of texture over time, which would not happen without updating the block
+                worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
             }
-            else if (isPowered)
-            {
-                // Turn on das blinkenlights!
-                lightsOn();
-            }
+
             return;
         } // if(CommonProxy.isClient(worldObj))
 
-        // See if this tileEntity instance has ever loaded, if not, do some onLoad stuff to restore prior state
+        // See if this tileEntity instance has been properly loaded, if not, do some onLoad stuff to initialize or restore prior state
         if (!tileLoaded)
         {
             if (Utils.isDebug()) System.out.println("tileLoaded false, running onLoad");
@@ -1300,12 +1294,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             clearSnapshot();
         }
 
-        // Check if this or one of the blocks next to this is getting power from a neighboring block.
-        boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-
-        // This allows client-side animation of texture over time, which would not happen without updating the block
         if (isPowered && !CommonProxy.isServer())
         {
+            // This allows single-player animation of texture over time, which would not happen without updating the block
             worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
         }
 
@@ -1314,11 +1305,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             // Reset tick time on losing power
             tickTime = 0;
 
-            if (!CommonProxy.isServer())
-            {
+//            if (!CommonProxy.isServer())
+//            {
                 // Shut off glowing light textures.
                 lightsOff();
-            }
+//            }
         }
 
         // If we are powered and previously weren't or timer has expired, it's time to go to work.
@@ -1327,11 +1318,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             tickTime = tickDelay;
             if (Utils.isDebug()) System.out.println("Powered");
 
-            if (!CommonProxy.isServer())
-            {
+//            if (!CommonProxy.isServer())
+//            {
                 // Turn on das blinkenlights!
                 lightsOn();
-            }
+//            }
 
             if (hasSnapshot)
             {
