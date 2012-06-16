@@ -263,7 +263,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             String type = Block.blocksList[ID].getClass().getName();
             if (type.endsWith("BlockGenericPipe"))
             {
-                if (Utils.isDebug())
+                /* if (Utils.isDebug())
                 {
                     try {
                         TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
@@ -275,13 +275,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                         Method methlist[] = pipecls.getDeclaredMethods();
                         Field fieldlist[] = pipecls.getDeclaredFields();
                         Class[] intfs = pipecls.getInterfaces();
-                        
+
                         System.out.println("***METHODS***");
                         for (int i = 0; i < methlist.length; i++)
                         {
                             Method m = methlist[i];
                             System.out.println("name = " + m.getName());
-                            System.out.println("decl class = " + m.getDeclaringClass());
+                            // System.out.println("decl class = " + m.getDeclaringClass()); // this will not change between different methods of the same class
                             Class pvec[] = m.getParameterTypes();
                             for (int j = 0; j < pvec.length; j++)
                             {
@@ -290,35 +290,56 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                             System.out.println("return type = " + m.getReturnType());
                             System.out.println("-----");
                         }
-                        
+
                         System.out.println("***FIELDS***");
                         for (int i = 0; i < fieldlist.length; i++)
                         {
                             Field fld = fieldlist[i];
                             System.out.println("name = " + fld.getName());
-                            System.out.println("decl class = " + fld.getDeclaringClass());
+                            // System.out.println("decl class = " + fld.getDeclaringClass()); // this will not change between different fields of the same class
                             System.out.println("type = " + fld.getType());
                             int mod = fld.getModifiers();
                             System.out.println("modifiers = " + Modifier.toString(mod));
                             System.out.println("-----");
                         }
-                        
+
                         System.out.println("***INTERFACES***");
                         for (int i = 0; i < intfs.length; i++)
                         {
-                            System.out.println("Interfaces: " + intfs[i]);
+                            System.out.println(intfs[i]);
                         }
                     }
                     catch (Throwable e)
                     {
                         System.err.println(e);
                     }
-                    
-                }
-                    
+                } */
+
                 // Buildcraft Pipe
-                // Until more specific matching of transport pipes can be performed, simply assume a connection.
-                return true;
+                boolean founditempipe = false;
+                try
+                {
+                    TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+                    Class cls = tile.getClass();
+                    Field fldpipe = cls.getDeclaredField("pipe");
+                    Object pipe = fldpipe.get(tile);
+
+                    Class pipecls = Class.forName("buildcraft.transport.Pipe"); // TODO Correct the class name?
+                    Field fldtransport = pipecls.getDeclaredField("transport");
+
+                    Object transport = fldtransport.get(pipe);
+                    String transportType = transport.getClass().getName();
+                    if (transportType.endsWith("Items"))
+                    {
+                        // then this door should be open
+                        founditempipe = true;
+                    }
+                }
+                catch (Throwable e)
+                {
+                    System.err.println(e);
+                }
+                return founditempipe;
             }
             else if (type.endsWith("eloraam.base.BlockMicro"))
             {
