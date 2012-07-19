@@ -1,3 +1,8 @@
+/* Inventory Stocker
+*  Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+*  Licensed as open source with restrictions. Please see attached LICENSE.txt.
+*/
+
 package net.minecraft.src;
 
 import java.io.File;
