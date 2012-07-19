@@ -1,6 +1,6 @@
 TERMS AND CONDITIONS
 
-Version 1.0.0
+Version 1.0.2
 July 19th, 2012
 This document supersedes and replaces any prior license agreement.
 
@@ -12,12 +12,12 @@ Mod: The mod code designated by the present license, in source form, binary
 form, as obtained standalone, as part of a wider distribution or resulting from
 the compilation of the original or modified sources.
 
-Source - original or decompiled code for the mod, whether modified or
-unmodified.
+Source: Original or decompiled code for the mod, in modified or unmodified
+form.
 
-Owner - Original author(s) of the mod.
+Owner: Original author(s) of the mod.
 
-User: Anybody that interacts with the software in one of the following ways:
+User: Anyone who interacts with the software in one of the following ways:
    - play
    - decompile
    - recompile or compile
@@ -27,7 +27,7 @@ User: Anybody that interacts with the software in one of the following ways:
 1. Scope
 --------
 The present license is granted to any user of the mod. As a prerequisite,
-a user must own a legally acquired copy of Minecraft
+a user must own a legally acquired copy of Minecraft.
    
 2. Liability
 ------------
@@ -39,7 +39,7 @@ or misuse of this mod are the sole responsibility of the user.
 
 3. Play rights
 --------------
-The user is allowed to install this mod on a client or a server and to play
+The user is allowed to install this mod on a client and a server and to play
 without restriction.
 
 4. Derivative Works/Modifications
@@ -56,8 +56,8 @@ copies, and modifications are noted at the top of the modified file with the
 author of the modification, the date of the modification, and a brief
 description of what was changed.
 
-Creating entirely new works based on portions the source is allowed without any
-restrictions.
+Creating entirely new works based on portions of the source is allowed without
+any restrictions.
 
 5. Distribution of original or modified copy rights
 ---------------------------------------------------
@@ -69,6 +69,6 @@ from the owner.
 6. Commercial Purposes
 ----------------------
 Any commercial use of this mod and derivative works/modifications are
-strictly forbidden without advanced written permission from owner.
+strictly forbidden without advance written permission from owner.
 
 Copyright © 2012 Tallinu & Pantheis
