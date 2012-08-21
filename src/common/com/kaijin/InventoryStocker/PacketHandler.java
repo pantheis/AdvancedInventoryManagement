@@ -11,7 +11,7 @@ import java.io.DataInputStream;
 import com.kaijin.InventoryStocker.*;
 
 import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
+import cpw.mods.fml.common.network.*;
 
 public class PacketHandler implements IPacketHandler
 {
@@ -44,9 +44,9 @@ public class PacketHandler implements IPacketHandler
 
     //This is the listen function to obtain data FROM the server TO the client
     @Override
-    public void onPacketData(NetworkManager network, String channel, byte[] data)
+    public void onPacketData(NetworkManager network, Packet250CustomPayload packet, Player player)
     {
-        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
+        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.data));
         //Read the first int to determine packet type
         try
         {

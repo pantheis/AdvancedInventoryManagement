@@ -3,14 +3,18 @@
 *  Licensed as open source with restrictions. Please see attached LICENSE.txt.
 */
 
-package net.minecraft.src;
+package com.kaijin.InventoryStocker;
 
 import java.io.File;
 import java.util.*;
-import net.minecraft.src.forge.*;
 import com.kaijin.InventoryStocker.*;
+import net.minecraftforge.common.*;
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.network.*;
 
-public class mod_InventoryStocker extends NetworkMod
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="beta 1 for Minecraft 1.3.2")
+@NetworkMod(channels = { "InventoryStocker" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+public class mod_InventoryStocker
 {
     static Configuration configuration = CommonProxy.getConfiguration();
     static int InventoryStockerBlockID;
