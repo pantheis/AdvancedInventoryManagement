@@ -5,20 +5,26 @@
 
 package com.kaijin.InventoryStocker;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
 import com.kaijin.InventoryStocker.*;
 
 import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
 
 public class ContainerInventoryStocker extends Container
 {
     private IInventory playerinventory;
     private TileEntityInventoryStocker inventorystockerinventory;
+    private List<String> guiPlayerList = new ArrayList<String>();
+    private EntityPlayer human;
 
-    public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory)
+    public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory, EntityPlayer player)
     {
         this.playerinventory = playerinventory;
         this.inventorystockerinventory = inventorystockerinventory;
+        this.human = player;
         int xCol;
         int yRow;
 
@@ -26,7 +32,7 @@ public class ContainerInventoryStocker extends Container
         {
             for (xCol = 0; xCol < 3; ++xCol)
             {
-                this.addSlot(new Slot(inventorystockerinventory, xCol + 3 * yRow, 8 + xCol * 18, 18 + yRow * 18));
+                this.addSlotToContainer(new Slot(inventorystockerinventory, xCol + 3 * yRow, 8 + xCol * 18, 18 + yRow * 18));
             }
         }
 
@@ -34,7 +40,7 @@ public class ContainerInventoryStocker extends Container
         {
             for (xCol = 0; xCol < 3; ++xCol)
             {
-                this.addSlot(new Slot(inventorystockerinventory, 9 + xCol + 3 * yRow, 116 + xCol * 18, 18 + yRow * 18));
+                this.addSlotToContainer(new Slot(inventorystockerinventory, 9 + xCol + 3 * yRow, 116 + xCol * 18, 18 + yRow * 18));
             }
         }
 
@@ -42,13 +48,13 @@ public class ContainerInventoryStocker extends Container
         {
             for (xCol = 0; xCol < 9; ++xCol)
             {
-                this.addSlot(new Slot(playerinventory, xCol + yRow * 9 + 9, 8 + xCol * 18, 86 + yRow * 18));
+                this.addSlotToContainer(new Slot(playerinventory, xCol + yRow * 9 + 9, 8 + xCol * 18, 86 + yRow * 18));
             }
         }
 
         for (xCol = 0; xCol < 9; ++xCol)
         {
-            this.addSlot(new Slot(playerinventory, xCol, 8 + xCol * 18, 144));
+            this.addSlotToContainer(new Slot(playerinventory, xCol, 8 + xCol * 18, 144));
         }
     }
 
@@ -92,12 +98,24 @@ public class ContainerInventoryStocker extends Container
         return var2;
     }
     
+    public void onCraftGuiOpened(ICrafting par1ICrafting)
+    {
+        super.onCraftGuiOpened(par1ICrafting);
+        guiPlayerList.add(((EntityPlayerMP)par1ICrafting).username);
+        inventorystockerinventory.sendSnapshotStateClient(((EntityPlayerMP)par1ICrafting).username);
+        inventorystockerinventory.entityOpenList(guiPlayerList);
+        
+    }
     /**
      * Callback for when the crafting gui is closed.
      */
     public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
     {
         super.onCraftGuiClosed(par1EntityPlayer);
-        this.inventorystockerinventory.closeChest();
+        if (guiPlayerList.contains(par1EntityPlayer.username))
+        {
+            guiPlayerList.remove(par1EntityPlayer.username);
+            inventorystockerinventory.entityOpenList(guiPlayerList);
+        }
     }
 }

@@ -5,26 +5,51 @@
 
 package com.kaijin.InventoryStocker;
 
+import cpw.mods.fml.common.network.IConnectionHandler;
+import cpw.mods.fml.common.network.Player;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
 
 public class ConnectionHandler implements IConnectionHandler
 {
-    @Override
-    public void onConnect(NetworkManager network)
-    {
-        MessageManager.getInstance().registerChannel(network, new PacketHandler(), "InvStocker");
-    }
+	@Override
+	public void playerLoggedIn(Player player, NetHandler netHandler,
+			NetworkManager manager) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void onLogin(NetworkManager network, Packet1Login login)
-    {
-        
-    }
+	@Override
+	public String connectionReceived(NetLoginHandler netHandler,
+			NetworkManager manager) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public void onDisconnect(NetworkManager network, String message,Object[] args)
-    {
-        
-    }
+	@Override
+	public void connectionOpened(NetHandler netClientHandler, String server,
+			int port, NetworkManager manager) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionOpened(NetHandler netClientHandler,
+			MinecraftServer server, NetworkManager manager) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionClosed(NetworkManager manager) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clientLoggedIn(NetHandler clientHandler,
+			NetworkManager manager, Packet1Login login) {
+		// TODO Auto-generated method stub
+		
+	}
 }

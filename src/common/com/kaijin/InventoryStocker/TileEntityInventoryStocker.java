@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.*;
-
 import com.kaijin.InventoryStocker.*;
-
 import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
@@ -63,7 +62,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void setSnapshotState(boolean state)
     {
-        if(CommonProxy.isClient(worldObj))
+        if(ClientProxy.isClient(worldObj))
         {
             this.hasSnapshot = state;
         }
@@ -124,7 +123,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     {
         Packet250CustomPayload packet = createSnapshotPacket();
 
-        CommonProxy.sendPacketToPlayer(playerName, packet);
+        ClientProxy.sendPacketToPlayer(playerName, packet);
     }
     
 /**
@@ -138,7 +137,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         {
             for (int i = 0; i < this.remoteUsers.size(); ++i)
             {
-                CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
+                ClientProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
             }
         }
     }
@@ -169,12 +168,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
 
-        CommonProxy.sendPacketToServer(packet);
+        ClientProxy.sendPacketToServer(packet);
     }
 
     public void guiTakeSnapshot()
     {
-        if(CommonProxy.isClient(worldObj))
+        if(ClientProxy.isClient(worldObj))
         {
             sendSnapshotRequestServer(true);
         }
@@ -186,7 +185,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void guiClearSnapshot()
     {
-        if(CommonProxy.isClient(worldObj))
+        if(ClientProxy.isClient(worldObj))
         {
             sendSnapshotRequestServer(false);
         }
@@ -207,7 +206,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         extendedChestSnapshot = null;
         reactorWorkaround = false;
         reactorWidth = 0;
-        if (CommonProxy.isServer())
+        if (ClientProxy.isServer())
         {
             sendSnapshotStateClients();
         }
@@ -215,13 +214,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void onUpdate()
     {
-        if(!CommonProxy.isClient(worldObj))
+        if(!ClientProxy.isClient(worldObj))
         {
             if (checkInvalidSnapshot())
                 clearSnapshot();
         }
 
-        if (!CommonProxy.isServer())
+        if (!ClientProxy.isServer())
         {
             // Check adjacent blocks for tubes or pipes and update list accordingly
             updateDoorStates();
@@ -552,7 +551,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
-        if(!CommonProxy.isClient(worldObj))
+        if(!ClientProxy.isClient(worldObj))
         {
             super.readFromNBT(nbttagcompound);
 
@@ -632,7 +631,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
      */
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
-        if(!CommonProxy.isClient(worldObj))
+        if(!ClientProxy.isClient(worldObj))
         {
             super.writeToNBT(nbttagcompound);
 
@@ -706,7 +705,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 */
     public void onLoad()
     {
-        if(!CommonProxy.isClient(worldObj))
+        if(!ClientProxy.isClient(worldObj))
         {
             tileLoaded = true;
             if (Utils.isDebug()) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
@@ -1320,7 +1319,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         // Check if this or one of the blocks next to this is getting power from a neighboring block.
         boolean isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
-        if(CommonProxy.isClient(worldObj))
+        if(ClientProxy.isClient(worldObj))
         {
             //Check the door states client side in SMP here
             updateDoorStates();
@@ -1352,7 +1351,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             {
                 if (takeSnapShot(tile))
                 {
-                    if (CommonProxy.isServer())
+                    if (ClientProxy.isServer())
                     {
                         // server has no GUI, but this code works for our purposes.
                         // We need to send the snapshot state flag here to all clients that have the GUI open
@@ -1374,7 +1373,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             clearSnapshot();
         }
 
-        if (isPowered && !CommonProxy.isServer())
+        if (isPowered && !ClientProxy.isServer())
         {
             // This allows single-player animation of texture over time, which would not happen without updating the block
             worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
@@ -1423,4 +1422,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
             tickTime--;
         }
     }
+
+	@Override
+	public int getStartInventorySide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getSizeInventorySide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

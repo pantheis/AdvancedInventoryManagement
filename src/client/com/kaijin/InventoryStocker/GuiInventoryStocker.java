@@ -6,11 +6,8 @@
 package com.kaijin.InventoryStocker;
 
 import org.lwjgl.opengl.GL11;
-
 import com.kaijin.InventoryStocker.*;
-
 import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
 
 public class GuiInventoryStocker extends GuiContainer
 {
@@ -24,7 +21,7 @@ public class GuiInventoryStocker extends GuiContainer
 
     public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker, EntityPlayer player)
     {
-        super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
+        super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker, player));
         this.playerinventory = playerinventory;
         this.tile = tileentityinventorystocker;
         xSize = 176;

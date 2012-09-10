@@ -8,7 +8,7 @@ package com.kaijin.InventoryStocker;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.kaijin.InventoryStocker.CommonProxy;
+import com.kaijin.InventoryStocker.ClientProxy;
 
 import net.minecraft.src.*;
 

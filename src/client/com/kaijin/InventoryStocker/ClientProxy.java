@@ -6,16 +6,19 @@
 package com.kaijin.InventoryStocker;
 
 import java.io.File;
-import net.minecraft.src.*;
-import net.minecraft.src.forge.*;
-import net.minecraft.client.Minecraft;
 
-public class CommonProxy
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.src.*;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.Configuration;
+
+public class ClientProxy extends CommonProxy
 {
     public static void load()
     {
         MinecraftForgeClient.preloadTexture("/com/kaijin/InventoryStocker/textures/terrain.png");
-        ModLoader.addName(mod_InventoryStocker.InventoryStocker, "Inventory Stocker");
+        LanguageRegistry.addName(mod_InventoryStocker.instance, "Inventory Stocker");
     }
 
     public static Configuration getConfiguration()

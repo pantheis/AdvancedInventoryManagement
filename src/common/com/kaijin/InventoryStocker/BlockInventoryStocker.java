@@ -5,13 +5,9 @@
 
 package com.kaijin.InventoryStocker;
 
-import net.minecraft.src.forge.*;
 import java.util.*;
-
 import com.kaijin.InventoryStocker.*;
-
 import net.minecraft.src.*;
-import net.minecraft.src.mod_InventoryStocker.*;
 
 public class BlockInventoryStocker extends Block implements ITextureProvider, IConnectRedstone
 {
@@ -217,7 +213,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
     {
         TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-        if (tile instanceof IInventory && !CommonProxy.isClient(world))
+        if (tile instanceof IInventory && !ClientProxy.isClient(world))
         {
             dropItems(world, (IInventory) tile, i, j, k);
         }

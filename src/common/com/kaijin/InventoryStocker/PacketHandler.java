@@ -74,14 +74,14 @@ public class PacketHandler implements IPacketHandler
                 ex.printStackTrace();
             }
 
-            World world = CommonProxy.PacketHandlerGetWorld(network);
+            World world = ClientProxy.PacketHandlerGetWorld(network);
             TileEntity tile = world.getBlockTileEntity(x, y, z);
 
             //check if the tile we're looking at is an Inventory Stocker tile
             if (tile instanceof TileEntityInventoryStocker)
             {
                 //call a function on that tile to let it know if it has a valid state server side or not
-                if(CommonProxy.isClient(tile.worldObj))
+                if(ClientProxy.isClient(tile.worldObj))
                 {
                     //snapshot state message from server
                     ((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
