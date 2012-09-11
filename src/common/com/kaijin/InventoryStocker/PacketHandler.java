@@ -80,6 +80,7 @@ public class PacketHandler implements IPacketHandler
             //check if the tile we're looking at is an Inventory Stocker tile
             if (tile instanceof TileEntityInventoryStocker)
             {
+            	
                 //call a function on that tile to let it know if it has a valid state server side or not
                 if(ClientProxy.isClient(tile.worldObj))
                 {

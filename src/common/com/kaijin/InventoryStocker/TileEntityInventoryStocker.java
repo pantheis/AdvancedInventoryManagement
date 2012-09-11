@@ -13,6 +13,8 @@ import java.util.List;
 import java.lang.reflect.*;
 import com.kaijin.InventoryStocker.*;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
@@ -37,7 +39,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     private TileEntityChest extendedChest = null;
     private int remoteNumSlots = 0;
     private String targetTileName = "none";
-    private List<String> remoteUsers = new ArrayList<String>();
+    private List<Player> remoteUsers = new ArrayList<Player>();
 
     final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
     final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
@@ -72,6 +74,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
     
     public void entityOpenList(List crafters)
     {
+    	if (Utils.isDebug()) System.out.println("entityOpenList");
         this.remoteUsers = crafters;
     }
     
@@ -96,6 +99,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     private Packet250CustomPayload createSnapshotPacket()
     {
+    	if (Utils.isDebug()) System.out.println("createSnapshotPacket");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -112,7 +116,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
         return packet;
@@ -123,6 +127,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
  */
     public void sendSnapshotStateClient(Player playerName)
     {
+    	if (Utils.isDebug()) System.out.println("sendSnapshotStateClient");
         Packet250CustomPayload packet = createSnapshotPacket();
 
         ClientProxy.sendPacketToPlayer(playerName, packet);
@@ -133,13 +138,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
  */
     private void sendSnapshotStateClients()
     {
+    	if (Utils.isDebug()) System.out.println("sendSnapshotStateClients");
         Packet250CustomPayload packet = createSnapshotPacket();
 
         if (this.remoteUsers != null)
         {
             for (int i = 0; i < this.remoteUsers.size(); ++i)
             {
-                ClientProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
+                CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
             }
         }
     }
@@ -150,6 +156,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
  */
     private void sendSnapshotRequestServer(boolean state)
     {
+    	if (Utils.isDebug()) System.out.println("sendSnapshotRequestServer");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -166,7 +173,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
         }
 
         Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = "InvStocker"; // CHANNEL MAX 16 CHARS
+        packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
 
@@ -175,14 +182,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
     public void guiTakeSnapshot()
     {
-        if(ClientProxy.isClient(worldObj))
-        {
+//        if(ClientProxy.isClient(worldObj))
+//        {
+        	if (Utils.isDebug()) System.out.println("guiTakeSnapshot.sendSnapshotRequestServer");
             sendSnapshotRequestServer(true);
-        }
-        else
-        {
-            guiTakeSnapshot = true;
-        }
+//        }
+//        else
+//        {
+//            guiTakeSnapshot = true;
+//        }
     }
 
     public void guiClearSnapshot()
