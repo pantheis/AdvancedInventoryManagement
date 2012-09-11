@@ -120,13 +120,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 	/**
 	 * Sends a snapshot state to the client that just opened the GUI.
-	 * @param EntityPlayerMP
+	 * @param EntityPlayer
 	 */
-	public void sendSnapshotStateClient(EntityPlayerMP player)
+	public void sendSnapshotStateClient(EntityPlayer player)
 	{
 		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient");
 		Packet250CustomPayload packet = createSnapshotPacket();
-
 		CommonProxy.sendPacketToPlayer(player, packet);
 	}
 
@@ -210,6 +209,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		// Check adjacent blocks for tubes or pipes and update list accordingly
 		updateDoorStates();
+		
 	}
 
 	private void updateDoorStates()
@@ -1098,7 +1098,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	  */
 	 public boolean checkInvalidSnapshot()
 	 {
-
+		 /* TODO Add code here to check if the chunk that the tile at front face
+		 *      is in is actually loaded or not. Return false immediately if it
+		 *      isn't loaded so that other code doesn't clear the snapshot.
+		 */
 		 TileEntity tile = getTileAtFrontFace();
 		 if (!(tile instanceof IInventory)) // A null pointer will fail an instanceof test, so there's no need to independently check it.
 		 {

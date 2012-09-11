@@ -104,7 +104,7 @@ public class ContainerInventoryStocker extends Container
 	{
 		super.addCraftingToCrafters(par1ICrafting);
 		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-		inventorystockerinventory.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
+		inventorystockerinventory.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
 		inventorystockerinventory.entityOpenList(guiPlayerList);
 
 	}
