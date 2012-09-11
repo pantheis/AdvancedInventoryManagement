@@ -8,10 +8,6 @@ package com.kaijin.InventoryStocker;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.kaijin.InventoryStocker.ClientProxy;
-
-import net.minecraft.src.*;
-
 public class Utils
 {
     // This is set by a configuration file property debug

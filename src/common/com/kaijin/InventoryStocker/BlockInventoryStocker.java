@@ -223,7 +223,7 @@ public class BlockInventoryStocker extends Block
     {
         TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-        if (tile instanceof IInventory && !ClientProxy.isClient(world))
+        if (tile instanceof IInventory && !CommonProxy.isClient(world))
         {
             dropItems(world, (IInventory) tile, i, j, k);
         }
