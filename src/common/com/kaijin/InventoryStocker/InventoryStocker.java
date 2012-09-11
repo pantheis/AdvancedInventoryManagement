@@ -10,36 +10,49 @@ import java.util.*;
 import com.kaijin.InventoryStocker.*;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = "InventoryStocker", name="Inventory Stocker", version="beta 1 for Minecraft 1.3.2")
 @NetworkMod(channels = { "InventoryStocker" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class)
-public class mod_InventoryStocker
+public class InventoryStocker
 {
 	@SidedProxy(clientSide = "com.kaijin.InventoryStocker.ClientProxy", serverSide = "com.kaijin.InventoryStocker.CommonProxy")
 	public static CommonProxy proxy; //This object will be populated with the class that you choose for the environment
 	@Instance
-	public static mod_InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
+	public static InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
     
-	static Configuration configuration = proxy.getConfiguration();
     static int InventoryStockerBlockID;
     static public boolean isDebugging;
-    static { configurationProperties(); }
     
-    
-    public static final Block InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("inventoryStocker");
-
-    @Init
-    public void load()
+    @PreInit
+	public static void preInit(FMLPreInitializationEvent event)
     {
+    	Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
+    	configuration.load();
+        InventoryStockerBlockID = configuration.getOrCreateBlockIdProperty("InventoryStocker", 2490).getInt();
+        isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
+        configuration.save();
+    }
+    
+    @Init
+    public void load(FMLInitializationEvent event)
+    {
+    	InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("InventoryStocker").setCreativeTab(CreativeTabs.tabBlock);
+    	LanguageRegistry.addName(InventoryStocker, "Inventory Stocker");
         GameRegistry.registerBlock(InventoryStocker);
         GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
         if (Utils.isDebug())
@@ -51,19 +64,13 @@ public class mod_InventoryStocker
         ClientProxy.load();
         if (ClientProxy.isServer())
         {
-            ModLoader.getLogger().info ("InventoryStocker " +  + " loaded.");
+            ModLoader.getLogger().info ("InventoryStocker " + " loaded.");
         }
         if (isDebugging)
         {
             ModLoader.getLogger().info("InventoryStocker debugging enabled.");
         }
     }
-
-	public static void configurationProperties()
-    {
-        configuration.load();
-        InventoryStockerBlockID = Integer.parseInt(configuration.getOrCreateBlockIdProperty("InventoryStocker", 249).value);
-        isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
-        configuration.save();
-    }
+    
+    public static Block InventoryStocker; 
 }

@@ -8,19 +8,19 @@ package com.kaijin.InventoryStocker;
 import java.io.File;
 
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.src.*;
 import net.minecraftforge.common.Configuration;
+import com.kaijin.InventoryStocker.*;
 
 public class CommonProxy implements IGuiHandler
 {
+	public static String BLOCK_PNG = "/com/kaijin/InventoryStocker/textures/terrain.png";
+	
     public static void load()
     {
-
-    }
-
-    public static Configuration getConfiguration()
-    {
-        return new Configuration(new File("config/InventoryStocker.cfg"));
     }
 
 //    public static World PacketHandlerGetWorld(NetworkManager network)
@@ -39,10 +39,10 @@ public class CommonProxy implements IGuiHandler
         return true;
     }
 
-//    public static void sendPacketToPlayer(String playerName, Packet250CustomPayload packet)
-//    {
-//        ModLoader.getMinecraftServerInstance().configManager.sendPacketToPlayer(playerName, packet);
-//    }
+    public static void sendPacketToPlayer(Player playerName, Packet250CustomPayload packet)
+    {
+        PacketDispatcher.sendPacketToPlayer(packet, playerName);
+    }
 
     public static void sendPacketToServer(Packet250CustomPayload packet)
     {

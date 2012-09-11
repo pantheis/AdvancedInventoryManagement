@@ -11,6 +11,8 @@ import java.util.Iterator;
 
 import com.kaijin.InventoryStocker.*;
 
+import cpw.mods.fml.common.network.Player;
+
 import net.minecraft.src.*;
 
 public class ContainerInventoryStocker extends Container
@@ -98,11 +100,11 @@ public class ContainerInventoryStocker extends Container
         return var2;
     }
     
-    public void onCraftGuiOpened(ICrafting par1ICrafting)
+    public void addCraftingToCrafters(ICrafting par1ICrafting)
     {
-        super.onCraftGuiOpened(par1ICrafting);
+        super.addCraftingToCrafters(par1ICrafting);
         guiPlayerList.add(((EntityPlayerMP)par1ICrafting).username);
-        inventorystockerinventory.sendSnapshotStateClient(((EntityPlayerMP)par1ICrafting).username);
+        inventorystockerinventory.sendSnapshotStateClient((Player)(par1ICrafting));
         inventorystockerinventory.entityOpenList(guiPlayerList);
         
     }

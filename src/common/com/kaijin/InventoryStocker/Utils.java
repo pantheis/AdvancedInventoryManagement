@@ -17,7 +17,7 @@ public class Utils
     // This is set by a configuration file property debug
     public static boolean isDebug()
     {
-        return mod_InventoryStocker.isDebugging;
+        return InventoryStocker.isDebugging;
     }
 
 /**

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.*;
 import com.kaijin.InventoryStocker.*;
+
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
@@ -119,7 +121,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
  * Sends a snapshot state to the client that just opened the GUI.
  * @param playerName
  */
-    public void sendSnapshotStateClient(String playerName)
+    public void sendSnapshotStateClient(Player playerName)
     {
         Packet250CustomPayload packet = createSnapshotPacket();
 

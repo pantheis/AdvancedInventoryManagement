@@ -6,24 +6,34 @@
 package com.kaijin.InventoryStocker;
 
 import java.util.*;
+
+import net.minecraft.src.Block;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IBlockAccess;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
+import net.minecraft.src.MathHelper;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
+
 import com.kaijin.InventoryStocker.*;
-import net.minecraft.src.*;
 
-public class BlockInventoryStocker extends Block implements ITextureProvider, IConnectRedstone
+
+public class BlockInventoryStocker extends Block
 {
-    public BlockInventoryStocker(int i, int j)
+    public BlockInventoryStocker(int i, int j, Material material)
     {
-        super(i, j, Material.ground);
-    }
-
-    public void addCreativeItems(ArrayList itemList)
-    {
-        itemList.add(new ItemStack(this));
+        super(i, j, material);
+//        setCreativeTab(CreativeTabs.tabBlock);
     }
 
     public String getTextureFile()
     {
-        return "/com/kaijin/InventoryStocker/textures/terrain.png";
+        return CommonProxy.BLOCK_PNG;
     }
 
     public int getBlockTextureFromSide(int i)
@@ -97,7 +107,7 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
     }
 
     @Override
-    public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
     {
         // Prevent GUI pop-up and handle block rotation
         if (entityplayer.isSneaking())
@@ -130,12 +140,12 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
         {
             tile.onUpdate();
         }
-        entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
+        entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
         return true;
     }
 
     @Override
-    public TileEntity getTileEntity(int metadata)
+    public TileEntity createTileEntity(World world, int metadata)
     {
         return new TileEntityInventoryStocker();
     }
@@ -178,10 +188,10 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
         // TileEntity tile = world.getBlockTileEntity(x, y, z);
     }
 
-    public void onBlockRemoval(World world, int x, int y, int z)
+    public void breakBlock(World world, int x, int y, int z, int par1, int par2)
     {
         preDestroyBlock(world, x, y, z);
-        super.onBlockRemoval(world, x, y, z);
+        super.breakBlock(world, x, y, z, par1, par2);
     }
     
     public static void dropItems(World world, ItemStack stack, int i, int j, int k)
@@ -218,5 +228,4 @@ public class BlockInventoryStocker extends Block implements ITextureProvider, IC
             dropItems(world, (IInventory) tile, i, j, k);
         }
     }
-
 }
