@@ -14,7 +14,6 @@ import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
-import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.Init;
@@ -26,8 +25,9 @@ import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="beta 1 for Minecraft 1.3.2")
-@NetworkMod(channels = { "InventoryStocker" }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class)
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b1")
+@NetworkMod(channels = { "InventoryStocker" }, clientSideRequired = true, serverSideRequired = false,
+            packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class)
 public class InventoryStocker
 {
 	@SidedProxy(clientSide = "com.kaijin.InventoryStocker.ClientProxy", serverSide = "com.kaijin.InventoryStocker.CommonProxy")
@@ -64,11 +64,11 @@ public class InventoryStocker
         ClientProxy.load();
         if (ClientProxy.isServer())
         {
-            ModLoader.getLogger().info ("InventoryStocker " + " loaded.");
+        	FMLLog.getLogger().info ("InventoryStocker " + " loaded.");
         }
         if (isDebugging)
         {
-            ModLoader.getLogger().info("InventoryStocker debugging enabled.");
+        	FMLLog.getLogger().info("InventoryStocker debugging enabled.");
         }
     }
     

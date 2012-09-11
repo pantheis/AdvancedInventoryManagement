@@ -7,6 +7,7 @@ package com.kaijin.InventoryStocker;
 
 import java.io.File;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.src.*;
@@ -21,15 +22,10 @@ public class ClientProxy extends CommonProxy
         MinecraftForgeClient.preloadTexture(CommonProxy.BLOCK_PNG);
     }
 
-    public static Configuration getConfiguration()
-    {
-        return new Configuration(new File(Minecraft.getMinecraftDir(), "config/InventoryStocker.cfg"));
-    }
-
     public static World PacketHandlerGetWorld(NetworkManager network)
     {
         //server side needs to grab the world entity
-        return ModLoader.getMinecraftInstance().theWorld;
+        return FMLClientHandler.instance().getClient().theWorld;
     }
 
     public static boolean isClient(World world)
