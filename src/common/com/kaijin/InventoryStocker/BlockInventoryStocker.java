@@ -189,10 +189,10 @@ public class BlockInventoryStocker extends Block
 		// TileEntity tile = world.getBlockTileEntity(x, y, z);
 	}
 
-	public void breakBlock(World world, int x, int y, int z, int par1, int par2)
+	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
 	{
 		preDestroyBlock(world, x, y, z);
-		super.breakBlock(world, x, y, z, par1, par2);
+		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 
 	public static void dropItems(World world, ItemStack stack, int i, int j, int k)
@@ -224,9 +224,10 @@ public class BlockInventoryStocker extends Block
 	{
 		TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-		if (tile instanceof IInventory && !CommonProxy.isClient(world))
+		if (tile instanceof IInventory && !InventoryStocker.proxy.isClient(world))
 		{
 			dropItems(world, (IInventory) tile, i, j, k);
+			tile.invalidate();
 		}
 	}
 }

@@ -26,12 +26,12 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
-	public static boolean isClient(World world)
+	public boolean isClient(World world)
 	{
 		return false;
 	}
 
-	public static boolean isServer()
+	public boolean isServer()
 	{
 		return true;
 	}

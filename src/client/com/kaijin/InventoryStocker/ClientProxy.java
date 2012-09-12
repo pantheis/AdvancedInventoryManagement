@@ -22,12 +22,14 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.preloadTexture(CommonProxy.BLOCK_PNG);
 	}
 
-	public static boolean isClient(World world)
+	@Override
+	public boolean isClient(World world)
 	{
 		return world instanceof WorldClient;
 	}
 
-	public static boolean isServer()
+	@Override
+	public boolean isServer()
 	{
 		return false;
 	}

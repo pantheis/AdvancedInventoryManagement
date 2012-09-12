@@ -1,0 +1,211 @@
+2012-09-12 14:12:53 [INFO] [STDOUT] MinecraftForge v4.1.1.251 Initialized
+sendSnapshotStateClients
+2012-09-12 14:12:53 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:53 [INFO] [STDOUT] tileLoaded false, running onLoad
+2012-09-12 14:12:53 [INFO] [STDOUT] onLoad, remote inv size = 0
+2012-09-12 14:12:53 [INFO] [STDOUT] onLoad tile = null
+2012-09-12 14:12:53 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:53 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:53 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:53 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:53 [INFO] [STDOUT] tileLoaded false, running onLoad
+2012-09-12 14:12:53 [INFO] [STDOUT] onLoad, remote inv size = 0
+2012-09-12 14:12:53 [INFO] [STDOUT] onLoad tile = null
+2012-09-12 14:12:53 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:53 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:59 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:12:59 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:59 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:59 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:12:59 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:59 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:12:59 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:12:59 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:12:59 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:01 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:01 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:01 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:01 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:01 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:01 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:01 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:01 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:01 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:01 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:01 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:03 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-12 14:13:03 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-12 14:13:03 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-12 14:13:03 [INFO] [STDOUT] ServerPacketHandler.onPacketData
+2012-09-12 14:13:03 [INFO] [STDOUT] ServerPacketHandler: Attempting to get worldObj
+2012-09-12 14:13:03 [INFO] [STDOUT] GUI: take snapshot request
+2012-09-12 14:13:03 [INFO] [STDOUT] GUI take snapshot request
+2012-09-12 14:13:03 [INFO] [STDOUT] Shapshot taken of targetTileName: net.minecraft.src.TileEntityChest
+2012-09-12 14:13:03 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:03 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:03 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:03 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:05 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:05 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:07 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:07 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:07 [INFO] [STDOUT] Powered
+2012-09-12 14:13:07 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:07 [INFO] [STDOUT] Powered
+2012-09-12 14:13:07 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:07 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:07 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:07 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:07 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:07 [INFO] [STDOUT] tileLoaded false, running onLoad
+2012-09-12 14:13:07 [INFO] [STDOUT] onLoad, remote inv size = 0
+2012-09-12 14:13:07 [INFO] [STDOUT] onLoad, target name=net.minecraft.src.TileEntityChest stored name=none NOT matched.
+2012-09-12 14:13:07 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:07 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:07 [INFO] [STDOUT] Powered
+2012-09-12 14:13:07 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:08 [INFO] [STDOUT] Powered
+2012-09-12 14:13:08 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:08 [INFO] [STDOUT] Powered
+2012-09-12 14:13:08 [INFO] [STDOUT] Powered
+2012-09-12 14:13:08 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:08 [INFO] [STDOUT] Powered
+2012-09-12 14:13:09 [INFO] [STDOUT] Powered
+2012-09-12 14:13:09 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:09 [INFO] [STDOUT] Powered
+2012-09-12 14:13:09 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:09 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:10 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:10 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:10 [INFO] [STDOUT] Powered
+2012-09-12 14:13:10 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:10 [INFO] [STDOUT] Powered
+2012-09-12 14:13:11 [INFO] [STDOUT] Powered
+2012-09-12 14:13:11 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:11 [INFO] [STDOUT] Powered
+2012-09-12 14:13:11 [INFO] [STDOUT] Powered
+2012-09-12 14:13:11 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:11 [INFO] [STDOUT] Powered
+2012-09-12 14:13:11 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:11 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:11 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:11 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:11 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:11 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:11 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:12 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:12 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:12 [INFO] [STDOUT] Powered
+2012-09-12 14:13:12 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:12 [INFO] [STDOUT] Powered
+2012-09-12 14:13:12 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:12 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:12 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:12 [INFO] [STDOUT] Powered
+2012-09-12 14:13:12 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:12 [INFO] [STDOUT] Powered
+2012-09-12 14:13:13 [INFO] [STDOUT] Powered
+2012-09-12 14:13:13 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:13 [INFO] [STDOUT] Powered
+2012-09-12 14:13:13 [INFO] [STDOUT] Powered
+2012-09-12 14:13:13 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:13 [INFO] [STDOUT] Powered
+2012-09-12 14:13:14 [INFO] [STDOUT] Powered
+2012-09-12 14:13:14 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:14 [INFO] [STDOUT] Powered
+2012-09-12 14:13:14 [INFO] [STDOUT] Powered
+2012-09-12 14:13:14 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:14 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:14 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:14 [INFO] [STDOUT] Powered
+2012-09-12 14:13:14 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:14 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:14 [INFO] [STDOUT] tileLoaded false, running onLoad
+2012-09-12 14:13:14 [INFO] [STDOUT] onLoad, remote inv size = 0
+2012-09-12 14:13:14 [INFO] [STDOUT] onLoad, target name=net.minecraft.src.TileEntityChest stored name=none NOT matched.
+2012-09-12 14:13:14 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:14 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:17 [INFO] [STDOUT] Invalid snapshot: Tile = null
+2012-09-12 14:13:17 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:17 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:17 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:17 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:18 [INFO] [STDOUT] Invalid snapshot: Tile = null
+2012-09-12 14:13:18 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:18 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:18 [INFO] [STDOUT] Invalid snapshot: Tile = null
+2012-09-12 14:13:18 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:18 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:18 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:18 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:18 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:18 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:18 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:18 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:18 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:20 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:20 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:20 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:20 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:20 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:20 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:20 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:20 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:20 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:21 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:21 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:21 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:21 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:21 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:21 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:21 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:21 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:21 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:21 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:21 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:21 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:21 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:22 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-12 14:13:22 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-12 14:13:22 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-12 14:13:22 [INFO] [STDOUT] ServerPacketHandler.onPacketData
+2012-09-12 14:13:22 [INFO] [STDOUT] ServerPacketHandler: Attempting to get worldObj
+2012-09-12 14:13:22 [INFO] [STDOUT] GUI: take snapshot request
+2012-09-12 14:13:22 [INFO] [STDOUT] GUI take snapshot request
+2012-09-12 14:13:22 [INFO] [STDOUT] Shapshot taken of targetTileName: net.minecraft.src.TileEntityChest
+2012-09-12 14:13:22 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:22 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:22 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:22 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:24 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:24 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:24 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:24 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:24 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:24 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:24 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:24 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:26 [INFO] [STDOUT] Invalid snapshot: TileName Mismatched, detected TileName=net.minecraft.src.TileEntityChest expected TileName=none
+2012-09-12 14:13:26 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:26 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:26 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:26 [INFO] [STDOUT] sendSnapshotStateClient
+2012-09-12 14:13:26 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:26 [INFO] [STDOUT] entityOpenList
+2012-09-12 14:13:26 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-12 14:13:26 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-12 14:13:29 [INFO] [STDOUT] Single Wooden Chest Found
+2012-09-12 14:13:30 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:30 [INFO] [STDOUT] createSnapshotPacket
+2012-09-12 14:13:30 [INFO] [STDOUT] tileLoaded false, running onLoad
+2012-09-12 14:13:30 [INFO] [STDOUT] onLoad, remote inv size = 0
+2012-09-12 14:13:30 [INFO] [STDOUT] onLoad, target name=net.minecraft.src.TileEntityChest stored name=none NOT matched.
+2012-09-12 14:13:30 [INFO] [STDOUT] sendSnapshotStateClients
+2012-09-12 14:13:30 [INFO] [STDOUT] createSnapshotPacket

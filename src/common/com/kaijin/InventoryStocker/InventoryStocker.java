@@ -65,7 +65,7 @@ public class InventoryStocker
 		GameRegistry.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
 		NetworkRegistry.instance().registerGuiHandler(this.instance, proxy);
 		proxy.load();
-		if (CommonProxy.isServer())
+		if (proxy.isServer())
 		{
 			FMLLog.getLogger().info ("InventoryStocker loaded.");
 		}

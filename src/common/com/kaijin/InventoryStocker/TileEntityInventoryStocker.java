@@ -1352,7 +1352,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			 clearSnapshot();
 		 }
 
-		 if (isPowered && !CommonProxy.isServer())
+		 if (isPowered && !InventoryStocker.proxy.isServer())
 		 {
 			 // This allows single-player animation of texture over time, which would not happen without updating the block
 			 worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
