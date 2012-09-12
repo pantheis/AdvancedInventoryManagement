@@ -103,10 +103,13 @@ public class ContainerInventoryStocker extends Container
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-		inventorystockerinventory.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
-		inventorystockerinventory.entityOpenList(guiPlayerList);
-
+		if (InventoryStocker.proxy.isServer())
+		{
+			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server");
+			guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
+			inventorystockerinventory.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
+			inventorystockerinventory.entityOpenList(guiPlayerList);
+		}
 	}
 	/**
 	 * Callback for when the crafting gui is closed.
@@ -114,10 +117,13 @@ public class ContainerInventoryStocker extends Container
 	 public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
 		 super.onCraftGuiClosed(par1EntityPlayer);
-		 if (guiPlayerList.contains(par1EntityPlayer.username))
+		 if (InventoryStocker.proxy.isServer())
 		 {
-			 guiPlayerList.remove(par1EntityPlayer.username);
-			 inventorystockerinventory.entityOpenList(guiPlayerList);
+			 if (guiPlayerList.contains(par1EntityPlayer.username))
+			 {
+				 guiPlayerList.remove(par1EntityPlayer.username);
+				 inventorystockerinventory.entityOpenList(guiPlayerList);
+			 }
 		 }
 	}
 }

@@ -48,7 +48,8 @@ public class CommonProxy implements IGuiHandler
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+			int x, int y, int z) 
+	{
 		if (!world.blockExists(x, y, z))
 		{
 			return null;
@@ -61,12 +62,15 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
+		((TileEntityInventoryStocker)tile).sendSnapshotStateClient(player);
+
 		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
 	}
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+			int x, int y, int z) 
+	{
 		if (!world.blockExists(x, y, z))
 		{
 			return null;
