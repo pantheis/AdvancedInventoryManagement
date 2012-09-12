@@ -1,221 +1,232 @@
+/* Inventory Stocker
+ *  Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ *  Licensed as open source with restrictions. Please see attached LICENSE.txt.
+ */
+
 package com.kaijin.InventoryStocker;
 
-import net.minecraft.src.forge.*;
 import java.util.*;
+
+import net.minecraft.src.Block;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.IBlockAccess;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
+import net.minecraft.src.MathHelper;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 
 import com.kaijin.InventoryStocker.*;
 
-import net.minecraft.src.*;
-import net.minecraft.src.mod_InventoryStocker.*;
 
-public class BlockInventoryStocker extends Block implements ITextureProvider, IConnectRedstone
+public class BlockInventoryStocker extends Block
 {
-    public BlockInventoryStocker(int i, int j)
-    {
-        super(i, j, Material.ground);
-    }
+	public BlockInventoryStocker(int i, int j, Material material)
+	{
+		super(i, j, material);
+		//        setCreativeTab(CreativeTabs.tabBlock);
+	}
 
-    public void addCreativeItems(ArrayList itemList)
-    {
-        itemList.add(new ItemStack(this));
-    }
+	public String getTextureFile()
+	{
+		return CommonProxy.BLOCK_PNG;
+	}
 
-    public String getTextureFile()
-    {
-        return "/com/kaijin/InventoryStocker/textures/terrain.png";
-    }
+	public int getBlockTextureFromSide(int i)
+	{
+		switch (i)
+		{
+		case 0: // Bottom
+			return 16;
 
-    public int getBlockTextureFromSide(int i)
-    {
-        switch (i)
-        {
-            case 0: // Bottom
-                return 16;
+		case 1: // Top
+			return 0;
 
-            case 1: // Top
-                return 0;
+		case 2: // North
+			return 16;
 
-            case 2: // North
-                return 16;
+		case 3: // South
+			return 16;
 
-            case 3: // South
-                return 16;
+		default: // 4-5 West-East
+			return 16;
+		}
+	}
 
-            default: // 4-5 West-East
-                return 16;
-        }
-    }
+	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
+	{
+		int m = blocks.getBlockMetadata(x, y, z);
+		int dir = m & 7;
+		int side = Utils.lookupRotatedSide(i, dir);
+		int powered = (m & 8) >> 3;
 
-    public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
-    {
-        int m = blocks.getBlockMetadata(x, y, z);
-        int dir = m & 7;
-        int side = Utils.lookupRotatedSide(i, dir);
-        int powered = (m & 8) >> 3;
+		//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
 
-        //if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
-        TileEntity tile = blocks.getBlockTileEntity(x, y, z);
+		// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
+		if (side == 0) // Front
+		{
+			int time = (int)tile.worldObj.getWorldTime();
+			return 2 + powered * (((time >> 2) & 3) + 1);
+		}
 
-        // Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-        if (side == 0) // Front
-        {
-            int time = (int)tile.worldObj.getWorldTime();
-            return 2 + powered * (((time >> 2) & 3) + 1);
-        }
-        
-        int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
-        
-        if (side == 1) // Back
-        {
-            return 32 + powered + open;
-        }
+		int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
 
-        return 16 + powered + open; // Top, Bottom, Left, Right
-    }
+		if (side == 1) // Back
+		{
+			return 32 + powered + open;
+		}
 
-    private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
-    {
-        if (player.rotationPitch > 45D)
-        {
-            return 0;
-        }
+		return 16 + powered + open; // Top, Bottom, Left, Right
+	}
 
-        if (player.rotationPitch < -45D)
-        {
-            return 1;
-        }
+	private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
+	{
+		if (player.rotationPitch > 45D)
+		{
+			return 0;
+		}
 
-        int dir = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        return dir == 0 ? 3 : (dir == 1 ? 4 : (dir == 2 ? 2 : (dir == 3 ? 5 : 0)));
-    }
+		if (player.rotationPitch < -45D)
+		{
+			return 1;
+		}
 
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
-    {
-        int dir = determineOrientation(world, x, y, z, (EntityPlayer)par5EntityLiving);
-        world.setBlockMetadataWithNotify(x, y, z, dir);
-    }
+		int dir = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		return dir == 0 ? 3 : (dir == 1 ? 4 : (dir == 2 ? 2 : (dir == 3 ? 5 : 0)));
+	}
 
-    @Override
-    public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer)
-    {
-        // Prevent GUI pop-up and handle block rotation
-        if (entityplayer.isSneaking())
-        {
-            // Rotate block if hand is empty
-            if (entityplayer.getCurrentEquippedItem() == null)
-            {
-                int i = world.getBlockMetadata(x, y, z);
-                int dir = i & 7; // Get orientation from first 3 bits of meta data
-                i ^= dir; // Clear those bits
-                ++dir; // Rotate
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+	{
+		int dir = determineOrientation(world, x, y, z, (EntityPlayer)par5EntityLiving);
+		world.setBlockMetadataWithNotify(x, y, z, dir);
+	}
 
-                if (dir > 5)
-                {
-                    dir = 0;    // Start over
-                }
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
+	{
+		// Prevent GUI pop-up and handle block rotation
+		if (entityplayer.isSneaking())
+		{
+			// Rotate block if hand is empty
+			if (entityplayer.getCurrentEquippedItem() == null)
+			{
+				int i = world.getBlockMetadata(x, y, z);
+				int dir = i & 7; // Get orientation from first 3 bits of meta data
+				i ^= dir; // Clear those bits
+				++dir; // Rotate
 
-                i |= dir; // Write orientation back to meta data value
-                world.setBlockMetadataWithNotify(x, y, z, i); // And store it
-                world.markBlockNeedsUpdate(x, y, z);
-            }
+				if (dir > 5)
+				{
+					dir = 0;    // Start over
+				}
 
-            // Block GUI popup when sneaking
-            return false;
-        }
+				i |= dir; // Write orientation back to meta data value
+				world.setBlockMetadataWithNotify(x, y, z, i); // And store it
+				world.markBlockNeedsUpdate(x, y, z);
+			}
 
-        // Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
-        TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-        if (tile != null)
-        {
-            tile.onUpdate();
-        }
-        entityplayer.openGui(mod_InventoryStocker.instance, 1, world, x, y, z);
-        return true;
-    }
+			// Block GUI popup when sneaking
+			return false;
+		}
 
-    @Override
-    public TileEntity getTileEntity(int metadata)
-    {
-        return new TileEntityInventoryStocker();
-    }
+		// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
+		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+		if (tile != null)
+		{
+			tile.onUpdate();
+		}
+		entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
+		return true;
+	}
 
-    @Override
-    public boolean canProvidePower()
-    {
-        return false; // Old means of causing visual RedPower wire connections.
-    }
+	@Override
+	public TileEntity createTileEntity(World world, int metadata)
+	{
+		return new TileEntityInventoryStocker();
+	}
 
-    @Override
-    public boolean canConnectRedstone(IBlockAccess world, int X, int Y, int Z, int direction)
-    {
-        return true; // Will appear to connect to RedPower wires and such.
-        // Currently still causes redstone dust to appear to connect in some cases where it shouldn't; Not our fault.
-    }
+	@Override
+	public boolean canProvidePower()
+	{
+		return false; // Old means of causing visual RedPower wire connections.
+	}
 
-    @Override
-    public boolean hasTileEntity(int metadata)
-    {
-        return true;
-    }
+	@Override
+	public boolean canConnectRedstone(IBlockAccess world, int X, int Y, int Z, int direction)
+	{
+		return true; // Will appear to connect to RedPower wires and such.
+		// Currently still causes redstone dust to appear to connect in some cases where it shouldn't; Not our fault.
+	}
 
-    /**
-     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, neighbor blockID
-     */
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
-    {
-        super.onNeighborBlockChange(world, x, y, z, blockID);
-        TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-        if (tile != null)
-        {
-            tile.onUpdate();
-        }
-    }
+	@Override
+	public boolean hasTileEntity(int metadata)
+	{
+		return true;
+	}
 
-    public void onBlockPlaced(World world, int x, int y, int z, int facing)
-    {
-        // TileEntity tile = world.getBlockTileEntity(x, y, z);
-    }
+	/**
+	 * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+	 * their own) Args: x, y, z, neighbor blockID
+	 */
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		super.onNeighborBlockChange(world, x, y, z, blockID);
+		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+		if (tile != null)
+		{
+			tile.onUpdate();
+		}
+	}
 
-    public void onBlockRemoval(World world, int x, int y, int z)
-    {
-        preDestroyBlock(world, x, y, z);
-        super.onBlockRemoval(world, x, y, z);
-    }
-    
-    public static void dropItems(World world, ItemStack stack, int i, int j, int k)
-    {
-        float f1 = 0.7F;
-        double d = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
-        double d1 = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
-        double d2 = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
-        EntityItem entityitem = new EntityItem(world, (double) i + d,
-                (double) j + d1, (double) k + d2, stack);
-        entityitem.delayBeforeCanPickup = 10;
-        world.spawnEntityInWorld(entityitem);
-    }
+	public void onBlockPlaced(World world, int x, int y, int z, int facing)
+	{
+		// TileEntity tile = world.getBlockTileEntity(x, y, z);
+	}
 
-    public static void dropItems(World world, IInventory inventory, int i, int j, int k)
-    {
-        for (int l = 0; l < inventory.getSizeInventory(); ++l)
-        {
-            ItemStack items = inventory.getStackInSlot(l);
+	public void breakBlock(World world, int x, int y, int z, int par1, int par2)
+	{
+		preDestroyBlock(world, x, y, z);
+		super.breakBlock(world, x, y, z, par1, par2);
+	}
 
-            if (items != null && items.stackSize > 0)
-            {
-                dropItems(world, inventory.getStackInSlot(l).copy(), i, j, k);
-            }
-        }
-    }
+	public static void dropItems(World world, ItemStack stack, int i, int j, int k)
+	{
+		float f1 = 0.7F;
+		double d = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
+		double d1 = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
+		double d2 = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
+		EntityItem entityitem = new EntityItem(world, (double) i + d,
+				(double) j + d1, (double) k + d2, stack);
+		entityitem.delayBeforeCanPickup = 10;
+		world.spawnEntityInWorld(entityitem);
+	}
 
-    public static void preDestroyBlock(World world, int i, int j, int k)
-    {
-        TileEntity tile = world.getBlockTileEntity(i, j, k);
+	public static void dropItems(World world, IInventory inventory, int i, int j, int k)
+	{
+		for (int l = 0; l < inventory.getSizeInventory(); ++l)
+		{
+			ItemStack items = inventory.getStackInSlot(l);
 
-        if (tile instanceof IInventory && !CommonProxy.isClient(world))
-        {
-            dropItems(world, (IInventory) tile, i, j, k);
-        }
-    }
+			if (items != null && items.stackSize > 0)
+			{
+				dropItems(world, inventory.getStackInSlot(l).copy(), i, j, k);
+			}
+		}
+	}
 
+	public static void preDestroyBlock(World world, int i, int j, int k)
+	{
+		TileEntity tile = world.getBlockTileEntity(i, j, k);
+
+		if (tile instanceof IInventory && !CommonProxy.isClient(world))
+		{
+			dropItems(world, (IInventory) tile, i, j, k);
+		}
+	}
 }
