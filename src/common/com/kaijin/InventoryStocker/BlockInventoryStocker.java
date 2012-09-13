@@ -23,6 +23,9 @@ import net.minecraft.src.World;
 
 import com.kaijin.InventoryStocker.*;
 
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.network.NetworkRegistry;
+
 
 public class BlockInventoryStocker extends Block
 {
@@ -148,6 +151,7 @@ public class BlockInventoryStocker extends Block
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
+		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
 	}
 

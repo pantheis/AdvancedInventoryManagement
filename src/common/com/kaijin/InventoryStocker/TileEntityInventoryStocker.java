@@ -22,7 +22,7 @@ import net.minecraftforge.common.ISidedInventory;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
-	private ItemStack contents[];
+	private ItemStack[] contents = new ItemStack[this.getSizeInventory()];
 	private ItemStack remoteSnapshot[];
 	private ItemStack extendedChestSnapshot[];
 
@@ -32,6 +32,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean previousPoweredState = false;
 
 	private boolean hasSnapshot = false;
+	private boolean lastSnapshotState = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
 	private TileEntity lastTileEntity = null;
@@ -48,7 +49,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private int tickDelay = 9;
 	private int tickTime = 0;
 
-	private boolean doorState[];
+	private boolean[] doorState = new boolean[6];
 
 
 	@Override
@@ -57,12 +58,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return true;
 	}
 
-	public TileEntityInventoryStocker()
-	{
-		contents = new ItemStack [this.getSizeInventory()];
-		clearSnapshot();
-		doorState = new boolean[6];
-	}
+//	public TileEntityInventoryStocker()
+//	{
+//		contents = new ItemStack [this.getSizeInventory()];
+//		if (Utils.isDebug()) System.out.println("TileEntityInventoryStocker().clearSnapshot()");
+////		clearSnapshot();
+//		doorState = new boolean[6];
+//	}
 
 	public void setSnapshotState(boolean state)
 	{
@@ -89,14 +91,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 	}
 
+	/**
+	 * Returns current value of hasSnapshot
+	 * @return
+	 */
 	public boolean validSnapshot()
 	{
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("tile.validSnapshot(): " + s);
 		return hasSnapshot;
 	}
 
 	private Packet250CustomPayload createSnapshotPacket()
 	{
-		if (Utils.isDebug()) System.out.println("createSnapshotPacket");
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("createSnapshotPacket: " + s);
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -122,9 +131,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 * Sends a snapshot state to the client that just opened the GUI.
 	 * @param EntityPlayer
 	 */
-	public void sendSnapshotStateClient(EntityPlayer player)
+	public void sendSnapshotStateClient(EntityPlayerMP player)
 	{
-		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient");
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient: " + s);
 		Packet250CustomPayload packet = createSnapshotPacket();
 		CommonProxy.sendPacketToPlayer(player, packet);
 	}
@@ -134,7 +144,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	private void sendSnapshotStateClients()
 	{
-		if (Utils.isDebug()) System.out.println("sendSnapshotStateClients");
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("sendSnapshotStateClients(): " + s);
 		Packet250CustomPayload packet = createSnapshotPacket();
 
 		if (this.remoteUsers != null)
@@ -193,6 +204,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		if(InventoryStocker.proxy.isClient(worldObj))
 		{
+			if (Utils.isDebug()) System.out.println("guiClearSnapshot.sendSnapshotRequestServer");
 			sendSnapshotRequestServer(false);	
 		}
 		else
@@ -212,8 +224,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		extendedChestSnapshot = null;
 		reactorWorkaround = false;
 		reactorWidth = 0;
+		if (Utils.isDebug()) System.out.println("clearSnapshot()");
 //		if (InventoryStocker.proxy.isServer())
 //		{
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("clearSnapshot: " + s);
 			sendSnapshotStateClients();	
 //		}
 	}
@@ -222,8 +237,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		if(!InventoryStocker.proxy.isClient(worldObj))
 		{
-			if (checkInvalidSnapshot())
+			if (checkInvalidSnapshot() && validSnapshot())
 			{
+				if (Utils.isDebug()) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
 				clearSnapshot();
 			}
 		}
@@ -1400,12 +1416,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 //					{
 						// server has no GUI, but this code works for our purposes.
 						// We need to send the snapshot state flag here to all clients that have the GUI open
+    					String s = new Boolean(hasSnapshot).toString();
+					    if (Utils.isDebug()) System.out.println("guiTakeSnapshot.sendSnapshotStateClients: " + s);
 						sendSnapshotStateClients();
 //					}
 				}
 				else
 				{
 					// Failed to get a valid snapshot. Run this just in case to cleanly reset everything.
+					if (Utils.isDebug()) System.out.println("updateEntity.guiTakeSnapshot_failed.clearSnapshot()");
 					clearSnapshot();
 				}
 			}
@@ -1415,6 +1434,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (guiClearSnapshot)
 		{
 			guiClearSnapshot = false;
+			if (Utils.isDebug()) System.out.println("updateEntity.guiClearSnapshot.clearSnapshot()");
 			clearSnapshot();
 		}
 
@@ -1447,6 +1467,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				// Check for any situation in which the snapshot should be invalidated.
 				if (checkInvalidSnapshot())
 				{
+					if (Utils.isDebug()) System.out.println("updateEntity.checkInvalidSnapshot.clearSnapshot()");
 					clearSnapshot();
 				}
 				else

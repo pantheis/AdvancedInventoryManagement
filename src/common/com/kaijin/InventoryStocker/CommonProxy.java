@@ -36,7 +36,7 @@ public class CommonProxy implements IGuiHandler
 		return true;
 	}
 
-	public static void sendPacketToPlayer(EntityPlayer player, Packet250CustomPayload packet)
+	public static void sendPacketToPlayer(EntityPlayerMP player, Packet250CustomPayload packet)
 	{
 		PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
 	}
@@ -62,7 +62,7 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		((TileEntityInventoryStocker)tile).sendSnapshotStateClient(player);
+		((TileEntityInventoryStocker)tile).sendSnapshotStateClient((EntityPlayerMP)player);
 
 		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
 	}

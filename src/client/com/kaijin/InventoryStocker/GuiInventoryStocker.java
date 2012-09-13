@@ -46,6 +46,8 @@ public class GuiInventoryStocker extends GuiContainer
 		 * validate snapshot state and display valid or invalid
 		 * This also needs to be expanded to get the valid/invalid state via custom packet in SMP from the server
 		 */
+		String s = new Boolean(this.tile.validSnapshot()).toString();
+		if (Utils.isDebug()) System.out.println("gui.tile.validSnapshot(): " + s);
 		if (this.tile.validSnapshot())
 		{
 			this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
@@ -92,7 +94,6 @@ public class GuiInventoryStocker extends GuiContainer
 		}
 		super.mouseClicked(par1, par2, par3);
 	}
-
 
 	/*
 	 * This function actually handles what happens when you click on a button, by ID

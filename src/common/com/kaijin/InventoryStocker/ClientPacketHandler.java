@@ -84,6 +84,8 @@ public class ClientPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
+				String s = new Boolean(snapshot).toString();
+				if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s);
 				//snapshot state message from server
 				((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
 			}
