@@ -188,11 +188,6 @@ public class BlockInventoryStocker extends Block
 		}
 	}
 
-	public void onBlockPlaced(World world, int x, int y, int z, int facing)
-	{
-		// TileEntity tile = world.getBlockTileEntity(x, y, z);
-	}
-
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
 	{
 		preDestroyBlock(world, x, y, z);

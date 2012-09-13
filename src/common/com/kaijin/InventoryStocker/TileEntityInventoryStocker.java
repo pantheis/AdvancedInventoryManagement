@@ -30,6 +30,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean guiClearSnapshot = false;
 	private boolean tileLoaded = false;
 	private boolean previousPoweredState = false;
+	private boolean lightState = false;
 
 	private boolean hasSnapshot = false;
 	private boolean lastSnapshotState = false;
@@ -242,6 +243,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				if (Utils.isDebug()) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
 				clearSnapshot();
 			}
+			String s = new Boolean(hasSnapshot).toString();
+			if (Utils.isDebug()) System.out.println("onUpdate.!isClient.sendSnapshotStateClients: " + s);
 		}
 		if (!InventoryStocker.proxy.isServer())
 		{
@@ -1352,6 +1355,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private void lightsOff()
 	{
+		lightState = false;
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
 		meta &= 7; // Clear bit 4
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
@@ -1360,6 +1364,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private void lightsOn()
 	{
+		lightState = true;
 		// Turn on das blinkenlights!
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
 		meta |= 8; // Set bit 4
@@ -1438,19 +1443,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			clearSnapshot();
 		}
 
-		if (isPowered && !InventoryStocker.proxy.isServer())
-		{
-			// This allows single-player animation of texture over time, which would not happen without updating the block
-			worldObj.markBlockAsNeedsUpdate(xCoord, yCoord, zCoord);
-		}
-
 		if (!isPowered)
 		{
 			// Reset tick time on losing power
 			tickTime = 0;
 
 			// Shut off glowing light textures.
-			lightsOff();
+			if (lightState)lightsOff();
 		}
 
 		// If we are powered and previously weren't or timer has expired, it's time to go to work.
@@ -1460,7 +1459,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			if (Utils.isDebug()) System.out.println("Powered");
 
 			// Turn on das blinkenlights!
-			lightsOn();
+			if(!lightState)lightsOn();
 
 			if (hasSnapshot)
 			{
@@ -1473,6 +1472,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				else
 				{
 					// If we've made it here, it's time to stock the remote inventory.
+					if (Utils.isDebug()) System.out.println("updateEntity.stockInventory()");
 					stockInventory();
 				}
 			}
