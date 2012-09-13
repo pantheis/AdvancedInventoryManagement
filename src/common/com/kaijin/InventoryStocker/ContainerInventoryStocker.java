@@ -18,14 +18,14 @@ import net.minecraft.src.*;
 public class ContainerInventoryStocker extends Container
 {
 	private IInventory playerinventory;
-	private TileEntityInventoryStocker inventorystockerinventory;
+	private TileEntityInventoryStocker tile;
 	private List<EntityPlayerMP> guiPlayerList = new ArrayList<EntityPlayerMP>();
 	private EntityPlayer human;
 
 	public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory, EntityPlayer player)
 	{
 		this.playerinventory = playerinventory;
-		this.inventorystockerinventory = inventorystockerinventory;
+		this.tile = inventorystockerinventory;
 		this.human = player;
 		int xCol;
 		int yRow;
@@ -62,7 +62,7 @@ public class ContainerInventoryStocker extends Container
 
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		return this.inventorystockerinventory.isUseableByPlayer(entityplayer);
+		return this.tile.isUseableByPlayer(entityplayer);
 	}
 
 	public ItemStack transferStackInSlot(int par1)
@@ -100,30 +100,32 @@ public class ContainerInventoryStocker extends Container
 		return var2;
 	}
 
+	@Override
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-		if (InventoryStocker.proxy.isServer())
-		{
+//		if (InventoryStocker.proxy.isServer())
+//		{
 			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server");
 			guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-			inventorystockerinventory.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
-			inventorystockerinventory.entityOpenList(guiPlayerList);
-		}
+			tile.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
+			tile.entityOpenList(guiPlayerList);
+//		}
 	}
 	/**
 	 * Callback for when the crafting gui is closed.
 	 */
+	@Override
 	 public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
 		 super.onCraftGuiClosed(par1EntityPlayer);
-		 if (InventoryStocker.proxy.isServer())
-		 {
+//		 if (InventoryStocker.proxy.isServer())
+//		 {
 			 if (guiPlayerList.contains(par1EntityPlayer.username))
 			 {
 				 guiPlayerList.remove(par1EntityPlayer.username);
-				 inventorystockerinventory.entityOpenList(guiPlayerList);
+				 tile.entityOpenList(guiPlayerList);
 			 }
-		 }
+//		 }
 	}
 }

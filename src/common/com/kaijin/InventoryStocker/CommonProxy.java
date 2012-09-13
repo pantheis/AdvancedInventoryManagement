@@ -21,7 +21,7 @@ public class CommonProxy implements IGuiHandler
 {
 	public static String BLOCK_PNG = "/com/kaijin/InventoryStocker/textures/terrain.png";
 
-	public static void load()
+	public void load()
 	{
 
 	}
