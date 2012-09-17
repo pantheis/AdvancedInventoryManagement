@@ -7,22 +7,24 @@ package com.kaijin.InventoryStocker;
 
 import org.lwjgl.opengl.GL11;
 import com.kaijin.InventoryStocker.*;
+
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.src.*;
 
+@SideOnly(Side.CLIENT)
 public class GuiInventoryStocker extends GuiContainer
 {
-	IInventory playerinventory;
-	TileEntityInventoryStocker tile;
+	private TileEntityInventoryStocker tile;
 	// last button clicked
 	private GuiButton selectedButton = null;
 
 	// define button class wide
 	private GuiButton button = null;
 
-	public GuiInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker tileentityinventorystocker, EntityPlayer player)
+	public GuiInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
 	{
-		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker, player));
-		this.playerinventory = playerinventory;
+		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
 		this.tile = tileentityinventorystocker;
 		xSize = 176;
 		ySize = 168;
@@ -46,9 +48,9 @@ public class GuiInventoryStocker extends GuiContainer
 		 * validate snapshot state and display valid or invalid
 		 * This also needs to be expanded to get the valid/invalid state via custom packet in SMP from the server
 		 */
-		String s = new Boolean(this.tile.validSnapshot()).toString();
-		if (Utils.isDebug()) System.out.println("gui.tile.validSnapshot(): " + s);
-		if (this.tile.validSnapshot())
+		String s = new Boolean(this.tile.serverSnapshotState()).toString();
+		if (Utils.isDebug()) System.out.println("gui.tile.serverSnapshotState(): " + s);
+		if (this.tile.serverSnapshotState())
 		{
 			this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
 		}
@@ -76,7 +78,7 @@ public class GuiInventoryStocker extends GuiContainer
 		//If you make changes to the button state, you must call .drawButton(mc, XOffset, YOffset)
 		button.xPosition = (this.width / 2) - 20;
 		button.yPosition = YOffset + 43;
-		button.displayString = this.tile.validSnapshot() ? "Clear" : "Scan";
+		button.displayString = this.tile.serverSnapshotState() ? "Clear" : "Scan";
 		button.drawButton(mc, mouseX, mouseY);
 	}
 
@@ -109,7 +111,7 @@ public class GuiInventoryStocker extends GuiContainer
 		}
 		if (button.id == 0)
 		{
-			if (this.tile.validSnapshot())
+			if (this.tile.serverSnapshotState())
 			{
 				if (Utils.isDebug()) System.out.println("Button Pressed, clearing snapshot");
 				this.tile.guiClearSnapshot();

@@ -26,7 +26,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public boolean isClient(World world)
 	{
-		return world instanceof WorldClient;
+		return world.isRemote;
 	}
 
 	@Override

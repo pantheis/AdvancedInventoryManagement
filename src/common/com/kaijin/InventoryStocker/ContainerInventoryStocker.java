@@ -8,25 +8,18 @@ package com.kaijin.InventoryStocker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-
 import com.kaijin.InventoryStocker.*;
-
 import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.src.*;
 
 public class ContainerInventoryStocker extends Container
 {
-	private IInventory playerinventory;
 	private TileEntityInventoryStocker tile;
 	private List<EntityPlayerMP> guiPlayerList = new ArrayList<EntityPlayerMP>();
-	private EntityPlayer human;
 
-	public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory, EntityPlayer player)
+	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker inventorystockerinventory)
 	{
-		this.playerinventory = playerinventory;
 		this.tile = inventorystockerinventory;
-		this.human = player;
 		int xCol;
 		int yRow;
 
@@ -106,7 +99,8 @@ public class ContainerInventoryStocker extends Container
 		super.addCraftingToCrafters(par1ICrafting);
 //		if (InventoryStocker.proxy.isServer())
 //		{
-			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server");
+		String n = ((EntityPlayerMP)par1ICrafting).username;
+			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n);
 			guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
 			tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
 			tile.entityOpenList(guiPlayerList);

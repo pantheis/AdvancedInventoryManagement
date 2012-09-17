@@ -15,6 +15,7 @@ import com.kaijin.InventoryStocker.*;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
@@ -33,6 +34,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean lightState = false;
 
 	private boolean hasSnapshot = false;
+	private boolean serverHasSnapshot = false;
 	private boolean lastSnapshotState = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
@@ -67,9 +69,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 //		doorState = new boolean[6];
 //	}
 
+	@SideOnly(Side.CLIENT)
 	public void setSnapshotState(boolean state)
 	{
-		this.hasSnapshot = state;
+		this.serverHasSnapshot = state;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public boolean serverSnapshotState()
+	{
+		return serverHasSnapshot;
 	}
 
 	public void entityOpenList(List crafters)
@@ -153,6 +162,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			for (int i = 0; i < this.remoteUsers.size(); ++i)
 			{
+				String n = remoteUsers.get(i).username;
+				if (Utils.isDebug()) System.out.println("sendSnapshotStateClients.name:  " + n);
 				CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
 			}
 		}
@@ -245,6 +256,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 			String s = new Boolean(hasSnapshot).toString();
 			if (Utils.isDebug()) System.out.println("onUpdate.!isClient.sendSnapshotStateClients: " + s);
+			sendSnapshotStateClients();
 		}
 		if (!InventoryStocker.proxy.isServer())
 		{
@@ -1417,14 +1429,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			{
 				if (takeSnapShot(tile))
 				{
-//					if (InventoryStocker.proxy.isServer())
-//					{
+					if (InventoryStocker.proxy.isServer())
+					{
 						// server has no GUI, but this code works for our purposes.
 						// We need to send the snapshot state flag here to all clients that have the GUI open
     					String s = new Boolean(hasSnapshot).toString();
 					    if (Utils.isDebug()) System.out.println("guiTakeSnapshot.sendSnapshotStateClients: " + s);
 						sendSnapshotStateClients();
-//					}
+					}
 				}
 				else
 				{

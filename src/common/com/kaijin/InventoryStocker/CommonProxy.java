@@ -28,7 +28,7 @@ public class CommonProxy implements IGuiHandler
 
 	public boolean isClient(World world)
 	{
-		return false;
+		return world.isRemote;
 	}
 
 	public boolean isServer()
@@ -64,7 +64,7 @@ public class CommonProxy implements IGuiHandler
 
 		((TileEntityInventoryStocker)tile).sendSnapshotStateClient((EntityPlayerMP)player);
 
-		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
+		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 
 	@Override
@@ -83,6 +83,6 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
+		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 }
