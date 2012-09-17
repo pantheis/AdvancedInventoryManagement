@@ -1429,14 +1429,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			{
 				if (takeSnapShot(tile))
 				{
-					if (InventoryStocker.proxy.isServer())
-					{
+//					if (InventoryStocker.proxy.isServer())
+//					{
 						// server has no GUI, but this code works for our purposes.
 						// We need to send the snapshot state flag here to all clients that have the GUI open
     					String s = new Boolean(hasSnapshot).toString();
 					    if (Utils.isDebug()) System.out.println("guiTakeSnapshot.sendSnapshotStateClients: " + s);
 						sendSnapshotStateClients();
-					}
+//					}
 				}
 				else
 				{
