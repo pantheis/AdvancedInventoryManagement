@@ -49,7 +49,7 @@ public class GuiInventoryStocker extends GuiContainer
 		 * This also needs to be expanded to get the valid/invalid state via custom packet in SMP from the server
 		 */
 		String s = new Boolean(this.tile.serverSnapshotState()).toString();
-		if (Utils.isDebug()) System.out.println("gui.tile.serverSnapshotState(): " + s);
+		if (Utils.isDebug()) System.out.println("gui.tile.serverSnapshotState(): " + s + ", guid: " + this.tile.myGUID);
 		if (this.tile.serverSnapshotState())
 		{
 			this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
@@ -122,5 +122,6 @@ public class GuiInventoryStocker extends GuiContainer
 				this.tile.guiTakeSnapshot();
 			}
 		}
+
 	}
 }

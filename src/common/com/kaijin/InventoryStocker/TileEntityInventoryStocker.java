@@ -26,7 +26,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private ItemStack[] contents = new ItemStack[this.getSizeInventory()];
 	private ItemStack remoteSnapshot[];
 	private ItemStack extendedChestSnapshot[];
-
+	
 	private boolean guiTakeSnapshot = false;
 	private boolean guiClearSnapshot = false;
 	private boolean tileLoaded = false;
@@ -54,7 +54,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private boolean[] doorState = new boolean[6];
 
-
+	public static int NextGUID = 1;
+	public int myGUID;
+	
+	public TileEntityInventoryStocker()
+	{
+		myGUID = NextGUID;
+		if (Utils.isDebug()) System.out.println("New TE, GUID =" + this.myGUID);
+		NextGUID++;
+	}
+	
 	@Override
 	public boolean canUpdate()
 	{
@@ -72,6 +81,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@SideOnly(Side.CLIENT)
 	public void setSnapshotState(boolean state)
 	{
+		String s = new Boolean(state).toString();
+		if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s);
 		this.serverHasSnapshot = state;
 	}
 	
@@ -1372,6 +1383,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		meta &= 7; // Clear bit 4
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+//		worldObj.setBlockAndMetadataWithUpdate(xCoord, yCoord, zCoord, InventoryStocker.InventoryStockerBlockID, meta, true);
+
 	}
 
 	private void lightsOn()
@@ -1382,6 +1395,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		meta |= 8; // Set bit 4
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+//		worldObj.setBlockAndMetadataWithUpdate(xCoord, yCoord, zCoord, InventoryStocker.InventoryStockerBlockID, meta, true);
 	}
 
 	@Override

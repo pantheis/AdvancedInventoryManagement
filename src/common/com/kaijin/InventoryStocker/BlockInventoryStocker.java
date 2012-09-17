@@ -30,7 +30,7 @@ import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
 
-public class BlockInventoryStocker extends BlockContainer
+public class BlockInventoryStocker extends Block
 {
 	public BlockInventoryStocker(int i, int j, Material material)
 	{
@@ -160,19 +160,13 @@ public class BlockInventoryStocker extends BlockContainer
 		}
 	}
 
-//	@Override
-//	public TileEntity createTileEntity(World world, int metadata)
-//	{
-//		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
-//		return new TileEntityInventoryStocker();
-//	}
-
 	@Override
-	public TileEntity createNewTileEntity(World var1) {
+	public TileEntity createTileEntity(World world, int metadata)
+	{
 		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
 	}
-	
+
 	@Override
 	public boolean canProvidePower()
 	{

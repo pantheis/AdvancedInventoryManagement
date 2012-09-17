@@ -99,8 +99,8 @@ public class ContainerInventoryStocker extends Container
 		super.addCraftingToCrafters(par1ICrafting);
 //		if (InventoryStocker.proxy.isServer())
 //		{
-		String n = ((EntityPlayerMP)par1ICrafting).username;
-			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n);
+			String n = ((EntityPlayerMP)par1ICrafting).username;
+			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n + ", guid: " + this.tile.myGUID);
 			guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
 			tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
 			tile.entityOpenList(guiPlayerList);
