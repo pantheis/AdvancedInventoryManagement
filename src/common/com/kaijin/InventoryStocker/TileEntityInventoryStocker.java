@@ -505,6 +505,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
+		//TODO need to add reading of direction and light states here
 		if(!InventoryStocker.proxy.isClient())
 		{
 			super.readFromNBT(nbttagcompound);
@@ -514,6 +515,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
 			reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
+			
+			// Light status and direction
+			
+			this.facingDirection = nbttagcompound.getInteger("facingDirection");
+			this.lightMeta = nbttagcompound.getInteger("lightMeta");
+
 			boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
 
 			if (Utils.isDebug()) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
@@ -585,6 +592,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
+		//TODO need to add saving of direction and light states here
 		if(!InventoryStocker.proxy.isClient())
 		{
 			super.writeToNBT(nbttagcompound);
@@ -649,6 +657,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			nbttagcompound.setBoolean("reactorWorkaround", reactorWorkaround);
 			nbttagcompound.setInteger("reactorWidth", reactorWidth);
 			nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
+			
+			// Light status and direction
+			
+			nbttagcompound.setInteger("facingDirection", this.facingDirection);
+			nbttagcompound.setInteger("lightMeta", this.lightMeta);
 		}
 	}
 
@@ -1465,6 +1478,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private Packet250CustomPayload createRotateRequestPacket()
 	{
+		if (Utils.isDebug()) System.out.println("te.createRotateRequestPacket");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -1489,6 +1503,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private Packet250CustomPayload createRotateDataPacket()
 	{
+		if (Utils.isDebug()) System.out.println("te.createRotateDataPacket");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -1513,6 +1528,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	private Packet250CustomPayload createLightDataPacket()
 	{
+		if (Utils.isDebug()) System.out.println("te.createLightDataPacket");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -1540,6 +1556,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void sendRotateRequestServer()
 	{
+		if (Utils.isDebug()) System.out.println("te.sendRotateRequest");
 		Packet250CustomPayload packet = createRotateRequestPacket();
 		CommonProxy.sendPacketToServer(packet);
 	}
@@ -1549,11 +1566,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void sendRotateData()
 	{
+		if (Utils.isDebug()) System.out.println("te.sendRotateData");
 		Packet250CustomPayload packet = createRotateDataPacket();
 		//Get the current dimensionID
 		int dimensionId = worldObj.getWorldInfo().getDimension();
 		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, xCoord, 240, dimensionId, packet);
+		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 256, dimensionId, packet);
 	}
 
 	/**
@@ -1561,11 +1579,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void sendLightData()
 	{
+		if (Utils.isDebug()) System.out.println("te.sendLightData");
 		Packet250CustomPayload packet = createLightDataPacket();
 		//Get the current dimensionID
 		int dimensionId = worldObj.getWorldInfo().getDimension();
 		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, xCoord, 240, dimensionId, packet);
+		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 256, dimensionId, packet);
 	}
 
 

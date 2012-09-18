@@ -128,7 +128,7 @@ public class BlockInventoryStocker extends Block
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		if (world.isRemote)
+		if (InventoryStocker.proxy.isServer())
 		{
 			return true;
 		}
@@ -143,6 +143,7 @@ public class BlockInventoryStocker extends Block
 					TileEntity tile = world.getBlockTileEntity(x, y, z);
 					if(tile instanceof TileEntityInventoryStocker)
 					{
+						if (Utils.isDebug()) System.out.println("Block.sendRotateRequestServer");
 						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
 					}
 
