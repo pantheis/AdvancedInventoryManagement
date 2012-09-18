@@ -16,6 +16,7 @@ import com.kaijin.InventoryStocker.*;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
@@ -56,6 +57,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public static int NextGUID = 1;
 	public int myGUID;
+	public int facingDirection = 0;
 	
 	public TileEntityInventoryStocker()
 	{
@@ -148,6 +150,66 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		packet.length = packet.data.length;
 		return packet;
 	}
+	
+	private Packet250CustomPayload createRotateRequestPacket()
+	{
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		DataOutputStream data = new DataOutputStream(bytes);
+		try
+		{
+			data.writeInt(1);
+			data.writeInt(this.xCoord);
+			data.writeInt(this.yCoord);
+			data.writeInt(this.zCoord);
+			data.writeBoolean(true);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
+		packet.data = bytes.toByteArray();
+		packet.length = packet.data.length;
+		return packet;
+	}
+
+	private Packet250CustomPayload createRotateDataPacket()
+	{
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		DataOutputStream data = new DataOutputStream(bytes);
+		try
+		{
+			data.writeInt(1);
+			data.writeInt(this.xCoord);
+			data.writeInt(this.yCoord);
+			data.writeInt(this.zCoord);
+			data.writeInt(this.facingDirection);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
+		packet.data = bytes.toByteArray();
+		packet.length = packet.data.length;
+		return packet;
+	}
+
+	
+	/**
+	 * Sends a rotate request to the server to rotate the block
+	 */
+	public void sendRotateRequestServer()
+	{
+		// TODO Auto-generated method stub
+		Packet250CustomPayload packet = createRotateRequestPacket();
+		CommonProxy.sendPacketToServer(packet);
+	}
+	
 	/**
 	 * Sends a snapshot state to the client that just opened the GUI.
 	 * @param EntityPlayer
@@ -160,6 +222,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		CommonProxy.sendPacketToPlayer(player, packet);
 	}
 
+	/**
+	 * Sends an update packet to all clients with the rotation info
+	 */
+	public void sendRotateData()
+	{
+		String s = new Boolean(hasSnapshot).toString();
+		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient: " + s);
+		Packet250CustomPayload packet = createRotateDataPacket();
+//		CommonProxy.sendPacketToPlayer(player, packet);
+		//Get the current dimensionID
+		int dimensionId = worldObj.getWorldInfo().getDimension();
+		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
+		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, xCoord, 240, dimensionId, packet);
+	}
+	
 	/**
 	 * Send snapshot state to all clients in the GUI open list.
 	 */

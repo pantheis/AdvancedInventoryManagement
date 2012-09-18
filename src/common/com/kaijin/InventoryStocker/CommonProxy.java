@@ -40,7 +40,7 @@ public class CommonProxy implements IGuiHandler
 	{
 		PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
 	}
-
+	
 	public static void sendPacketToServer(Packet250CustomPayload packet)
 	{
 		PacketDispatcher.sendPacketToServer(packet);

@@ -66,29 +66,35 @@ public class BlockInventoryStocker extends Block
 	@SideOnly(Side.CLIENT)
 	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
 	{
-		int m = blocks.getBlockMetadata(x, y, z);
-		int dir = m & 7;
-		int side = Utils.lookupRotatedSide(i, dir);
-		int powered = (m & 8) >> 3;
-
-		//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+		//TODO possibly redo this to use Forge.Direction
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-
-		// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-		if (side == 0) // Front
+		if(tile instanceof TileEntityInventoryStocker)
 		{
-			int time = (int)tile.worldObj.getWorldTime();
-			return 2 + powered * (((time >> 2) & 3) + 1);
+			//int m = blocks.getBlockMetadata(x, y, z);
+			int m = ((TileEntityInventoryStocker)tile).facingDirection;
+			int dir = m & 7;
+			int side = Utils.lookupRotatedSide(i, dir);
+			int powered = (m & 8) >> 3;
+
+			//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+
+			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
+			if (side == 0) // Front
+			{
+				int time = (int)tile.worldObj.getWorldTime();
+				return 2 + powered * (((time >> 2) & 3) + 1);
+			}
+
+			int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
+
+			if (side == 1) // Back
+			{
+				return 32 + powered + open;
+			}
+
+			return 16 + powered + open; // Top, Bottom, Left, Right
 		}
-
-		int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
-
-		if (side == 1) // Back
-		{
-			return 32 + powered + open;
-		}
-
-		return 16 + powered + open; // Top, Bottom, Left, Right
+		return i;
 	}
 
 	private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
@@ -129,7 +135,19 @@ public class BlockInventoryStocker extends Block
 				// Rotate block if hand is empty
 				if (entityplayer.getCurrentEquippedItem() == null)
 				{
-					int i = world.getBlockMetadata(x, y, z);
+					TileEntity tile = world.getBlockTileEntity(x, y, z);
+					if(tile instanceof TileEntityInventoryStocker)
+					{
+						//TODO send packet rotate request to server here
+						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
+					}
+					// Block GUI popup when sneaking
+					return false;
+				
+					
+					/*
+					// Commenting out meta get, moving to a TE int with packet sync instead
+					// int i = world.getBlockMetadata(x, y, z);
 					int dir = i & 7; // Get orientation from first 3 bits of meta data
 					i ^= dir; // Clear those bits
 					++dir; // Rotate
@@ -140,12 +158,11 @@ public class BlockInventoryStocker extends Block
 					}
 
 					i |= dir; // Write orientation back to meta data value
-					world.setBlockMetadataWithNotify(x, y, z, i); // And store it
+					// Commenting out meta set, moving to a TE int with packet sync instead
+					// world.setBlockMetadataWithNotify(x, y, z, i); // And store it
 					world.markBlockNeedsUpdate(x, y, z);
+					*/
 				}
-
-				// Block GUI popup when sneaking
-				return false;
 			}
 
 			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
