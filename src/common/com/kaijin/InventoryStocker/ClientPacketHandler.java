@@ -16,7 +16,6 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.*;
 
-@SideOnly(Side.CLIENT)
 public class ClientPacketHandler implements IPacketHandler
 {
 	int packetType = -1;

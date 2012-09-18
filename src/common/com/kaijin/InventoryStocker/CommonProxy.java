@@ -36,16 +36,6 @@ public class CommonProxy implements IGuiHandler
 		return true;
 	}
 
-	public static void sendPacketToPlayer(EntityPlayerMP player, Packet250CustomPayload packet)
-	{
-		PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
-	}
-	
-	public static void sendPacketToServer(Packet250CustomPayload packet)
-	{
-		PacketDispatcher.sendPacketToServer(packet);
-	}
-
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) 

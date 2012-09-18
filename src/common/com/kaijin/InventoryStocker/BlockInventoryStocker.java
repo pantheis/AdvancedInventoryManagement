@@ -116,7 +116,12 @@ public class BlockInventoryStocker extends Block
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
 		int dir = determineOrientation(world, x, y, z, (EntityPlayer)par5EntityLiving);
-		world.setBlockMetadataWithNotify(x, y, z, dir);
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		if(tile instanceof TileEntityInventoryStocker)
+		{
+			((TileEntityInventoryStocker)tile).facingDirection = dir;
+		}
+//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
 
 	@Override
@@ -138,12 +143,8 @@ public class BlockInventoryStocker extends Block
 					TileEntity tile = world.getBlockTileEntity(x, y, z);
 					if(tile instanceof TileEntityInventoryStocker)
 					{
-						//TODO send packet rotate request to server here
 						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
 					}
-					// Block GUI popup when sneaking
-					return false;
-				
 					
 					/*
 					// Commenting out meta get, moving to a TE int with packet sync instead
@@ -163,6 +164,9 @@ public class BlockInventoryStocker extends Block
 					world.markBlockNeedsUpdate(x, y, z);
 					*/
 				}
+				// Block GUI popup when sneaking
+				return false;
+
 			}
 
 			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
