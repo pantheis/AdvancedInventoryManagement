@@ -23,7 +23,10 @@ public class ClientPacketHandler implements IPacketHandler
 	int y = 0;
 	int z = 0;
 	int facingDirection = 0;
+	int lightMeta = 0;
+
 	boolean snapshot = false;
+
 
 	/*
 	 * Packet format:
@@ -52,6 +55,11 @@ public class ClientPacketHandler implements IPacketHandler
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
 	 *             byte 4: int "metadata", sync client TE rotation information with server
+	 *         2=
+	 *             byte 1: x location of TileEntity
+	 *             byte 2: y location of TileEntity
+	 *             byte 3: z location of TileEntity
+	 *             byte 4: boolean information, false = lights off, true = lights on
 	 *             
 	 * remaining bytes: data for packet
 	 */
@@ -95,12 +103,13 @@ public class ClientPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
-				String s = new Boolean(snapshot).toString();
-				if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
+				//				String s = new Boolean(snapshot).toString();
+				//				if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
 				//snapshot state message from server
 				((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
 			}
 		}
+
 		if (this.packetType == 1)
 		{
 			try
@@ -121,6 +130,30 @@ public class ClientPacketHandler implements IPacketHandler
 			if (tile instanceof TileEntityInventoryStocker)
 			{
 				((TileEntityInventoryStocker)tile).facingDirection = this.facingDirection;
+				world.markBlockNeedsUpdate(x, y, z);
+			}
+		}
+
+		if (this.packetType == 2)
+		{
+			try
+			{
+				this.x = stream.readInt();
+				this.y = stream.readInt();
+				this.z = stream.readInt();
+				this.lightMeta = stream.readInt();
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			World world = FMLClientHandler.instance().getClient().theWorld;
+			TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+			//check if the tile we're looking at is an Inventory Stocker tile
+			if (tile instanceof TileEntityInventoryStocker)
+			{
+				((TileEntityInventoryStocker)tile).lightMeta = this.lightMeta;
 				world.markBlockNeedsUpdate(x, y, z);
 			}
 		}

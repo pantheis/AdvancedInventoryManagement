@@ -21,7 +21,7 @@ public class ServerPacketHandler implements IPacketHandler
 	int y = 0;
 	int z = 0;
 	int facingDirection = 0;
-	
+
 	boolean snapshot = false;
 	boolean rotateRequest = false;
 
@@ -95,8 +95,8 @@ public class ServerPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
-				String s = new Boolean(snapshot).toString();
-				if (Utils.isDebug()) System.out.println("ServerPacketHandler: tile.recvSnapshotReqiest: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
+				//				String s = new Boolean(snapshot).toString();
+				//				if (Utils.isDebug()) System.out.println("ServerPacketHandler: tile.recvSnapshotReqiest: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
 				((TileEntityInventoryStocker)tile).recvSnapshotRequest(snapshot);
 			}
 		}

@@ -97,29 +97,24 @@ public class ContainerInventoryStocker extends Container
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-//		if (InventoryStocker.proxy.isServer())
-//		{
-			String n = ((EntityPlayerMP)par1ICrafting).username;
-			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n + ", guid: " + this.tile.myGUID);
-			guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-			tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
-			tile.entityOpenList(guiPlayerList);
-//		}
+		//			String n = ((EntityPlayerMP)par1ICrafting).username;
+		//			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n + ", guid: " + this.tile.myGUID);
+		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
+		tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
+		tile.entityOpenList(guiPlayerList);
 	}
 	/**
 	 * Callback for when the crafting gui is closed.
 	 */
 	@Override
-	 public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
+	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
-		 super.onCraftGuiClosed(par1EntityPlayer);
-//		 if (InventoryStocker.proxy.isServer())
-//		 {
-			 if (guiPlayerList.contains(par1EntityPlayer.username))
-			 {
-				 guiPlayerList.remove(par1EntityPlayer.username);
-				 tile.entityOpenList(guiPlayerList);
-			 }
-//		 }
+		super.onCraftGuiClosed(par1EntityPlayer);
+
+		if (guiPlayerList.contains(par1EntityPlayer.username))
+		{
+			guiPlayerList.remove(par1EntityPlayer.username);
+			tile.entityOpenList(guiPlayerList);
+		}
 	}
 }

@@ -22,16 +22,4 @@ public class ClientProxy extends CommonProxy
 	{
 		MinecraftForgeClient.preloadTexture(CommonProxy.BLOCK_PNG);
 	}
-
-	@Override
-	public boolean isClient(World world)
-	{
-		return world.isRemote;
-	}
-
-	@Override
-	public boolean isServer()
-	{
-		return false;
-	}
 }

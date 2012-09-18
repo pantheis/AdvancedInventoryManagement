@@ -72,9 +72,10 @@ public class BlockInventoryStocker extends Block
 		{
 			//int m = blocks.getBlockMetadata(x, y, z);
 			int m = ((TileEntityInventoryStocker)tile).facingDirection;
+			int l = ((TileEntityInventoryStocker)tile).lightMeta;
 			int dir = m & 7;
 			int side = Utils.lookupRotatedSide(i, dir);
-			int powered = (m & 8) >> 3;
+			int powered = (l & 8) >> 3;
 
 			//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
 
@@ -121,13 +122,12 @@ public class BlockInventoryStocker extends Block
 		{
 			((TileEntityInventoryStocker)tile).facingDirection = dir;
 		}
-//		world.setBlockMetadataWithNotify(x, y, z, dir);
+		//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-
 		if (world.isRemote)
 		{
 			return true;
@@ -145,7 +145,7 @@ public class BlockInventoryStocker extends Block
 					{
 						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
 					}
-					
+
 					/*
 					// Commenting out meta get, moving to a TE int with packet sync instead
 					// int i = world.getBlockMetadata(x, y, z);
@@ -162,7 +162,7 @@ public class BlockInventoryStocker extends Block
 					// Commenting out meta set, moving to a TE int with packet sync instead
 					// world.setBlockMetadataWithNotify(x, y, z, i); // And store it
 					world.markBlockNeedsUpdate(x, y, z);
-					*/
+					 */
 				}
 				// Block GUI popup when sneaking
 				return false;
@@ -258,7 +258,7 @@ public class BlockInventoryStocker extends Block
 	{
 		TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-		if (tile instanceof IInventory && !InventoryStocker.proxy.isClient(world))
+		if (tile instanceof IInventory && !InventoryStocker.proxy.isClient())
 		{
 			dropItems(world, (IInventory) tile, i, j, k);
 			tile.invalidate();

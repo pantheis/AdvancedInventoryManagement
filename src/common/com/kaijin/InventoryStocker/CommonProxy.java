@@ -8,11 +8,13 @@ package com.kaijin.InventoryStocker;
 import java.io.File;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.server.FMLServerHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.src.*;
 import net.minecraftforge.common.Configuration;
 import com.kaijin.InventoryStocker.*;
@@ -26,14 +28,34 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
-	public boolean isClient(World world)
+	public boolean isClient()
 	{
-		return world.isRemote;
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if (side == Side.CLIENT)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public boolean isServer()
 	{
-		return true;
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if (side == Side.SERVER)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public static void sendPacketToPlayer(Packet250CustomPayload packet, EntityPlayerMP player)
+	{
+		PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
+	}
+
+	public static void sendPacketToServer(Packet250CustomPayload packet)
+	{
+		PacketDispatcher.sendPacketToServer(packet);
 	}
 
 	@Override
