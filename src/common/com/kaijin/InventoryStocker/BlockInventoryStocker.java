@@ -123,7 +123,11 @@ public class BlockInventoryStocker extends Block
 		}
 		//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
-
+/*
+ * TODO update this so that the server detects right-click-sneak and rotates instead of making the client send
+ * a packet
+ */
+	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
@@ -133,17 +137,8 @@ public class BlockInventoryStocker extends Block
 			if (entityplayer.isSneaking())
 			{
 				if (Utils.isDebug()) System.out.println("Block.world.isRemote.isSneaking");
-				// Rotate block if hand is empty
-				if (entityplayer.getCurrentEquippedItem() == null)
-				{
-					TileEntity tile = world.getBlockTileEntity(x, y, z);
-					if(tile instanceof TileEntityInventoryStocker)
-					{
-						if (Utils.isDebug()) System.out.println("Block.sendRotateRequestServer");
-						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
-					}
-				}
-				// Block GUI popup when sneaking
+				// Prevent GUI popup when sneaking
+				// This allows you to sneak place things directly on the inventory stocker
 				return false;
 			}
 		}
@@ -152,11 +147,36 @@ public class BlockInventoryStocker extends Block
 			// Prevent GUI pop-up and handle block rotation
 			if (entityplayer.isSneaking())
 			{
+				if (entityplayer.getCurrentEquippedItem() == null)
+				{
+					TileEntity tile = world.getBlockTileEntity(x, y, z);
+					if(tile instanceof TileEntityInventoryStocker)
+					{
+						int Metainfo = ((TileEntityInventoryStocker)tile).Metainfo;
+						int dir = Metainfo & 7; // Get orientation from first 3 bits of meta data
+						Metainfo ^= dir; // Clear those bits
+						++dir; // Rotate
+
+						if (dir > 5)
+						{
+							dir = 0;    // Start over
+						}
+
+						Metainfo |= dir; // Write orientation back to meta data value
+
+						((TileEntityInventoryStocker)tile).Metainfo = Metainfo;
+						world.markBlockNeedsUpdate(x, y, z);
+					}
+					//prevent GUI popup when sneaking and your hand is empty
+					return false;
+				}
 				if (Utils.isDebug()) System.out.println("Block.isServer.isSneaking");
-				// Rotate block if hand is empty
+				// Prevent GUI popup when sneaking but with something in your hand
+				// This allows you to sneak place things directly on the inventory stocker
 				return false;
 			}
 
+			//If we got here, we're not sneaking, time to get to work opening the GUI
 			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
 			TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
 			if (tile != null)
@@ -178,7 +198,7 @@ public class BlockInventoryStocker extends Block
 			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
 			return true;
 		}
-		if (Utils.isDebug()) System.out.println("Block.onBlockActivated.fallthrough");
+		if (Utils.isDebug()) System.out.println("Block.onBlockActivated.fallthrough-should not happen?");
 		return true;
 	}
 

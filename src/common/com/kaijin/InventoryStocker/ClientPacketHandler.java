@@ -49,7 +49,7 @@ public class ClientPacketHandler implements IPacketHandler
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
 	 *             byte 4: boolean information, false = no valid snapshot, true = valid snapshot
-	 *         1=
+	 *         1=@Deprecated
 	 *             byte 1: x location of TileEntity
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
