@@ -8,6 +8,7 @@ package com.kaijin.InventoryStocker;
 import java.util.*;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityLiving;
@@ -23,13 +24,17 @@ import net.minecraft.src.World;
 
 import com.kaijin.InventoryStocker.*;
 
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.common.network.NetworkRegistry;
+
 
 public class BlockInventoryStocker extends Block
 {
 	public BlockInventoryStocker(int i, int j, Material material)
 	{
 		super(i, j, material);
-		//        setCreativeTab(CreativeTabs.tabBlock);
 	}
 
 	public String getTextureFile()
@@ -58,31 +63,38 @@ public class BlockInventoryStocker extends Block
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
 	{
-		int m = blocks.getBlockMetadata(x, y, z);
-		int dir = m & 7;
-		int side = Utils.lookupRotatedSide(i, dir);
-		int powered = (m & 8) >> 3;
-
-		//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+		//TODO possibly redo this to use Forge.Direction
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-
-		// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-		if (side == 0) // Front
+		if(tile instanceof TileEntityInventoryStocker)
 		{
-			int time = (int)tile.worldObj.getWorldTime();
-			return 2 + powered * (((time >> 2) & 3) + 1);
+			//int m = blocks.getBlockMetadata(x, y, z);
+			int m = ((TileEntityInventoryStocker)tile).Metainfo;
+			int dir = m & 7;
+			int side = Utils.lookupRotatedSide(i, dir);
+			int powered = (m & 8) >> 3;
+
+			//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+
+			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
+			if (side == 0) // Front
+			{
+				int time = (int)tile.worldObj.getWorldTime();
+				return 2 + powered * (((time >> 2) & 3) + 1);
+			}
+
+			int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
+
+			if (side == 1) // Back
+			{
+				return 32 + powered + open;
+			}
+
+			return 16 + powered + open; // Top, Bottom, Left, Right
 		}
-
-		int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
-
-		if (side == 1) // Back
-		{
-			return 32 + powered + open;
-		}
-
-		return 16 + powered + open; // Top, Bottom, Left, Right
+		return i;
 	}
 
 	private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
@@ -104,50 +116,76 @@ public class BlockInventoryStocker extends Block
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
 		int dir = determineOrientation(world, x, y, z, (EntityPlayer)par5EntityLiving);
-		world.setBlockMetadataWithNotify(x, y, z, dir);
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		if(tile instanceof TileEntityInventoryStocker)
+		{
+			((TileEntityInventoryStocker)tile).Metainfo = dir;
+		}
+		//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		// Prevent GUI pop-up and handle block rotation
-		if (entityplayer.isSneaking())
+		if(world.isRemote)
 		{
-			// Rotate block if hand is empty
-			if (entityplayer.getCurrentEquippedItem() == null)
+			// Prevent GUI pop-up and handle block rotation
+			if (entityplayer.isSneaking())
 			{
-				int i = world.getBlockMetadata(x, y, z);
-				int dir = i & 7; // Get orientation from first 3 bits of meta data
-				i ^= dir; // Clear those bits
-				++dir; // Rotate
-
-				if (dir > 5)
+				if (Utils.isDebug()) System.out.println("Block.world.isRemote.isSneaking");
+				// Rotate block if hand is empty
+				if (entityplayer.getCurrentEquippedItem() == null)
 				{
-					dir = 0;    // Start over
+					TileEntity tile = world.getBlockTileEntity(x, y, z);
+					if(tile instanceof TileEntityInventoryStocker)
+					{
+						if (Utils.isDebug()) System.out.println("Block.sendRotateRequestServer");
+						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
+					}
 				}
-
-				i |= dir; // Write orientation back to meta data value
-				world.setBlockMetadataWithNotify(x, y, z, i); // And store it
-				world.markBlockNeedsUpdate(x, y, z);
+				// Block GUI popup when sneaking
+				return false;
+			}
+		}
+		else if (InventoryStocker.proxy.isServer())
+		{
+			// Prevent GUI pop-up and handle block rotation
+			if (entityplayer.isSneaking())
+			{
+				if (Utils.isDebug()) System.out.println("Block.isServer.isSneaking");
+				// Rotate block if hand is empty
+				return false;
 			}
 
-			// Block GUI popup when sneaking
-			return false;
+			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
+			TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
+			if (tile != null)
+			{
+				tile.onUpdate();
+			}
+			if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
+			if(Utils.isDebug())
+			{
+				if(entityplayer instanceof EntityPlayerMP)
+				{
+					System.out.println("Block-EntityPlayer instance of EntityPlayerMP");
+				}
+				else
+				{
+					System.out.println("Block-EntityPlayer NOT instance of EntityPlayerMP");
+				}
+			}
+			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
+			return true;
 		}
-
-		// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
-		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-		if (tile != null)
-		{
-			tile.onUpdate();
-		}
-		entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
+		if (Utils.isDebug()) System.out.println("Block.onBlockActivated.fallthrough");
 		return true;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
+		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
 	}
 
@@ -177,6 +215,7 @@ public class BlockInventoryStocker extends Block
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
 		super.onNeighborBlockChange(world, x, y, z, blockID);
+		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
 		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
 		if (tile != null)
 		{
@@ -184,15 +223,11 @@ public class BlockInventoryStocker extends Block
 		}
 	}
 
-	public void onBlockPlaced(World world, int x, int y, int z, int facing)
-	{
-		// TileEntity tile = world.getBlockTileEntity(x, y, z);
-	}
-
-	public void breakBlock(World world, int x, int y, int z, int par1, int par2)
+	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
 	{
 		preDestroyBlock(world, x, y, z);
-		super.breakBlock(world, x, y, z, par1, par2);
+		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockDestroyedByPlayer");
+		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 
 	public static void dropItems(World world, ItemStack stack, int i, int j, int k)
@@ -224,9 +259,10 @@ public class BlockInventoryStocker extends Block
 	{
 		TileEntity tile = world.getBlockTileEntity(i, j, k);
 
-		if (tile instanceof IInventory && !CommonProxy.isClient(world))
+		if (tile instanceof IInventory && !InventoryStocker.proxy.isClient())
 		{
 			dropItems(world, (IInventory) tile, i, j, k);
+			tile.invalidate();
 		}
 	}
 }

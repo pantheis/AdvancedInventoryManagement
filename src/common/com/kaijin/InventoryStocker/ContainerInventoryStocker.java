@@ -8,25 +8,18 @@ package com.kaijin.InventoryStocker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-
 import com.kaijin.InventoryStocker.*;
-
 import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.src.*;
 
 public class ContainerInventoryStocker extends Container
 {
-	private IInventory playerinventory;
-	private TileEntityInventoryStocker inventorystockerinventory;
+	private TileEntityInventoryStocker tile;
 	private List<EntityPlayerMP> guiPlayerList = new ArrayList<EntityPlayerMP>();
-	private EntityPlayer human;
 
-	public ContainerInventoryStocker(IInventory playerinventory, TileEntityInventoryStocker inventorystockerinventory, EntityPlayer player)
+	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker inventorystockerinventory)
 	{
-		this.playerinventory = playerinventory;
-		this.inventorystockerinventory = inventorystockerinventory;
-		this.human = player;
+		this.tile = inventorystockerinventory;
 		int xCol;
 		int yRow;
 
@@ -62,7 +55,7 @@ public class ContainerInventoryStocker extends Container
 
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		return this.inventorystockerinventory.isUseableByPlayer(entityplayer);
+		return this.tile.isUseableByPlayer(entityplayer);
 	}
 
 	public ItemStack transferStackInSlot(int par1)
@@ -100,24 +93,42 @@ public class ContainerInventoryStocker extends Container
 		return var2;
 	}
 
+	@Override
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
+		if (Utils.isDebug())
+		{
+			System.out.println("gui.addCraftingToCrafters");
+			String n = ((EntityPlayerMP)par1ICrafting).username;
+			System.out.println("container.addCraftingToCrafters.server: " + n);
+		}
 		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-		inventorystockerinventory.sendSnapshotStateClient((EntityPlayer)(par1ICrafting));
-		inventorystockerinventory.entityOpenList(guiPlayerList);
-
+		tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
+		tile.entityOpenList(guiPlayerList);
 	}
 	/**
 	 * Callback for when the crafting gui is closed.
 	 */
-	 public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
+	@Override
+	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
-		 super.onCraftGuiClosed(par1EntityPlayer);
-		 if (guiPlayerList.contains(par1EntityPlayer.username))
-		 {
-			 guiPlayerList.remove(par1EntityPlayer.username);
-			 inventorystockerinventory.entityOpenList(guiPlayerList);
-		 }
+		super.onCraftGuiClosed(par1EntityPlayer);
+		if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-client+server");
+		if (InventoryStocker.proxy.isServer())
+		{
+			if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-SERVER");
+			if (guiPlayerList.contains(((EntityPlayerMP)par1EntityPlayer)))
+			{
+				if (Utils.isDebug())
+				{
+					System.out.println("gui.addCraftingToCrafters");
+					String n = ((EntityPlayerMP)par1EntityPlayer).username;
+					System.out.println("gui.onCraftGuiClosed.RemoveNameFromList: " + n);
+				}
+				guiPlayerList.remove(((EntityPlayerMP)par1EntityPlayer));
+				tile.entityOpenList(guiPlayerList);
+			}
+		}
 	}
 }

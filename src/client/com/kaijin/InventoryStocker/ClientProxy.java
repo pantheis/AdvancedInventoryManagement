@@ -17,18 +17,9 @@ import net.minecraftforge.common.Configuration;
 
 public class ClientProxy extends CommonProxy
 {
-	public static void load()
+	@Override
+	public void load()
 	{
 		MinecraftForgeClient.preloadTexture(CommonProxy.BLOCK_PNG);
-	}
-
-	public static boolean isClient(World world)
-	{
-		return world instanceof WorldClient;
-	}
-
-	public static boolean isServer()
-	{
-		return false;
 	}
 }

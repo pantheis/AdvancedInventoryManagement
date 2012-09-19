@@ -8,11 +8,13 @@ package com.kaijin.InventoryStocker;
 import java.io.File;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.server.FMLServerHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.src.*;
 import net.minecraftforge.common.Configuration;
 import com.kaijin.InventoryStocker.*;
@@ -21,22 +23,32 @@ public class CommonProxy implements IGuiHandler
 {
 	public static String BLOCK_PNG = "/com/kaijin/InventoryStocker/textures/terrain.png";
 
-	public static void load()
+	public void load()
 	{
 
 	}
 
-	public static boolean isClient(World world)
+	public boolean isClient()
 	{
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if (side == Side.CLIENT)
+		{
+			return true;
+		}
 		return false;
 	}
 
-	public static boolean isServer()
+	public boolean isServer()
 	{
-		return true;
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if (side == Side.SERVER)
+		{
+			return true;
+		}
+		return false;
 	}
 
-	public static void sendPacketToPlayer(EntityPlayer player, Packet250CustomPayload packet)
+	public static void sendPacketToPlayer(Packet250CustomPayload packet, EntityPlayerMP player)
 	{
 		PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
 	}
@@ -48,7 +60,8 @@ public class CommonProxy implements IGuiHandler
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+			int x, int y, int z) 
+	{
 		if (!world.blockExists(x, y, z))
 		{
 			return null;
@@ -61,12 +74,13 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
+		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+			int x, int y, int z) 
+	{
 		if (!world.blockExists(x, y, z))
 		{
 			return null;
@@ -78,7 +92,6 @@ public class CommonProxy implements IGuiHandler
 		{
 			return null;
 		}
-
-		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile, player);
+		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 }

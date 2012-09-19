@@ -18,11 +18,14 @@ import cpw.mods.fml.common.network.*;
 
 public class ClientPacketHandler implements IPacketHandler
 {
-	int packetType = 0;
+	int packetType = -1;
 	int x = 0;
 	int y = 0;
 	int z = 0;
+	int Metainfo = 0;
+
 	boolean snapshot = false;
+
 
 	/*
 	 * Packet format:
@@ -34,6 +37,11 @@ public class ClientPacketHandler implements IPacketHandler
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
 	 *             byte 4: boolean request, false = clear snapshot, true = take snapshot
+	 *         1=
+	 *             byte 1: x location of TileEntity
+	 *             byte 2: y location of TileEntity
+	 *             byte 3: z location of TileEntity
+	 *             byte 4: boolean request, false = not used, true = rotate request
 	 *         
 	 *         Server:
 	 *         0=
@@ -41,6 +49,11 @@ public class ClientPacketHandler implements IPacketHandler
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
 	 *             byte 4: boolean information, false = no valid snapshot, true = valid snapshot
+	 *         1=
+	 *             byte 1: x location of TileEntity
+	 *             byte 2: y location of TileEntity
+	 *             byte 3: z location of TileEntity
+	 *             byte 4: int "metadata", sync client TE rotation and lights with server
 	 *             
 	 * remaining bytes: data for packet
 	 */
@@ -84,8 +97,34 @@ public class ClientPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
+				//				String s = new Boolean(snapshot).toString();
+				//				if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
 				//snapshot state message from server
 				((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
+			}
+		}
+
+		if (this.packetType == 1)
+		{
+			try
+			{
+				this.x = stream.readInt();
+				this.y = stream.readInt();
+				this.z = stream.readInt();
+				this.Metainfo = stream.readInt();
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			World world = FMLClientHandler.instance().getClient().theWorld;
+			TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+			//check if the tile we're looking at is an Inventory Stocker tile
+			if (tile instanceof TileEntityInventoryStocker)
+			{
+				((TileEntityInventoryStocker)tile).Metainfo = this.Metainfo;
+				world.markBlockNeedsUpdate(x, y, z);
 			}
 		}
 	}

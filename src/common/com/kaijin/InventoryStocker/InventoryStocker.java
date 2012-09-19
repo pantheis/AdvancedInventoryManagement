@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b2")
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b3")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {"InventoryStocker"}, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = ("InventoryStocker"), packetHandler = ServerPacketHandler.class))
@@ -65,7 +65,7 @@ public class InventoryStocker
 		GameRegistry.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
 		NetworkRegistry.instance().registerGuiHandler(this.instance, proxy);
 		proxy.load();
-		if (CommonProxy.isServer())
+		if (proxy.isServer())
 		{
 			FMLLog.getLogger().info ("InventoryStocker loaded.");
 		}
