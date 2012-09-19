@@ -71,11 +71,10 @@ public class BlockInventoryStocker extends Block
 		if(tile instanceof TileEntityInventoryStocker)
 		{
 			//int m = blocks.getBlockMetadata(x, y, z);
-			int m = ((TileEntityInventoryStocker)tile).facingDirection;
-			int l = ((TileEntityInventoryStocker)tile).lightMeta;
+			int m = ((TileEntityInventoryStocker)tile).Metainfo;
 			int dir = m & 7;
 			int side = Utils.lookupRotatedSide(i, dir);
-			int powered = (l & 8) >> 3;
+			int powered = (m & 8) >> 3;
 
 			//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
 
@@ -120,7 +119,7 @@ public class BlockInventoryStocker extends Block
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if(tile instanceof TileEntityInventoryStocker)
 		{
-			((TileEntityInventoryStocker)tile).facingDirection = dir;
+			((TileEntityInventoryStocker)tile).Metainfo = dir;
 		}
 		//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
@@ -128,15 +127,12 @@ public class BlockInventoryStocker extends Block
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		if (InventoryStocker.proxy.isServer())
-		{
-			return true;
-		}
-		else
+		if(world.isRemote)
 		{
 			// Prevent GUI pop-up and handle block rotation
 			if (entityplayer.isSneaking())
 			{
+				if (Utils.isDebug()) System.out.println("Block.world.isRemote.isSneaking");
 				// Rotate block if hand is empty
 				if (entityplayer.getCurrentEquippedItem() == null)
 				{
@@ -146,28 +142,19 @@ public class BlockInventoryStocker extends Block
 						if (Utils.isDebug()) System.out.println("Block.sendRotateRequestServer");
 						((TileEntityInventoryStocker)tile).sendRotateRequestServer();
 					}
-
-					/*
-					// Commenting out meta get, moving to a TE int with packet sync instead
-					// int i = world.getBlockMetadata(x, y, z);
-					int dir = i & 7; // Get orientation from first 3 bits of meta data
-					i ^= dir; // Clear those bits
-					++dir; // Rotate
-
-					if (dir > 5)
-					{
-						dir = 0;    // Start over
-					}
-
-					i |= dir; // Write orientation back to meta data value
-					// Commenting out meta set, moving to a TE int with packet sync instead
-					// world.setBlockMetadataWithNotify(x, y, z, i); // And store it
-					world.markBlockNeedsUpdate(x, y, z);
-					 */
 				}
 				// Block GUI popup when sneaking
 				return false;
-
+			}
+		}
+		else if (InventoryStocker.proxy.isServer())
+		{
+			// Prevent GUI pop-up and handle block rotation
+			if (entityplayer.isSneaking())
+			{
+				if (Utils.isDebug()) System.out.println("Block.isServer.isSneaking");
+				// Rotate block if hand is empty
+				return false;
 			}
 
 			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
@@ -177,9 +164,22 @@ public class BlockInventoryStocker extends Block
 				tile.onUpdate();
 			}
 			if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
+			if(Utils.isDebug())
+			{
+				if(entityplayer instanceof EntityPlayerMP)
+				{
+					System.out.println("Block-EntityPlayer instance of EntityPlayerMP");
+				}
+				else
+				{
+					System.out.println("Block-EntityPlayer NOT instance of EntityPlayerMP");
+				}
+			}
 			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
 			return true;
 		}
+		if (Utils.isDebug()) System.out.println("Block.onBlockActivated.fallthrough");
+		return true;
 	}
 
 	@Override

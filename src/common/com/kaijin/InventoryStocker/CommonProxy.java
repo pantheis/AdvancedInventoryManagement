@@ -74,8 +74,6 @@ public class CommonProxy implements IGuiHandler
 			return null;
 		}
 
-		((TileEntityInventoryStocker)tile).sendSnapshotStateClient((EntityPlayerMP)player);
-
 		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 
@@ -94,7 +92,6 @@ public class CommonProxy implements IGuiHandler
 		{
 			return null;
 		}
-
 		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
 	}
 }

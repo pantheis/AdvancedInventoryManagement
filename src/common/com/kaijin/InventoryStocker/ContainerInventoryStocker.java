@@ -97,8 +97,12 @@ public class ContainerInventoryStocker extends Container
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-		//			String n = ((EntityPlayerMP)par1ICrafting).username;
-		//			if (Utils.isDebug()) System.out.println("container.addCraftingToCrafters.server: " + n + ", guid: " + this.tile.myGUID);
+		if (Utils.isDebug())
+		{
+			System.out.println("gui.addCraftingToCrafters");
+			String n = ((EntityPlayerMP)par1ICrafting).username;
+			System.out.println("container.addCraftingToCrafters.server: " + n);
+		}
 		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
 		tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
 		tile.entityOpenList(guiPlayerList);
@@ -110,11 +114,21 @@ public class ContainerInventoryStocker extends Container
 	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
 		super.onCraftGuiClosed(par1EntityPlayer);
-
-		if (guiPlayerList.contains(par1EntityPlayer.username))
+		if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-client+server");
+		if (InventoryStocker.proxy.isServer())
 		{
-			guiPlayerList.remove(par1EntityPlayer.username);
-			tile.entityOpenList(guiPlayerList);
+			if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-SERVER");
+			if (guiPlayerList.contains(((EntityPlayerMP)par1EntityPlayer)))
+			{
+				if (Utils.isDebug())
+				{
+					System.out.println("gui.addCraftingToCrafters");
+					String n = ((EntityPlayerMP)par1EntityPlayer).username;
+					System.out.println("gui.onCraftGuiClosed.RemoveNameFromList: " + n);
+				}
+				guiPlayerList.remove(((EntityPlayerMP)par1EntityPlayer));
+				tile.entityOpenList(guiPlayerList);
+			}
 		}
 	}
 }

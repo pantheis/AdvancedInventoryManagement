@@ -22,8 +22,7 @@ public class ClientPacketHandler implements IPacketHandler
 	int x = 0;
 	int y = 0;
 	int z = 0;
-	int facingDirection = 0;
-	int lightMeta = 0;
+	int Metainfo = 0;
 
 	boolean snapshot = false;
 
@@ -54,12 +53,7 @@ public class ClientPacketHandler implements IPacketHandler
 	 *             byte 1: x location of TileEntity
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
-	 *             byte 4: int "metadata", sync client TE rotation information with server
-	 *         2=
-	 *             byte 1: x location of TileEntity
-	 *             byte 2: y location of TileEntity
-	 *             byte 3: z location of TileEntity
-	 *             byte 4: boolean information, false = lights off, true = lights on
+	 *             byte 4: int "metadata", sync client TE rotation and lights with server
 	 *             
 	 * remaining bytes: data for packet
 	 */
@@ -117,7 +111,7 @@ public class ClientPacketHandler implements IPacketHandler
 				this.x = stream.readInt();
 				this.y = stream.readInt();
 				this.z = stream.readInt();
-				this.facingDirection = stream.readInt();
+				this.Metainfo = stream.readInt();
 			}
 			catch (Exception ex)
 			{
@@ -129,31 +123,7 @@ public class ClientPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
-				((TileEntityInventoryStocker)tile).facingDirection = this.facingDirection;
-				world.markBlockNeedsUpdate(x, y, z);
-			}
-		}
-
-		if (this.packetType == 2)
-		{
-			try
-			{
-				this.x = stream.readInt();
-				this.y = stream.readInt();
-				this.z = stream.readInt();
-				this.lightMeta = stream.readInt();
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-			World world = FMLClientHandler.instance().getClient().theWorld;
-			TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-			//check if the tile we're looking at is an Inventory Stocker tile
-			if (tile instanceof TileEntityInventoryStocker)
-			{
-				((TileEntityInventoryStocker)tile).lightMeta = this.lightMeta;
+				((TileEntityInventoryStocker)tile).Metainfo = this.Metainfo;
 				world.markBlockNeedsUpdate(x, y, z);
 			}
 		}

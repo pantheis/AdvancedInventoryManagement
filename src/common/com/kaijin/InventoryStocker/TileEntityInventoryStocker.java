@@ -59,6 +59,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	public int myGUID;
 	public int facingDirection = 0;
 	public int lightMeta = 0;
+	public int Metainfo = 0;
 
 	public TileEntityInventoryStocker()
 	{
@@ -89,8 +90,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public void entityOpenList(List crafters)
 	{
-		//		if (Utils.isDebug()) System.out.println("entityOpenList");
 		this.remoteUsers = crafters;
+		if (Utils.isDebug())
+		{
+			System.out.println("entityOpenList");
+			for(int i=0; i < this.remoteUsers.size(); i++)
+			{
+				String n = this.remoteUsers.get(i).username;
+				System.out.println("NamesOnEntityList: " + n);
+			}
+		}
 	}
 
 	public void recvSnapshotRequest(boolean state)
@@ -302,7 +311,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			else if (type.endsWith("eloraam.base.BlockMicro"))
 			{
 				// RedPower Tube test
-				int m = this.facingDirection;
+				int m = this.Metainfo;
 
 				return (m >= 8) && (m <= 10);
 			}
@@ -348,7 +357,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public int getRotatedSideFromMetadata(int side)
 	{
-		int dir = this.facingDirection & 7;
+		int dir = this.Metainfo & 7;
 		return Utils.lookupRotatedSide(side, dir);
 	}
 
@@ -386,7 +395,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public TileEntity getTileAtFrontFace()
 	{
-		int dir = this.facingDirection & 7;
+		int dir = this.Metainfo & 7;
 		/**
 		 *      0: -Y (bottom side)
 		 *      1: +Y (top side)
@@ -505,7 +514,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
-		//TODO need to add reading of direction and light states here
 		if(!InventoryStocker.proxy.isClient())
 		{
 			super.readFromNBT(nbttagcompound);
@@ -517,9 +525,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
 			
 			// Light status and direction
-			
-			this.facingDirection = nbttagcompound.getInteger("facingDirection");
-			this.lightMeta = nbttagcompound.getInteger("lightMeta");
+			this.Metainfo = nbttagcompound.getInteger("Metainfo");
 
 			boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
 
@@ -592,7 +598,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
-		//TODO need to add saving of direction and light states here
 		if(!InventoryStocker.proxy.isClient())
 		{
 			super.writeToNBT(nbttagcompound);
@@ -659,9 +664,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
 			
 			// Light status and direction
-			
-			nbttagcompound.setInteger("facingDirection", this.facingDirection);
-			nbttagcompound.setInteger("lightMeta", this.lightMeta);
+			nbttagcompound.setInteger("Metainfo", this.Metainfo);
 		}
 	}
 
@@ -1297,31 +1300,31 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private void lightsOff()
 	{
 		lightState = false;
-		int meta = this.lightMeta; // Grab current meta data
+		int meta = this.Metainfo; // Grab current meta data
 		meta &= 7; // Clear bit 4
-		this.lightMeta = meta;
+		this.Metainfo = meta;
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-		sendLightData(); // send packet to nearby clients informing them of the new light state
-
-		//		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-		//		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-		//		worldObj.setBlockAndMetadataWithUpdate(xCoord, yCoord, zCoord, InventoryStocker.InventoryStockerBlockID, meta, true);
-
+//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
 	}
 
 	private void lightsOn()
 	{
 		lightState = true;
 		// Turn on das blinkenlights!
-		int meta = this.lightMeta; // Grab current meta data
+		int meta = this.Metainfo; // Grab current meta data
 		meta |= 8; // Set bit 4
-		this.lightMeta = meta;
+		this.Metainfo = meta;
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-		sendLightData(); // send packet to nearby clients informing them of the new light state
-
-		//		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); // Grab current meta data
-		//		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta); // And store it
-		//		worldObj.setBlockAndMetadataWithUpdate(xCoord, yCoord, zCoord, InventoryStocker.InventoryStockerBlockID, meta, true);
+		if (Utils.isDebug())
+		{
+			System.out.println("entityOpenList");
+			for(int i=0; i < this.remoteUsers.size(); i++)
+			{
+				String n = this.remoteUsers.get(i).username;
+				System.out.println("NamesOnEntityList: " + n);
+			}
+		}
+//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
 	}
 
 	@Override
@@ -1450,6 +1453,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	/*
 	 * Start networking section
 	 */
+	
+	@Override
+	public Packet250CustomPayload getAuxillaryInfoPacket()
+	{
+		if (Utils.isDebug()) System.out.println("te.getAuxillaryInfoPacket()");
+		return createExtraTEInfoPacket();
+	}
+	
 	private Packet250CustomPayload createSnapshotPacket()
 	{
 		//		String s = new Boolean(hasSnapshot).toString();
@@ -1501,9 +1512,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return packet;
 	}
 
-	private Packet250CustomPayload createRotateDataPacket()
+	/**<pre>
+	 * This function returns a Packet250CustomPayload:
+	 *   byte 1: x location of TileEntity
+	 *   byte 2: y location of TileEntity
+	 *   byte 3: z location of TileEntity
+	 *   byte 4: int "metadata", with rotation and light state info as bits</pre>
+
+	 * @return Packet250CustomPayload
+	 */
+	private Packet250CustomPayload createExtraTEInfoPacket()
 	{
-		if (Utils.isDebug()) System.out.println("te.createRotateDataPacket");
+		if (Utils.isDebug()) System.out.println("te.createExtraTEInfoPacket");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -1512,32 +1532,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			data.writeInt(this.xCoord);
 			data.writeInt(this.yCoord);
 			data.writeInt(this.zCoord);
-			data.writeInt(this.facingDirection);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
-		packet.data = bytes.toByteArray();
-		packet.length = packet.data.length;
-		return packet;
-	}
-
-	private Packet250CustomPayload createLightDataPacket()
-	{
-		if (Utils.isDebug()) System.out.println("te.createLightDataPacket");
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		DataOutputStream data = new DataOutputStream(bytes);
-		try
-		{
-			data.writeInt(2);
-			data.writeInt(this.xCoord);
-			data.writeInt(this.yCoord);
-			data.writeInt(this.zCoord);
-			data.writeInt(this.lightMeta);
+			data.writeInt(this.Metainfo);
 		}
 		catch(IOException e)
 		{
@@ -1558,35 +1553,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		if (Utils.isDebug()) System.out.println("te.sendRotateRequest");
 		Packet250CustomPayload packet = createRotateRequestPacket();
-		CommonProxy.sendPacketToServer(packet);
+		InventoryStocker.proxy.sendPacketToServer(packet);
 	}
 	
 	/**
 	 * Sends an update packet to all clients with the rotation info
 	 */
-	public void sendRotateData()
+	public void sendExtraTEData()
 	{
-		if (Utils.isDebug()) System.out.println("te.sendRotateData");
-		Packet250CustomPayload packet = createRotateDataPacket();
+		if (Utils.isDebug()) System.out.println("te.sendExtraTEData");
+		Packet250CustomPayload packet = createExtraTEInfoPacket();
 		//Get the current dimensionID
 		int dimensionId = worldObj.getWorldInfo().getDimension();
 		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
 		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 256, dimensionId, packet);
 	}
-
-	/**
-	 * Sends an update packet to all clients with the lights status
-	 */
-	public void sendLightData()
-	{
-		if (Utils.isDebug()) System.out.println("te.sendLightData");
-		Packet250CustomPayload packet = createLightDataPacket();
-		//Get the current dimensionID
-		int dimensionId = worldObj.getWorldInfo().getDimension();
-		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 256, dimensionId, packet);
-	}
-
 
 	/**
 	 * Sends a snapshot state to the client that just opened the GUI.
@@ -1594,10 +1575,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void sendSnapshotStateClient(EntityPlayerMP player)
 	{
+		if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClient");
 		//		String s = new Boolean(hasSnapshot).toString();
 		//		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient: " + s);
 		Packet250CustomPayload packet = createSnapshotPacket();
-		CommonProxy.sendPacketToPlayer(packet, player);
+		InventoryStocker.proxy.sendPacketToPlayer(packet, player);
 	}
 
 	/**
@@ -1605,6 +1587,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	private void sendSnapshotStateClients()
 	{
+		if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClients");
 		//		String s = new Boolean(hasSnapshot).toString();
 		//		if (Utils.isDebug()) System.out.println("sendSnapshotStateClients(): " + s);
 		Packet250CustomPayload packet = createSnapshotPacket();
@@ -1616,7 +1599,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				//				String n = remoteUsers.get(i).username;
 				//				if (Utils.isDebug()) System.out.println("sendSnapshotStateClients.name:  " + n);
 				//				CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
-				CommonProxy.sendPacketToPlayer(packet, remoteUsers.get(i));
+				if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClients-Actually sending");
+				InventoryStocker.proxy.sendPacketToPlayer(packet, remoteUsers.get(i));
 			}
 		}
 	}
@@ -1648,7 +1632,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		packet.data = bytes.toByteArray();
 		packet.length = packet.data.length;
 
-		CommonProxy.sendPacketToServer(packet);
+		InventoryStocker.proxy.sendPacketToServer(packet);
 	}
 
 	/*

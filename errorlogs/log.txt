@@ -1,1228 +1,194 @@
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:05:59 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:05:59 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:00 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:00 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:00 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:00 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:00 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:00 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:00 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:01 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:01 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:01 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:01 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:01 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:01 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:01 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:01 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:02 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:02 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:02 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:02 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:02 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:03 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:03 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:03 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:03 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:04 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:04 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:04 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:05 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:05 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:05 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:06 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:06 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:06 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:06 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:07 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:07 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:07 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:08 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:08 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:08 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:08 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:09 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:09 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:09 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:10 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:11 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:11 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:11 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:11 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:12 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:12 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:12 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:13 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:14 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:14 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:14 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:14 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:15 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:15 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:15 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:15 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:15 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:16 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:16 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:16 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:17 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:17 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:17 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:18 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:18 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:18 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:18 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:19 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:19 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:19 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:19 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:20 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:20 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:21 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:21 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:21 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:21 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:22 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:22 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:22 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:23 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:24 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:24 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:25 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:25 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:25 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:25 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:26 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:26 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:26 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:27 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:27 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:27 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:28 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:30 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:31 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:31 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:32 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:32 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:32 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:33 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] Button Pressed, taking snapshot
-2012-09-13 13:06:33 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:33 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:33 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:33 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:33 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:34 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:34 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:35 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:35 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:35 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:35 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:36 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:36 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:36 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:36 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:36 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:37 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] Button Pressed, clearing snapshot
-2012-09-13 13:06:38 [INFO] [STDOUT] guiClearSnapshot.sendSnapshotRequestServer
-2012-09-13 13:06:38 [INFO] [STDOUT] sendSnapshotRequestServer
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
-2012-09-13 13:06:38 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:38 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:38 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:38 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:39 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:39 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] gui.tile.validSnapshot(): true
-2012-09-13 13:06:39 [INFO] [STDOUT] tile.validSnapshot(): true
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:40 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:40 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:40 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] gui.tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] tile.validSnapshot(): false
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:41 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:41 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:42 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:43 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:43 [INFO] [STDOUT] ClientPacketHandler.onPacketData
-2012-09-13 13:06:43 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
-2012-09-13 13:06:43 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
-2012-09-13 13:06:43 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
-2012-09-13 13:06:48 [INFO] [STDOUT] Stopping!
-2012-09-13 13:06:48 [INFO] [STDOUT] SoundSystem shutting down...
-2012-09-13 13:06:48 [INFO] [STDOUT]     Author: Paul Lamb, www.paulscode.com
+2012-09-19 11:32:16 [INFO] [ForgeModLoader] Forge Mod Loader version 3.0.196.366 for Minecraft client:1.3.2, server:1.3.2 loading
+2012-09-19 11:32:18 [INFO] [STDOUT] 27 achievements
+2012-09-19 11:32:18 [INFO] [STDOUT] 195 recipes
+2012-09-19 11:32:18 [INFO] [STDOUT] Setting user: Player567, -
+2012-09-19 11:32:18 [INFO] [STDERR] Client asked for parameter: server
+2012-09-19 11:32:18 [INFO] [STDOUT] LWJGL Version: 2.4.2
+2012-09-19 11:32:20 [INFO] [ForgeModLoader] Attempting early MinecraftForge initialization
+2012-09-19 11:32:20 [INFO] [ForgeModLoader] Completed early MinecraftForge initialization
+2012-09-19 11:32:20 [INFO] [ForgeModLoader] Searching C:\cjtemp\MC1.2.5 dev\mcp72\jars\mods for mods
+2012-09-19 11:32:21 [INFO] [ForgeModLoader] Forge Mod Loader has identified 3 mods to load
+2012-09-19 11:32:22 [INFO] [STDOUT] Starting up SoundSystem...
+2012-09-19 11:32:22 [INFO] [STDOUT] Initializing LWJGL OpenAL
+2012-09-19 11:32:22 [INFO] [STDOUT]     (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+2012-09-19 11:32:22 [INFO] [STDOUT] OpenAL initialized.
+2012-09-19 11:32:23 [INFO] [ForgeModLoader] InventoryStocker debugging enabled.
+2012-09-19 11:32:23 [INFO] [ForgeModLoader] Forge Mod Loader has successfully loaded 3 mods
+2012-09-19 11:32:26 [INFO] [STDOUT] Connecting to 127.0.0.1, 25565
+2012-09-19 11:32:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:28 [INFO] [STDOUT] BlockInventoryStocker.createTileEntity
+2012-09-19 11:32:28 [INFO] [STDOUT] New TE, GUID =1
+2012-09-19 11:32:28 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:28 [INFO] [ForgeModLoader] MinecraftForge v4.1.1.251 Initialized
+2012-09-19 11:32:43 [INFO] [STDOUT] MinecraftForge v4.1.1.251 Initialized
+Block.onBlockActivated.fallthrough
+2012-09-19 11:32:44 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:44 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:32:44 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:32:45 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-19 11:32:45 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-19 11:32:45 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:32:45 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:45 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:32:45 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:32:46 [INFO] [STDOUT] Button Pressed, clearing snapshot
+2012-09-19 11:32:46 [INFO] [STDOUT] guiClearSnapshot.sendSnapshotRequestServer
+2012-09-19 11:32:46 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:32:46 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:46 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:32:46 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:32:47 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-19 11:32:47 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-19 11:32:47 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:32:47 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:47 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:32:47 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:32:48 [INFO] [STDOUT] Button Pressed, clearing snapshot
+2012-09-19 11:32:48 [INFO] [STDOUT] guiClearSnapshot.sendSnapshotRequestServer
+2012-09-19 11:32:48 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:32:48 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:48 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:32:48 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:32:48 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:32:50 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:50 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:50 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:50 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:50 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:53 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:53 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:53 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:53 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:54 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:55 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:55 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:55 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:55 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:55 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:56 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:56 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:56 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:56 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:56 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:57 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:57 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:57 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:57 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:57 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:32:58 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:32:58 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:32:58 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:32:58 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:32:59 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:09 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:14 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:15 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:19 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:19 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:19 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:19 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:19 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:20 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:20 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:20 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:20 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:20 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:21 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:21 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:21 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:21 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:21 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:21 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:21 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:21 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:21 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:21 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:22 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:22 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:22 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:22 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:22 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:23 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:23 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:23 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:23 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:23 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:24 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:24 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:24 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:24 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:27 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:29 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:33 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:33 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:33 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:33 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:33 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:34 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:34 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:34 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:34 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:35 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:36 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:36 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:36 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:36 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:36 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:37 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:37 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:37 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:37 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:37 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:39 [INFO] [STDOUT] Block.world.isRemote.isSneaking
+2012-09-19 11:33:39 [INFO] [STDOUT] Block.sendRotateRequestServer
+2012-09-19 11:33:39 [INFO] [STDOUT] te.sendRotateRequest
+2012-09-19 11:33:39 [INFO] [STDOUT] te.createRotateRequestPacket
+2012-09-19 11:33:40 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:46 [INFO] [STDOUT] Block.onBlockActivated.fallthrough
+2012-09-19 11:33:47 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:47 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:33:47 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:33:47 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-19 11:33:47 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-19 11:33:47 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:33:48 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:48 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:33:48 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:33:48 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:33:54 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:54 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:55 [INFO] [STDOUT] Block.onBlockActivated.fallthrough
+2012-09-19 11:33:55 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:55 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:33:55 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:33:58 [INFO] [STDOUT] Button Pressed, clearing snapshot
+2012-09-19 11:33:58 [INFO] [STDOUT] guiClearSnapshot.sendSnapshotRequestServer
+2012-09-19 11:33:58 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:33:58 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:33:58 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:33:58 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:33:59 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:34:05 [INFO] [STDOUT] Block.onBlockActivated.fallthrough
+2012-09-19 11:34:05 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:34:05 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:34:05 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: false
+2012-09-19 11:34:06 [INFO] [STDOUT] Button Pressed, taking snapshot
+2012-09-19 11:34:06 [INFO] [STDOUT] guiTakeSnapshot.sendSnapshotRequestServer
+2012-09-19 11:34:06 [INFO] [STDOUT] sendSnapshotRequestServer
+2012-09-19 11:34:06 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:34:06 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:34:06 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:34:06 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:34:10 [INFO] [STDOUT] Block.onBlockActivated.fallthrough
+2012-09-19 11:34:11 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:34:11 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:34:11 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:34:13 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:34:21 [INFO] [STDOUT] Block.onBlockActivated.fallthrough
+2012-09-19 11:34:21 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:34:21 [INFO] [STDOUT] ClientPacketHandler: Attempting to get theWorld
+2012-09-19 11:34:21 [INFO] [STDOUT] ClientPacketHandler: tile.setSnapshotState: true
+2012-09-19 11:34:22 [INFO] [STDOUT] gui.onCraftGuiClosed-client+server
+2012-09-19 11:34:24 [INFO] [STDOUT] ClientPacketHandler.onPacketData
+2012-09-19 11:34:25 [INFO] [STDOUT] ClientPacketHandler.onPacketData

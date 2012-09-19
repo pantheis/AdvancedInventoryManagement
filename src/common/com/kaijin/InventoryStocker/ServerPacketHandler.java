@@ -20,7 +20,7 @@ public class ServerPacketHandler implements IPacketHandler
 	int x = 0;
 	int y = 0;
 	int z = 0;
-	int facingDirection = 0;
+	int Metainfo = 0;
 
 	boolean snapshot = false;
 	boolean rotateRequest = false;
@@ -51,7 +51,7 @@ public class ServerPacketHandler implements IPacketHandler
 	 *             byte 1: x location of TileEntity
 	 *             byte 2: y location of TileEntity
 	 *             byte 3: z location of TileEntity
-	 *             byte 4: int "metadata", sync client TE rotation information with server
+	 *             byte 4: int "metadata", sync client TE rotation and lights with server
 	 *             
 	 * remaining bytes: data for packet
 	 */
@@ -119,9 +119,9 @@ public class ServerPacketHandler implements IPacketHandler
 				TileEntity tile = world.getBlockTileEntity(x, y, z);
 				if (tile instanceof TileEntityInventoryStocker)
 				{
-					this.facingDirection = ((TileEntityInventoryStocker)tile).facingDirection;
-					int dir = facingDirection & 7; // Get orientation from first 3 bits of meta data
-					this.facingDirection ^= dir; // Clear those bits
+					this.Metainfo = ((TileEntityInventoryStocker)tile).Metainfo;
+					int dir = Metainfo & 7; // Get orientation from first 3 bits of meta data
+					this.Metainfo ^= dir; // Clear those bits
 					++dir; // Rotate
 
 					if (dir > 5)
@@ -129,12 +129,11 @@ public class ServerPacketHandler implements IPacketHandler
 						dir = 0;    // Start over
 					}
 
-					this.facingDirection |= dir; // Write orientation back to meta data value
+					this.Metainfo |= dir; // Write orientation back to meta data value
 
-					((TileEntityInventoryStocker)tile).facingDirection = this.facingDirection;
+					((TileEntityInventoryStocker)tile).Metainfo = this.Metainfo;
 					world.markBlockNeedsUpdate(x, y, z);
-					((TileEntityInventoryStocker)tile).sendRotateData();
-					//TODO call TE send packet to client for syncing facing direction
+//					((TileEntityInventoryStocker)tile).sendExtraTEData();
 				}
 			}
 		}
