@@ -190,6 +190,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 	}
 
+	//TODO Move this information to be included in the int Metadata
 	private void updateDoorStates()
 	{
 		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
@@ -329,6 +330,18 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return doorState[i];
 	}
 
+	@Override
+	public int getStartInventorySide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getSizeInventorySide(ForgeDirection side) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 	public int getStartInventorySide(int i)
 	{
 		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -1436,18 +1449,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			tickTime--;
 		}
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	/*
