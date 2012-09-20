@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.*;
 import com.kaijin.InventoryStocker.*;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
@@ -247,7 +246,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			String type = Block.blocksList[ID].getClass().getName();
 			if (type.endsWith("BlockGenericPipe"))
 			{
-				/* if (Utils.isDebug())
+				/*
+				 if (Utils.isDebug())
                 {
                     try {
                         TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
@@ -297,7 +297,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                     {
                         System.err.println(e);
                     }
-                } */
+                }*/
 
 				// Buildcraft Pipe
 				int founditempipe = 0;
@@ -355,7 +355,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@Override
 	public int getSizeInventorySide(ForgeDirection side) {
 		// TODO Auto-generated method stub
-		return 0;
+		return 9;
 	}
 	
 	public int getStartInventorySide(int i)

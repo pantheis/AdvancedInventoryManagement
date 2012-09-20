@@ -230,13 +230,13 @@ public class BlockInventoryStocker extends Block
 	 */
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		super.onNeighborBlockChange(world, x, y, z, blockID);
 		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
 		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
 		if (tile != null)
 		{
 			tile.onUpdate();
 		}
+		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
 
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
