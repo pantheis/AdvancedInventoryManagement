@@ -53,7 +53,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private int tickDelay = 9;
 	private int tickTime = 0;
 
-	private boolean[] doorState = new boolean[6];
+//	private boolean[] doorState = new boolean[6];
 
 	public static int NextGUID = 1;
 	public int myGUID;
@@ -193,12 +193,21 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	//TODO Move this information to be included in the int Metadata
 	private void updateDoorStates()
 	{
-		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
-		doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
-		doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
-		doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
-		doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
-		doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
+//		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
+//		doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
+//		doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
+//		doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
+//		doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
+//		doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
+		int doorFlags = 0;
+		doorFlags |= 16 * findTubeOrPipeAt(xCoord,   yCoord-1, zCoord);
+		doorFlags |= 32 * findTubeOrPipeAt(xCoord,   yCoord+1, zCoord);
+		doorFlags |= 64 * findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1);
+		doorFlags |= 128 * findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1);
+		doorFlags |= 256 * findTubeOrPipeAt(xCoord-1, yCoord,   zCoord);
+		doorFlags |= 512 * findTubeOrPipeAt(xCoord+1, yCoord,   zCoord);
+		this.Metainfo ^= (this.Metainfo & 1008); // 1008 = bits 4 through 9 (zero based)
+		this.Metainfo |= doorFlags;
 	}
 
 	/**
@@ -223,7 +232,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 * Unable to distinguish water and power pipes from transport pipes.
 	 * Would Buildcraft API help?</pre>
 	 */
-	private boolean findTubeOrPipeAt(int x, int y, int z)
+	private int findTubeOrPipeAt(int x, int y, int z)
 	{
 		int ID = worldObj.getBlockId(x, y, z);
 		if (ID > 0)
@@ -284,7 +293,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
                 } */
 
 				// Buildcraft Pipe
-				boolean founditempipe = false;
+				int founditempipe = 0;
 				try
 				{
 					TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
@@ -300,7 +309,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 					if (transportType.endsWith("Items"))
 					{
 						// then this door should be open
-						founditempipe = true;
+						founditempipe = 1;
 					}
 				}
 				catch (Throwable e)
@@ -314,10 +323,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				// RedPower Tube test
 				int m = worldObj.getBlockMetadata(x, y, z);
 
-				return (m >= 8) && (m <= 10);
+				return (m >= 8) && (m <= 10) ? 1 : 0;
 			}
 		}
-		return false;
+		return 0;
 	}
 
 	/**
@@ -327,7 +336,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public boolean doorOpenOnSide(int i)
 	{
-		return doorState[i];
+		return (this.Metainfo & (1 << (i + 4))) > 0;
 	}
 
 	@Override
