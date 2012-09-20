@@ -121,12 +121,7 @@ public class BlockInventoryStocker extends Block
 		{
 			((TileEntityInventoryStocker)tile).Metainfo = dir;
 		}
-		//		world.setBlockMetadataWithNotify(x, y, z, dir);
 	}
-/*
- * TODO update this so that the server detects right-click-sneak and rotates instead of making the client send
- * a packet
- */
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
@@ -229,8 +224,9 @@ public class BlockInventoryStocker extends Block
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-	 * their own) Args: x, y, z, neighbor blockID
+	 * This is called when something changes near our block, we use it to detect placement of pipes/tubes
+	 * so we can update our textures. We also use it to verify the attached storage inventory hasn't been
+	 * removed or changed.
 	 */
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{

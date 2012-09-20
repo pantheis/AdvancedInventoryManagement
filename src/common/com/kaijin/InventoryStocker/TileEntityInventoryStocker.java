@@ -172,6 +172,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public void onUpdate()
 	{
+		//Doing a chunk loaded check here, if it's not, return from onUpdate without doing anything 
+		if (!isChunkLoaded())
+		{
+			return;
+		}
 		if(!InventoryStocker.proxy.isClient())
 		{
 			if (checkInvalidSnapshot() && validSnapshot())
@@ -183,7 +188,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			//			if (Utils.isDebug()) System.out.println("onUpdate.!isClient.sendSnapshotStateClients: " + s);
 			sendSnapshotStateClients();
 		}
-		if (!InventoryStocker.proxy.isServer())
+		if (InventoryStocker.proxy.isServer())
 		{
 			// Check adjacent blocks for tubes or pipes and update list accordingly
 			updateDoorStates();
@@ -191,6 +196,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 
 	//TODO Move this information to be included in the int Metadata
+	// Partially done, needs testing
 	private void updateDoorStates()
 	{
 //		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
@@ -208,6 +214,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		doorFlags |= 512 * findTubeOrPipeAt(xCoord+1, yCoord,   zCoord);
 		this.Metainfo ^= (this.Metainfo & 1008); // 1008 = bits 4 through 9 (zero based)
 		this.Metainfo |= doorFlags;
+		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 	}
 
 	/**
@@ -462,6 +469,55 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return worldObj.getBlockTileEntity(x, y, z);
 	}
 
+	public Coords getLocFrontFace()
+	{
+		int dir = this.Metainfo & 7;
+		/**
+		 *      0: -Y (bottom side)
+		 *      1: +Y (top side)
+		 *      2: -Z (west side)
+		 *      3: +Z (east side)
+		 *      4: -X (north side)
+		 *      5: +x (south side)
+		 */
+		int x = xCoord;
+		int y = yCoord;
+		int z = zCoord;
+
+		switch (dir)
+		{
+		case 0:
+			y--;
+			break;
+
+		case 1:
+			y++;
+			break;
+
+		case 2:
+			z--;
+			break;
+
+		case 3:
+			z++;
+			break;
+
+		case 4:
+			x--;
+			break;
+
+		case 5:
+			x++;
+			break;
+
+		default:
+			return null;
+		}
+		Coords coord = new Coords(x, y, z);
+		return coord;
+	}
+
+	
 	public int getSizeInventory()
 	{
 		return 18;
@@ -1136,6 +1192,17 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 
 	/**
+	 * Will check if the chunk the block at the front face is in is loaded
+	 * @return boolean
+	 */
+	private boolean isChunkLoaded()
+	{
+		Coords coord = getLocFrontFace();
+		return worldObj.blockExists(coord.x, coord.y, coord.z);
+	}
+
+	
+	/**
 	 * Will check if our snapshot should be invalidated.
 	 * Returns true if snapshot is invalid, false otherwise.
 	 * @return boolean
@@ -1145,7 +1212,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		/* TODO Add code here to check if the chunk that the tile at front face
 		 *      is in is actually loaded or not. Return false immediately if it
 		 *      isn't loaded so that other code doesn't clear the snapshot.
+		 *      
+		 *      Partially done, needs testing
 		 */
+		if (!isChunkLoaded())
+		{
+			return false;
+		}
 		TileEntity tile = getTileAtFrontFace();
 		if (!(tile instanceof IInventory)) // A null pointer will fail an instanceof test, so there's no need to independently check it.
 		{
@@ -1349,6 +1422,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@Override
 	public void updateEntity()
 	{
+		// Doing the adjacent chunk loaded check here. If it isn't loaded, return from the tick
+		// without doing anything
+		if (!isChunkLoaded())
+		{
+			return;
+		}
 		//		debugSnapshotDataClient();
 		//		debugSnapshotDataServer();
 		// Check if this or one of the blocks next to this is getting power from a neighboring block.
@@ -1358,9 +1437,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 		if(InventoryStocker.proxy.isClient())
 		{
-			//Check the door states client side in SMP here
-			updateDoorStates();
-
 			if (isPowered)
 			{
 				// This allows client-side animation of texture over time, which would not happen without updating the block
