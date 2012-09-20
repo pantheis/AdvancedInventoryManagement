@@ -35,7 +35,8 @@ public class InventoryStocker
 {
 	@SidedProxy(clientSide = "com.kaijin.InventoryStocker.ClientProxy", serverSide = "com.kaijin.InventoryStocker.CommonProxy")
 	public static CommonProxy proxy; //This object will be populated with the class that you choose for the environment
-	@Instance
+	
+	@Instance("InventoryStocker")
 	public static InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
 
 	static int InventoryStockerBlockID;

@@ -52,7 +52,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private int tickDelay = 9;
 	private int tickTime = 0;
 
-//	private boolean[] doorState = new boolean[6];
+	//	private boolean[] doorState = new boolean[6];
 
 	public static int NextGUID = 1;
 	public int myGUID;
@@ -185,12 +185,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 			//			String s = new Boolean(hasSnapshot).toString();
 			//			if (Utils.isDebug()) System.out.println("onUpdate.!isClient.sendSnapshotStateClients: " + s);
-			sendSnapshotStateClients();
-		}
-		if (InventoryStocker.proxy.isServer())
-		{
 			// Check adjacent blocks for tubes or pipes and update list accordingly
 			updateDoorStates();
+			sendSnapshotStateClients();
 		}
 	}
 
@@ -198,12 +195,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	// Partially done, needs testing
 	private void updateDoorStates()
 	{
-//		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
-//		doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
-//		doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
-//		doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
-//		doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
-//		doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
+		if (Utils.isDebug()) System.out.println("Update Door States");
+		//		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
+		//		doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
+		//		doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
+		//		doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
+		//		doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
+		//		doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
 		int doorFlags = 0;
 		doorFlags |= 16 * findTubeOrPipeAt(xCoord,   yCoord-1, zCoord);
 		doorFlags |= 32 * findTubeOrPipeAt(xCoord,   yCoord+1, zCoord);
@@ -246,83 +244,96 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			String type = Block.blocksList[ID].getClass().getName();
 			if (type.endsWith("BlockGenericPipe"))
 			{
-				/*
-				 if (Utils.isDebug())
-                {
-                    try {
-                        TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
-                        Class cls = tile.getClass();
-                        Field fldpipe = cls.getDeclaredField("pipe");
-                        Object pipeobj = fldpipe.get(tile);
-                        Class pipecls = pipeobj.getClass();
+				if (Utils.isDebug())
+				{
+					try {
+						TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+						Class cls = tile.getClass();
+						Field fldpipe = cls.getDeclaredField("pipe");
+						Object pipeobj = fldpipe.get(tile);
+						Class pipecls = pipeobj.getClass();
 
-                        Method methlist[] = pipecls.getDeclaredMethods();
-                        Field fieldlist[] = pipecls.getDeclaredFields();
-                        Class[] intfs = pipecls.getInterfaces();
+						Method methlist[] = pipecls.getDeclaredMethods();
+						Field fieldlist[] = pipecls.getDeclaredFields();
+						Class[] intfs = pipecls.getInterfaces();
 
-                        System.out.println("***METHODS***");
-                        for (int i = 0; i < methlist.length; i++)
-                        {
-                            Method m = methlist[i];
-                            System.out.println("name = " + m.getName());
-                            // System.out.println("decl class = " + m.getDeclaringClass()); // this will not change between different methods of the same class
-                            Class pvec[] = m.getParameterTypes();
-                            for (int j = 0; j < pvec.length; j++)
-                            {
-                                System.out.println("param #" + j + " " + pvec[j]);
-                            }
-                            System.out.println("return type = " + m.getReturnType());
-                            System.out.println("-----");
-                        }
+						System.out.println("***METHODS***");
+						for (int i = 0; i < methlist.length; i++)
+						{
+							Method m = methlist[i];
+							System.out.println("name = " + m.getName());
+							// System.out.println("decl class = " + m.getDeclaringClass()); // this will not change between different methods of the same class
+							Class pvec[] = m.getParameterTypes();
+							for (int j = 0; j < pvec.length; j++)
+							{
+								System.out.println("param #" + j + " " + pvec[j]);
+							}
+							System.out.println("return type = " + m.getReturnType());
+							System.out.println("-----");
+						}
 
-                        System.out.println("***FIELDS***");
-                        for (int i = 0; i < fieldlist.length; i++)
-                        {
-                            Field fld = fieldlist[i];
-                            System.out.println("name = " + fld.getName());
-                            // System.out.println("decl class = " + fld.getDeclaringClass()); // this will not change between different fields of the same class
-                            System.out.println("type = " + fld.getType());
-                            int mod = fld.getModifiers();
-                            System.out.println("modifiers = " + Modifier.toString(mod));
-                            System.out.println("-----");
-                        }
+						System.out.println("***FIELDS***");
+						for (int i = 0; i < fieldlist.length; i++)
+						{
+							Field fld = fieldlist[i];
+							System.out.println("name = " + fld.getName());
+							// System.out.println("decl class = " + fld.getDeclaringClass()); // this will not change between different fields of the same class
+							System.out.println("type = " + fld.getType());
+							int mod = fld.getModifiers();
+							System.out.println("modifiers = " + Modifier.toString(mod));
+							System.out.println("-----");
+						}
 
-                        System.out.println("***INTERFACES***");
-                        for (int i = 0; i < intfs.length; i++)
-                        {
-                            System.out.println(intfs[i]);
-                        }
-                    }
-                    catch (Throwable e)
-                    {
-                        System.err.println(e);
-                    }
-                }*/
+						System.out.println("***INTERFACES***");
+						for (int i = 0; i < intfs.length; i++)
+						{
+							System.out.println(intfs[i]);
+						}
+					}
+					catch (Throwable e)
+					{
+						System.err.println(e);
+					}
+				}
 
 				// Buildcraft Pipe
 				int founditempipe = 0;
 				try
 				{
 					TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+					if (Utils.isDebug()) System.out.println("Buildcraft grab TE");
 					Class cls = tile.getClass();
 					Field fldpipe = cls.getDeclaredField("pipe");
 					Object pipe = fldpipe.get(tile);
 
+					if (Utils.isDebug()) System.out.println("Buildcraft Class.forName pre");
 					Class pipecls = Class.forName("buildcraft.transport.Pipe"); // TODO Correct the class name?
+					if (Utils.isDebug()) System.out.println("Buildcraft Class.forName post");
+					if (Utils.isDebug()) System.out.println("Buildcraft getDeclaredField transport pre");
 					Field fldtransport = pipecls.getDeclaredField("transport");
+					if (Utils.isDebug()) System.out.println("Buildcraft getDeclaredField transport post");
 
+					if (Utils.isDebug()) System.out.println("Buildcraft Object transport = pre");
 					Object transport = fldtransport.get(pipe);
+					if (Utils.isDebug()) System.out.println("Buildcraft Object transport = post");
+					if (Utils.isDebug()) System.out.println("Buildcraft String transportType = pre");
 					String transportType = transport.getClass().getName();
+					if (Utils.isDebug()) System.out.println("Buildcraft String transportType = post");
+					if (Utils.isDebug()) System.out.println("Buildcraft String transportType endsWith Items = pre");
 					if (transportType.endsWith("Items"))
 					{
+						if (Utils.isDebug()) System.out.println("Buildcraft String transportType endsWith Items inside IF SUCCESS ");
 						// then this door should be open
 						founditempipe = 1;
 					}
 				}
 				catch (Throwable e)
 				{
+					if (Utils.isDebug()) System.out.println("Buildcraft pipe test exception");
 					System.err.println(e);
 				}
+				if (Utils.isDebug() && founditempipe == 1) System.out.println("Buildcraft pipe test found pipe");
+				if (Utils.isDebug() && founditempipe == 0) System.out.println("Buildcraft pipe test NOT found pipe");
 				return founditempipe;
 			}
 			else if (type.endsWith("eloraam.base.BlockMicro"))
@@ -355,34 +366,34 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@Override
 	public int getSizeInventorySide(ForgeDirection side) {
 		// TODO Auto-generated method stub
-		return 9;
-	}
-	
-	public int getStartInventorySide(int i)
-	{
-		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
-		int side = getRotatedSideFromMetadata(i);
-
-		if (side == 1)
-		{
-			return 9;    // access output section, 9-17
-		}
-
-		return 0; // access input section, 0-8
+		return 0;
 	}
 
-	public int getSizeInventorySide(int i)
-	{
-		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
-		int side = getRotatedSideFromMetadata(i);
-
-		if (side == 0)
-		{
-			return 0;    // Front has no inventory access
-		}
-
-		return 9;
-	}
+	//	public int getStartInventorySide(int i)
+	//	{
+	//		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
+	//		int side = getRotatedSideFromMetadata(i);
+	//
+	//		if (side == 1)
+	//		{
+	//			return 9;    // access output section, 9-17
+	//		}
+	//
+	//		return 0; // access input section, 0-8
+	//	}
+	//
+	//	public int getSizeInventorySide(int i)
+	//	{
+	//		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
+	//		int side = getRotatedSideFromMetadata(i);
+	//
+	//		if (side == 0)
+	//		{
+	//			return 0;    // Front has no inventory access
+	//		}
+	//
+	//		return 9;
+	//	}
 
 	public int getRotatedSideFromMetadata(int side)
 	{
@@ -517,7 +528,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return coord;
 	}
 
-	
+
 	public int getSizeInventory()
 	{
 		return 18;
@@ -580,6 +591,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			itemstack.stackSize = getInventoryStackLimit();
 		}
+		this.onInventoryChanged();
 	}
 
 	public String getInvName()
@@ -601,7 +613,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
 			reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
-			
+
 			// Light status and direction
 			this.Metainfo = nbttagcompound.getInteger("Metainfo");
 
@@ -740,7 +752,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			nbttagcompound.setBoolean("reactorWorkaround", reactorWorkaround);
 			nbttagcompound.setInteger("reactorWidth", reactorWidth);
 			nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
-			
+
 			// Light status and direction
 			nbttagcompound.setInteger("Metainfo", this.Metainfo);
 		}
@@ -1201,7 +1213,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return worldObj.blockExists(coord.x, coord.y, coord.z);
 	}
 
-	
+
 	/**
 	 * Will check if our snapshot should be invalidated.
 	 * Returns true if snapshot is invalid, false otherwise.
@@ -1398,7 +1410,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		int lights = this.Metainfo & 8; // Grab current state of lights
 		this.Metainfo ^= lights; // Toggles lights off if they're on (this two step method avoids worrying about retaining an unknown number of other bits)
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
+		//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
 	}
 
 	private void lightsOn()
@@ -1416,7 +1428,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				System.out.println("NamesOnEntityList: " + n);
 			}
 		}
-//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
+		//		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
 	}
 
 	@Override
@@ -1536,14 +1548,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	/*
 	 * Start networking section
 	 */
-	
+
 	@Override
 	public Packet250CustomPayload getAuxillaryInfoPacket()
 	{
 		if (Utils.isDebug()) System.out.println("te.getAuxillaryInfoPacket()");
 		return createExtraTEInfoPacket();
 	}
-	
+
 	private Packet250CustomPayload createSnapshotPacket()
 	{
 		//		String s = new Boolean(hasSnapshot).toString();
@@ -1638,7 +1650,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		Packet250CustomPayload packet = createRotateRequestPacket();
 		InventoryStocker.proxy.sendPacketToServer(packet);
 	}
-	
+
 	/**
 	 * Sends an update packet to all clients with the rotation info
 	 */
