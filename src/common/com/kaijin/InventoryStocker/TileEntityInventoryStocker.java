@@ -312,7 +312,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			else if (type.endsWith("eloraam.base.BlockMicro"))
 			{
 				// RedPower Tube test
-				int m = this.Metainfo;
+				int m = worldObj.getBlockMetadata(x, y, z);
 
 				return (m >= 8) && (m <= 10);
 			}
@@ -1313,9 +1313,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private void lightsOff()
 	{
 		lightState = false;
-		int meta = this.Metainfo; // Grab current meta data
-		meta &= 7; // Clear bit 4
-		this.Metainfo = meta;
+		int lights = this.Metainfo & 8; // Grab current state of lights
+		this.Metainfo ^= lights; // Toggles lights off if they're on (this two step method avoids worrying about retaining an unknown number of other bits)
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 //		sendExtraTEData(); // send packet to nearby clients informing them of the new light state
 	}
@@ -1324,9 +1323,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		lightState = true;
 		// Turn on das blinkenlights!
-		int meta = this.Metainfo; // Grab current meta data
-		meta |= 8; // Set bit 4
-		this.Metainfo = meta;
+		this.Metainfo |= 8; // Turn lights on
 		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		if (Utils.isDebug())
 		{
