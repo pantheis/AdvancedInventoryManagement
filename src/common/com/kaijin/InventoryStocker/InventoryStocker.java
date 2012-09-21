@@ -22,12 +22,11 @@ import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.*;
-import cpw.mods.fml.common.network.NetworkMod.NULL;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b3")
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b4", dependencies = "required-after:Forge@[4.1.1.251,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {"InventoryStocker"}, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = ("InventoryStocker"), packetHandler = ServerPacketHandler.class))
@@ -35,7 +34,8 @@ public class InventoryStocker
 {
 	@SidedProxy(clientSide = "com.kaijin.InventoryStocker.ClientProxy", serverSide = "com.kaijin.InventoryStocker.CommonProxy")
 	public static CommonProxy proxy; //This object will be populated with the class that you choose for the environment
-	@Instance
+	
+	@Instance("InventoryStocker")
 	public static InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
 
 	static int InventoryStockerBlockID;
