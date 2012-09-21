@@ -196,12 +196,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private void updateDoorStates()
 	{
 		if (Utils.isDebug()) System.out.println("Update Door States");
-		//		doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
-		//		doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
-		//		doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
-		//		doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
-		//		doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
-		//		doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
+		//doorState[0] = findTubeOrPipeAt(xCoord,   yCoord-1, zCoord); 
+		//doorState[1] = findTubeOrPipeAt(xCoord,   yCoord+1, zCoord); 
+		//doorState[2] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1); 
+		//doorState[3] = findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1); 
+		//doorState[4] = findTubeOrPipeAt(xCoord-1, yCoord,   zCoord); 
+		//doorState[5] = findTubeOrPipeAt(xCoord+1, yCoord,   zCoord); 
 		int doorFlags = 0;
 		doorFlags |= 16 * findTubeOrPipeAt(xCoord,   yCoord-1, zCoord);
 		doorFlags |= 32 * findTubeOrPipeAt(xCoord,   yCoord+1, zCoord);
@@ -234,7 +234,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 * Block class: buildcraft.transport.BlockGenericPipe
 	 *
 	 * Unable to distinguish water and power pipes from transport pipes.
-	 * Would Buildcraft API help?</pre>
+	 * Would Buildcraft API help?
+	 * Is the reflection testing actually doing that job successfully now?</pre>
 	 */
 	private int findTubeOrPipeAt(int x, int y, int z)
 	{
@@ -294,7 +295,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 					{
 						System.err.println(e);
 					}
-				}
+				} // end if debug
 
 				// Buildcraft Pipe
 				int founditempipe = 0;
@@ -319,7 +320,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 					if (Utils.isDebug()) System.out.println("Buildcraft String transportType = pre");
 					String transportType = transport.getClass().getName();
 					if (Utils.isDebug()) System.out.println("Buildcraft String transportType = post");
-					if (Utils.isDebug()) System.out.println("Buildcraft String transportType endsWith Items = pre");
+					if (Utils.isDebug()) System.out.println("Buildcraft String transportType .endsWith('Items') pre");
 					if (transportType.endsWith("Items"))
 					{
 						if (Utils.isDebug()) System.out.println("Buildcraft String transportType endsWith Items inside IF SUCCESS ");
@@ -340,7 +341,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			{
 				// RedPower Tube test
 				int m = worldObj.getBlockMetadata(x, y, z);
-
 				return (m >= 8) && (m <= 10) ? 1 : 0;
 			}
 		}
@@ -358,15 +358,37 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getStartInventorySide(ForgeDirection side)
+	{
+		// TODO Make sure the numbering and orientation matches up properly!
+		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
+		int i = getRotatedSideFromMetadata(side.ordinal());
+
+		if (Utils.isDebug()) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
+
+		if (i == 1)
+		{
+			return 9;    // access output section, 9-17
+		}
+
+		return 0; // access input section, 0-8
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getSizeInventorySide(ForgeDirection side)
+	{
+		// TODO Make sure the numbering and orientation matches up properly!
+		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
+		int i = getRotatedSideFromMetadata(side.ordinal());
+
+		if (Utils.isDebug()) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
+
+		if (i == 0)
+		{
+			return 0;    // Front has no inventory access
+		}
+
+		return 9;
 	}
 
 	//	public int getStartInventorySide(int i)
@@ -421,6 +443,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public Coords getLocAtFace(int i)
 	{
+		// TODO This should be doable using the ForgeDirection class to simplify even further, removing the switch statement
 		/**
 		 *      0: -Y (bottom side)
 		 *      1: +Y (top side)
@@ -429,41 +452,49 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 *      4: -X (north side)
 		 *      5: +x (south side)
 		 */
-		int x = xCoord;
-		int y = yCoord;
-		int z = zCoord;
+		Coords loc = new Coords(xCoord, yCoord, zCoord);
+
+		// Testing code
+		ForgeDirection side;
+		side = ForgeDirection.getOrientation(i);
+
+		int x = xCoord + side.offsetX;
+		int y = yCoord + side.offsetY;
+		int z = zCoord + side.offsetZ;
 
 		switch (i)
 		{
 		case 0:
-			y--;
+			loc.y--;
 			break;
 
 		case 1:
-			y++;
+			loc.y++;
 			break;
 
 		case 2:
-			z--;
+			loc.z--;
 			break;
 
 		case 3:
-			z++;
+			loc.z++;
 			break;
 
 		case 4:
-			x--;
+			loc.x--;
 			break;
 
 		case 5:
-			x++;
+			loc.x++;
 			break;
 
 		default:
 			return null;
 		}
-		Coords coord = new Coords(x, y, z);
-		return coord;
+
+		if (Utils.isDebug()) System.out.println("Old calculation = X: " + loc.x + " Y: " + loc.y + " Z: " + loc.z + " ForgeDirection result = X: " + x + " Y: " + y + " Z: " + z);
+		
+		return loc;
 	}
 
 	public int getSizeInventory()
@@ -750,6 +781,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	public void openChest() {}
 
 	public void closeChest() {}
+
 	/**
 	 * 
 	 * @param tile
