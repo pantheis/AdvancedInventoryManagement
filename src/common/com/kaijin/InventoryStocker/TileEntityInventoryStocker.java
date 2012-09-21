@@ -403,86 +403,24 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public int getBlockIDAtFace(int i)
 	{
-		int x = xCoord;
-		int y = yCoord;
-		int z = zCoord;
-
-		switch (i)
-		{
-		case 0:
-			y--;
-			break;
-		case 1:
-			y++;
-			break;
-		case 2:
-			z--;
-			break;
-		case 3:
-			z++;
-			break;
-		case 4:
-			x--;
-			break;
-		case 5:
-			x++;
-			break;
-		default:
-			return 0;
-		}
-		return worldObj.getBlockId(x, y, z);
+		Coords loc = getLocAtFace(i);
+		return worldObj.getBlockId(loc.x, loc.y, loc.z);
 	}
 
 	public TileEntity getTileAtFrontFace()
 	{
-		int dir = this.Metainfo & 7;
-		/**
-		 *      0: -Y (bottom side)
-		 *      1: +Y (top side)
-		 *      2: -Z (west side)
-		 *      3: +Z (east side)
-		 *      4: -X (north side)
-		 *      5: +x (south side)
-		 */
-		int x = xCoord;
-		int y = yCoord;
-		int z = zCoord;
-
-		switch (dir)
-		{
-		case 0:
-			y--;
-			break;
-
-		case 1:
-			y++;
-			break;
-
-		case 2:
-			z--;
-			break;
-
-		case 3:
-			z++;
-			break;
-
-		case 4:
-			x--;
-			break;
-
-		case 5:
-			x++;
-			break;
-
-		default:
-			return null;
-		}
-		return worldObj.getBlockTileEntity(x, y, z);
+		Coords loc = getLocFrontFace();
+		return worldObj.getBlockTileEntity(loc.x, loc.y, loc.z);
 	}
 
 	public Coords getLocFrontFace()
 	{
 		int dir = this.Metainfo & 7;
+		return getLocAtFace(dir);
+	}
+
+	public Coords getLocAtFace(int i)
+	{
 		/**
 		 *      0: -Y (bottom side)
 		 *      1: +Y (top side)
@@ -495,7 +433,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		int y = yCoord;
 		int z = zCoord;
 
-		switch (dir)
+		switch (i)
 		{
 		case 0:
 			y--;
@@ -527,7 +465,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		Coords coord = new Coords(x, y, z);
 		return coord;
 	}
-
 
 	public int getSizeInventory()
 	{
