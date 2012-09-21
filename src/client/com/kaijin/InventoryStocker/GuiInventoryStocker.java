@@ -42,14 +42,6 @@ public class GuiInventoryStocker extends GuiContainer
 		this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 
 		//Add snapshot text
-		//this.fontRenderer.drawString("Snapshot:", 65, 25, 4210752);
-
-		/*
-		 * validate snapshot state and display valid or invalid
-		 * This also needs to be expanded to get the valid/invalid state via custom packet in SMP from the server
-		 */
-		//		String s = new Boolean(this.tile.serverSnapshotState()).toString();
-		//		if (Utils.isDebug()) System.out.println("gui.tile.serverSnapshotState(): " + s + ", guid: " + this.tile.myGUID);
 		if (this.tile.serverSnapshotState())
 		{
 			this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
@@ -99,9 +91,6 @@ public class GuiInventoryStocker extends GuiContainer
 
 	/*
 	 * This function actually handles what happens when you click on a button, by ID
-	 * This needs to be expanded to handle the situation where we are in SMP by sending and receiving
-	 * packets to and from the server to communicate the button being pressed and the return status from
-	 * the server saying that it successfully invalidated the snapshot
 	 */
 	public void actionPerformed(GuiButton button)
 	{
