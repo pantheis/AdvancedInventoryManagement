@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version=Utils.FULLVERSION, dependencies = "required-after:Forge@[4.1.1.251,)")
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version=Utils.VERSION, dependencies = "required-after:Forge@[4.1.1.251,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {"InventoryStocker"}, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = ("InventoryStocker"), packetHandler = ServerPacketHandler.class))
