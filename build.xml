@@ -30,8 +30,6 @@
 		</or>
 	</condition>
 
-	
-
 	<mkdir dir="${download.dir}"/>
 
 	<!-- Targets -->
