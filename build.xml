@@ -3,7 +3,7 @@
 	<!-- Properties -->
 
 	<property name="mod.name"            value="InventoryStocker"/>
-	<property name="build.dir"           value="build"/>
+	<property name="build.dir"           value="Inventory Stocker/build"/>
 	<property name="src.dir"             value="Inventory Stocker/src"/>
 	<property name="res.dir"             value="Inventory Stocker/resources"/>
 
@@ -146,10 +146,18 @@
 		<!-- Copy MyMod source -->
 		<copy todir="${mcpsrc.dir}">
 			<fileset dir="${src.dir}/common">
+			<filterset>
+                <filter token="VERSION" value="${mymod.version.full}" />
+				<filter token="BUILD_NUMBER" value="${build.number}" />
+            </filterset>
 			</fileset>
 		</copy>
 		<copy todir="${mcpsrc.dir}">
 			<fileset dir="${src.dir}/client">
+			<filterset>
+                <filter token="VERSION" value="${mymod.version.full}" />
+				<filter token="BUILD_NUMBER" value="${build.number}" />
+            </filterset>
 			</fileset>
 		</copy>
 	</target>
