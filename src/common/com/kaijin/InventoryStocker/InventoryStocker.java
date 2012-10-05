@@ -44,11 +44,19 @@ public class InventoryStocker
 	@PreInit
 	public static void preInit(FMLPreInitializationEvent event)
 	{
-		Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
-		configuration.load();
-		InventoryStockerBlockID = configuration.getOrCreateBlockIdProperty("InventoryStocker", 2490).getInt();
-		isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
-		configuration.save();
+		try
+		{
+			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
+			configuration.load();
+			InventoryStockerBlockID = configuration.getOrCreateBlockIdProperty("InventoryStocker", 2490).getInt();
+			isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
+			configuration.save();
+		}
+		catch (Exception var1)
+		{
+			System.out.println("[ChargingBench] Error while trying to access configuration!");
+			throw new RuntimeException(var1);
+		}
 	}
 
 	@Init
