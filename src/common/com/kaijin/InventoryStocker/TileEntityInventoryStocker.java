@@ -492,7 +492,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			return null;
 		}
 
-		if (Utils.isDebug()) System.out.println("Old calculation = X: " + loc.x + " Y: " + loc.y + " Z: " + loc.z + " ForgeDirection result = X: " + x + " Y: " + y + " Z: " + z);
+//		if (Utils.isDebug()) System.out.println("Old calculation = X: " + loc.x + " Y: " + loc.y + " Z: " + loc.z + " ForgeDirection result = X: " + x + " Y: " + y + " Z: " + z);
 		
 		return loc;
 	}
