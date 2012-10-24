@@ -1519,7 +1519,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 
 	@Override
-	public Packet250CustomPayload getAuxillaryInfoPacket()
+	public Packet250CustomPayload getDescriptionPacket()
 	{
 		if (Utils.isDebug()) System.out.println("te.getAuxillaryInfoPacket()");
 		return createExtraTEInfoPacket();
