@@ -58,40 +58,71 @@ public class ContainerInventoryStocker extends Container
 		return this.tile.isUseableByPlayer(entityplayer);
 	}
 
-	public ItemStack transferStackInSlot(int par1)
+	//Updated function for transferStackInSlot(int slot)
+	@Override
+	public ItemStack func_82846_b(EntityPlayer p, int i)
 	{
-		ItemStack var2 = null;
-		Slot var3 = (Slot)this.inventorySlots.get(par1);
-
-		if (var3 != null && var3.getHasStack())
+		ItemStack itemstack = null;
+		Slot slot = (Slot) inventorySlots.get(i);
+		if (slot != null && slot.getHasStack())
 		{
-			ItemStack var4 = var3.getStack();
-			var2 = var4.copy();
-
-			if (par1 < 18)
+			ItemStack itemstack1 = slot.getStack();
+			itemstack = itemstack1.copy();
+			if (i < 18)
 			{
-				if (!this.mergeItemStack(var4, 18, this.inventorySlots.size(), true))
+				if (!mergeItemStack(itemstack1, 18, inventorySlots.size(), true))
 				{
 					return null;
 				}
-			}
-			else if (!this.mergeItemStack(var4, 0, 18, false))
+			} else if (!mergeItemStack(itemstack1, 0, 18, false))
 			{
 				return null;
 			}
-
-			if (var4.stackSize == 0)
+			if (itemstack1.stackSize == 0)
 			{
-				var3.putStack((ItemStack)null);
-			}
-			else
+				slot.putStack(null);
+			} else
 			{
-				var3.onSlotChanged();
+				slot.onSlotChanged();
 			}
 		}
-
-		return var2;
+		return itemstack;
 	}
+
+//	public ItemStack transferStackInSlot(int par1)
+//	{
+//		ItemStack var2 = null;
+//		Slot var3 = (Slot)this.inventorySlots.get(par1);
+//
+//		if (var3 != null && var3.getHasStack())
+//		{
+//			ItemStack var4 = var3.getStack();
+//			var2 = var4.copy();
+//
+//			if (par1 < 18)
+//			{
+//				if (!this.mergeItemStack(var4, 18, this.inventorySlots.size(), true))
+//				{
+//					return null;
+//				}
+//			}
+//			else if (!this.mergeItemStack(var4, 0, 18, false))
+//			{
+//				return null;
+//			}
+//
+//			if (var4.stackSize == 0)
+//			{
+//				var3.putStack((ItemStack)null);
+//			}
+//			else
+//			{
+//				var3.onSlotChanged();
+//			}
+//		}
+//
+//		return var2;
+//	}
 
 	@Override
 	public void addCraftingToCrafters(ICrafting par1ICrafting)

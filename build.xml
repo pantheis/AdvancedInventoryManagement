@@ -1,0 +1,130 @@
+<project name="Inventory Stocker" basedir="../" default="main">
+	<property environment="env" />
+	<!-- Properties -->
+
+	<property name="mod.name"            value="InventoryStocker"/>
+	<property name="build.dir"           value="Inventory Stocker/build"/>
+	<property name="src.dir"             value="Inventory Stocker/src"/>
+	<property name="res.dir"             value="Inventory Stocker/resources"/>
+
+	<property name="download.dir"        value="download"/>
+	<property name="files.minecraft.dir" value="jars"/>
+	<property name="clean_mcp"           value="clean"/>
+    
+	<property name="clean.name"          value="mcp719_f601332_clean.zip"/>
+
+	<property name="classes.dir"         value="${build.dir}/classes"/>
+	<property name="jar.dir"             value="${build.dir}/dist"/>
+
+	<property name="mcp.dir"             value="${build.dir}/mcp"/>
+	<property name="forge.dir"           value="${mcp.dir}/forge"/>
+
+	<property name="mcpsrc.dir"          value="${mcp.dir}/src/minecraft"/>
+
+	<property name="mcp.version"         value="719"/>
+	<property name="forge.version"       value="6.0.1.332"/>
+	<property name="mymod.version"       value="1.0"/>
+
+	<available property="forge-exists" file="${clean_mcp}/${clean.name}"/>
+    <target name="abort" unless="forge-exists">
+        <fail message="${clean.name} does not exist!" />
+    </target>
+
+	<mkdir dir="${download.dir}"/>
+
+	<!-- Targets -->
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<!-- Set build number -->
+	<target name="initialize-version" depends="version-provided,version-not-provided">
+		<property name="mymod.version.full"     value="${mymod.version}.${build.number}"/>
+		<echo message="Starting build for ${mymod.version.full}"/>
+	</target>
+
+	<target name="version-not-provided" unless="env.BUILD_NUMBER">
+		<buildnumber/>
+	</target>
+
+	<target name="version-provided" if="env.BUILD_NUMBER">
+		<property name="build.number" value="${env.BUILD_NUMBER}"/>
+	</target>
+
+	<!-- Setup mcp and forge -->
+	<target name="setup" depends="initialize-version">
+
+		<!-- Unzip them -->
+		<unzip dest="${build.dir}">
+			<fileset dir="${clean_mcp}">
+				<include name="${clean.name}"/>
+			</fileset>
+		</unzip>
+
+		<!-- Copy MyMod source -->
+		<copy todir="${mcpsrc.dir}">
+			<fileset dir="${src.dir}/common">
+			</fileset>
+			<filterset>
+                <filter token="VERSION" value="${mymod.version.full}" />
+				<filter token="BUILD_NUMBER" value="${build.number}" />
+            </filterset>
+			
+		</copy>
+	</target>
+
+	<target name="compile" depends="setup">
+
+		<!-- Recompile -->
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c recompile.bat"/>
+		</exec>
+
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg value="recompile.sh" />
+		</exec>
+
+		<!-- Reobf -->
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c reobfuscate.bat"/>
+		</exec>
+
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg value="reobfuscate.sh" />
+		</exec>
+
+		<!-- Copy MyMod classes -->
+		<copy todir="${classes.dir}">
+			<fileset dir="${mcp.dir}/reobf/minecraft"/>
+		</copy>
+
+		<!-- Copy common resources -->
+		<copy todir="${classes.dir}">
+			<fileset dir="${res.dir}/common">
+			</fileset>
+			<filterset>
+                <filter token="VERSION" value="${mymod.version.full}" />
+				<filter token="BUILD_NUMBER" value="${build.number}" />
+            </filterset>
+			</copy>
+
+		<!-- Copy client resources -->
+		<copy todir="${classes.dir}">
+			<fileset dir="${res.dir}/client">
+			</fileset>
+		</copy>		
+
+	</target>
+
+	<!-- Zip the compiled files -->
+	<target name="package" depends="compile">
+
+		<jar destfile="${jar.dir}/${mod.name}-${mymod.version.full}.jar" basedir="${classes.dir}"/>
+
+	</target>
+
+	<!-- Default target to run -->
+	<target name="main" depends="abort,initialize-version,clean,package"/>
+
+</project>

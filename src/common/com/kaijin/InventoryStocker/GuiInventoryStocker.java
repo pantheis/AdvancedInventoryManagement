@@ -34,7 +34,8 @@ public class GuiInventoryStocker extends GuiContainer
 	/**
 	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
 	 */
-	protected void drawGuiContainerForegroundLayer()
+	//FIXME figure out what the (int par1, int par2) are for
+	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRenderer.drawString("Input", 8, 6, 4210752);
 		this.fontRenderer.drawString(this.tile.getInvName(), 68, 6, 4210752);

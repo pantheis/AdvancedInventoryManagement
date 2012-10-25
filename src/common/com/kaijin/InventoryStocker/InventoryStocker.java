@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version="1.3.2.b4", dependencies = "required-after:Forge@[4.1.1.251,)")
+@Mod(modid = "InventoryStocker", name="Inventory Stocker", version=Utils.VERSION, dependencies = "required-after:Forge@[4.1.1.251,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {"InventoryStocker"}, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = ("InventoryStocker"), packetHandler = ServerPacketHandler.class))
@@ -48,13 +48,13 @@ public class InventoryStocker
 		{
 			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
 			configuration.load();
-			InventoryStockerBlockID = configuration.getOrCreateBlockIdProperty("InventoryStocker", 2490).getInt();
-			isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
+			InventoryStockerBlockID = configuration.getBlock("InventoryStocker", 2490).getInt();
+			isDebugging = Boolean.parseBoolean((configuration.get("debug", configuration.CATEGORY_GENERAL, false).value));
 			configuration.save();
 		}
 		catch (Exception var1)
 		{
-			System.out.println("[ChargingBench] Error while trying to access configuration!");
+			System.out.println("[Inventory Stocker] Error while trying to access configuration!");
 			throw new RuntimeException(var1);
 		}
 	}
