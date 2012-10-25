@@ -9,8 +9,9 @@
 
 	<property name="download.dir"        value="download"/>
 	<property name="files.minecraft.dir" value="jars"/>
+	<property name="clean_mcp"           value="clean"/>
     
-	<property name="clean.name"          value="mcp719_f601332_clean.zip"/>
+	<property name="clean.name"          value="${clean_mcp}/mcp719_f601332_clean.zip"/>
 
 	<property name="classes.dir"         value="${build.dir}/classes"/>
 	<property name="jar.dir"             value="${build.dir}/dist"/>
@@ -124,6 +125,6 @@
 	</target>
 
 	<!-- Default target to run -->
-	<target name="main" depends="initialize-version,clean,package"/>
+	<target name="main" depends="abort,initialize-version,clean,package"/>
 
 </project>
