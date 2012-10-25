@@ -48,8 +48,8 @@ public class InventoryStocker
 		{
 			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
 			configuration.load();
-			InventoryStockerBlockID = configuration.getOrCreateBlockIdProperty("InventoryStocker", 2490).getInt();
-			isDebugging = Boolean.parseBoolean((configuration.getOrCreateBooleanProperty("debug", configuration.CATEGORY_GENERAL, false).value));
+			InventoryStockerBlockID = configuration.getBlock("InventoryStocker", 2490).getInt();
+			isDebugging = Boolean.parseBoolean((configuration.get("debug", configuration.CATEGORY_GENERAL, false).value));
 			configuration.save();
 		}
 		catch (Exception var1)
