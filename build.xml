@@ -11,7 +11,7 @@
 	<property name="files.minecraft.dir" value="jars"/>
 	<property name="clean_mcp"           value="clean"/>
     
-	<property name="clean.name"          value="${clean_mcp}/mcp719_f601332_clean.zip"/>
+	<property name="clean.name"          value="mcp719_f601332_clean.zip"/>
 
 	<property name="classes.dir"         value="${build.dir}/classes"/>
 	<property name="jar.dir"             value="${build.dir}/dist"/>
@@ -25,9 +25,9 @@
 	<property name="forge.version"       value="6.0.1.332"/>
 	<property name="mymod.version"       value="1.0"/>
 
-	<available property="forge-exists" file="${download.dir}/${clean.name}"/>
+	<available property="forge-exists" file="${clean_mcp}/${clean.name}"/>
     <target name="abort" unless="forge-exists">
-        <echo message="${clean.name} does not exist!" />
+        <fail message="${clean.name} does not exist!" />
     </target>
 
 	<mkdir dir="${download.dir}"/>
@@ -57,7 +57,7 @@
 
 		<!-- Unzip them -->
 		<unzip dest="${build.dir}">
-			<fileset dir="${download.dir}">
+			<fileset dir="${clean_mcp}">
 				<include name="${clean.name}"/>
 			</fileset>
 		</unzip>
