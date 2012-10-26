@@ -5,12 +5,15 @@
 
 package com.kaijin.InventoryStocker;
 
+import net.minecraft.src.GuiButton;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.StatCollector;
+
 import org.lwjgl.opengl.GL11;
-import com.kaijin.InventoryStocker.*;
 
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import net.minecraft.src.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiInventoryStocker extends GuiContainer

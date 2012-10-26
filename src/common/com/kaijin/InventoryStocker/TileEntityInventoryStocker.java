@@ -8,18 +8,27 @@ package com.kaijin.InventoryStocker;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.*;
-import com.kaijin.InventoryStocker.*;
-import cpw.mods.fml.common.FMLCommonHandler;
+
+import net.minecraft.src.Block;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
+import net.minecraft.src.Packet250CustomPayload;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.TileEntityChest;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import net.minecraft.src.*;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 
 public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
 {
