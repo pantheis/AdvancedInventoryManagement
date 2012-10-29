@@ -1,16 +1,20 @@
-/* Inventory Stocker
- *  Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
- *  Licensed as open source with restrictions. Please see attached LICENSE.txt.
- */
+/*******************************************************************************
+ * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ * Licensed as open source with restrictions. Please see attached LICENSE.txt.
+ ******************************************************************************/
 
 package com.kaijin.InventoryStocker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
-import com.kaijin.InventoryStocker.*;
-import cpw.mods.fml.common.network.Player;
-import net.minecraft.src.*;
+
+import net.minecraft.src.Container;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.ICrafting;
+import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Slot;
 
 public class ContainerInventoryStocker extends Container
 {

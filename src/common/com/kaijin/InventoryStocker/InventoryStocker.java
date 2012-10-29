@@ -1,28 +1,27 @@
-/* Inventory Stocker
- *  Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
- *  Licensed as open source with restrictions. Please see attached LICENSE.txt.
- */
+/*******************************************************************************
+ * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ * Licensed as open source with restrictions. Please see attached LICENSE.txt.
+ ******************************************************************************/
 
 package com.kaijin.InventoryStocker;
-
-import java.io.File;
-import java.util.*;
-import com.kaijin.InventoryStocker.*;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
-import net.minecraftforge.common.*;
-import cpw.mods.fml.common.*;
+import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 

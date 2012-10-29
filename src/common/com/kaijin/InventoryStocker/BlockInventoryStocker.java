@@ -1,15 +1,11 @@
-/* Inventory Stocker
- *  Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
- *  Licensed as open source with restrictions. Please see attached LICENSE.txt.
- */
+/*******************************************************************************
+ * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ * Licensed as open source with restrictions. Please see attached LICENSE.txt.
+ ******************************************************************************/
 
 package com.kaijin.InventoryStocker;
 
-import java.util.*;
-
 import net.minecraft.src.Block;
-import net.minecraft.src.BlockContainer;
-import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
@@ -21,13 +17,8 @@ import net.minecraft.src.Material;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-
-import com.kaijin.InventoryStocker.*;
-
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import cpw.mods.fml.common.network.NetworkRegistry;
 
 
 public class BlockInventoryStocker extends Block
