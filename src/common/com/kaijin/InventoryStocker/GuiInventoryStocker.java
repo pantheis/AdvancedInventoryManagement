@@ -79,6 +79,7 @@ public class GuiInventoryStocker extends GuiContainer
 	}
 
 	//Copied mouseClicked function to get our button to make the "click" noise when clicked
+	@Override
 	protected void mouseClicked(int par1, int par2, int par3)
 	{
 		if (par3 == 0)
@@ -96,6 +97,7 @@ public class GuiInventoryStocker extends GuiContainer
 	/*
 	 * This function actually handles what happens when you click on a button, by ID
 	 */
+	@Override
 	public void actionPerformed(GuiButton button)
 	{
 		if (!button.enabled)
