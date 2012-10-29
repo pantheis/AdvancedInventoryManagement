@@ -121,7 +121,7 @@ public class ServerPacketHandler implements IPacketHandler
 				TileEntity tile = world.getBlockTileEntity(x, y, z);
 				if (tile instanceof TileEntityInventoryStocker)
 				{
-					this.Metainfo = ((TileEntityInventoryStocker)tile).Metainfo;
+					this.Metainfo = ((TileEntityInventoryStocker)tile).metaInfo;
 					int dir = Metainfo & 7; // Get orientation from first 3 bits of meta data
 					this.Metainfo ^= dir; // Clear those bits
 					++dir; // Rotate
@@ -133,7 +133,7 @@ public class ServerPacketHandler implements IPacketHandler
 
 					this.Metainfo |= dir; // Write orientation back to meta data value
 
-					((TileEntityInventoryStocker)tile).Metainfo = this.Metainfo;
+					((TileEntityInventoryStocker)tile).metaInfo = this.Metainfo;
 					world.markBlockNeedsUpdate(x, y, z);
 //					((TileEntityInventoryStocker)tile).sendExtraTEData();
 				}
