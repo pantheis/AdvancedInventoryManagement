@@ -123,7 +123,7 @@ public class ClientPacketHandler implements IPacketHandler
 			//check if the tile we're looking at is an Inventory Stocker tile
 			if (tile instanceof TileEntityInventoryStocker)
 			{
-				((TileEntityInventoryStocker)tile).Metainfo = this.Metainfo;
+				((TileEntityInventoryStocker)tile).metaInfo = this.Metainfo;
 				world.markBlockNeedsUpdate(x, y, z);
 			}
 		}

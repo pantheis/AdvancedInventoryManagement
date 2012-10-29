@@ -57,12 +57,10 @@ public class BlockInventoryStocker extends Block
 	@SideOnly(Side.CLIENT)
 	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
 	{
-		//TODO possibly redo this to use Forge.Direction
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-		if(tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityInventoryStocker)
 		{
-			//int m = blocks.getBlockMetadata(x, y, z);
-			int m = ((TileEntityInventoryStocker)tile).Metainfo;
+			int m = ((TileEntityInventoryStocker)tile).metaInfo;
 			int dir = m & 7;
 			int side = Utils.lookupRotatedSide(i, dir);
 			int powered = (m & 8) >> 3;
@@ -72,11 +70,13 @@ public class BlockInventoryStocker extends Block
 			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
 			if (side == 0) // Front
 			{
-				int time = (int)tile.worldObj.getWorldTime();
-				return 2 + powered * (((time >> 2) & 3) + 1);
+				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
+				//int time = (int)tile.worldObj.getWorldTime();
+				//return 2 + powered * (((time >> 2) & 3) + 1);
+				return 1 + powered;
 			}
 
-			int open = tile != null ? (((TileEntityInventoryStocker)tile).doorOpenOnSide(i) ? 2 : 0) : 0;
+			int open = (2 & (m >> (i + 3))); // Bit i + 4 shifted to the 2's place and isolated
 
 			if (side == 1) // Back
 			{
@@ -110,37 +110,31 @@ public class BlockInventoryStocker extends Block
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if(tile instanceof TileEntityInventoryStocker)
 		{
-			((TileEntityInventoryStocker)tile).Metainfo = dir;
+			((TileEntityInventoryStocker)tile).metaInfo = dir;
 		}
 	}
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		if(world.isRemote)
+		if (InventoryStocker.proxy.isClient())
 		{
-			// Prevent GUI pop-up and handle block rotation
-			if (entityplayer.isSneaking())
-			{
-				if (Utils.isDebug()) System.out.println("Block.world.isRemote.isSneaking");
-				// Prevent GUI popup when sneaking
-				// This allows you to sneak place things directly on the inventory stocker
-				return false;
-			}
+			return !entityplayer.isSneaking();
 		}
 		else if (InventoryStocker.proxy.isServer())
 		{
-			// Prevent GUI pop-up and handle block rotation
 			if (entityplayer.isSneaking())
 			{
+				// Prevent GUI pop-up and handle block rotation
+				if (Utils.isDebug()) System.out.println("BlockInvStock: isServer && isSneaking");
 				if (entityplayer.getCurrentEquippedItem() == null)
 				{
 					TileEntity tile = world.getBlockTileEntity(x, y, z);
-					if(tile instanceof TileEntityInventoryStocker)
+					if (tile instanceof TileEntityInventoryStocker)
 					{
-						int Metainfo = ((TileEntityInventoryStocker)tile).Metainfo;
-						int dir = Metainfo & 7; // Get orientation from first 3 bits of meta data
-						Metainfo ^= dir; // Clear those bits
+						int meta = ((TileEntityInventoryStocker)tile).metaInfo;
+						int dir = meta & 7; // Get orientation from first 3 bits of meta data
+						meta ^= dir; // Clear those bits
 						++dir; // Rotate
 
 						if (dir > 5)
@@ -148,31 +142,31 @@ public class BlockInventoryStocker extends Block
 							dir = 0;    // Start over
 						}
 
-						Metainfo |= dir; // Write orientation back to meta data value
+						meta |= dir; // Write orientation back to meta data value
 
-						((TileEntityInventoryStocker)tile).Metainfo = Metainfo;
+						((TileEntityInventoryStocker)tile).metaInfo = meta;
 						world.markBlockNeedsUpdate(x, y, z);
 					}
-					//prevent GUI popup when sneaking and your hand is empty
-					return false;
 				}
-				if (Utils.isDebug()) System.out.println("Block.isServer.isSneaking");
-				// Prevent GUI popup when sneaking but with something in your hand
-				// This allows you to sneak place things directly on the inventory stocker
+
+				// Prevent GUI popup when sneaking
+				// Allows you to place things directly on the inventory stocker, or rotate it, handled above
 				return false;
 			}
 
-			//If we got here, we're not sneaking, time to get to work opening the GUI
+			// If we got here, we're not sneaking, time to get to work opening the GUI
 			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
-			TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-			if (tile != null)
+			//TODO Do we really actually need to do this still? What problem did it solve? If it still exists, can we do it differently? 
+			TileEntity tile = world.getBlockTileEntity(x, y, z);
+			if (tile instanceof TileEntityInventoryStocker)
 			{
-				tile.onUpdate();
+				((TileEntityInventoryStocker)tile).onUpdate();
 			}
-			if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
-			if(Utils.isDebug())
+
+			/*if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
+			if (Utils.isDebug())
 			{
-				if(entityplayer instanceof EntityPlayerMP)
+				if (entityplayer instanceof EntityPlayerMP)
 				{
 					System.out.println("Block-EntityPlayer instance of EntityPlayerMP");
 				}
@@ -180,18 +174,19 @@ public class BlockInventoryStocker extends Block
 				{
 					System.out.println("Block-EntityPlayer NOT instance of EntityPlayerMP");
 				}
-			}
+			}*/
+
 			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
 			return true;
 		}
-		if (Utils.isDebug()) System.out.println("Block.onBlockActivated.fallthrough-should not happen?");
+		if (Utils.isDebug()) System.out.println("BlockInvStock: onBlockActivated fallthrough - should not happen!");
 		return true;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
-		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
+		//if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
 	}
 
@@ -205,7 +200,7 @@ public class BlockInventoryStocker extends Block
 	public boolean canConnectRedstone(IBlockAccess world, int X, int Y, int Z, int direction)
 	{
 		return true; // Will appear to connect to RedPower wires and such.
-		// Currently still causes redstone dust to appear to connect in some cases where it shouldn't; Not our fault.
+		//FIXME Currently still causes redstone dust to appear to connect in some cases where it shouldn't; Not our fault.
 	}
 
 	@Override
@@ -222,10 +217,10 @@ public class BlockInventoryStocker extends Block
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
 		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
-		TileEntityInventoryStocker tile = (TileEntityInventoryStocker)world.getBlockTileEntity(x, y, z);
-		if (tile != null)
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		if (tile instanceof TileEntityInventoryStocker)
 		{
-			tile.onUpdate();
+			((TileEntityInventoryStocker)tile).onUpdate();
 		}
 		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
@@ -237,7 +232,7 @@ public class BlockInventoryStocker extends Block
 		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 
-	public static void dropItems(World world, ItemStack stack, int i, int j, int k)
+	public static void dropItem(World world, ItemStack stack, int i, int j, int k)
 	{
 		float f1 = 0.7F;
 		double d = (double)(world.rand.nextFloat() * f1) + (double)(1.0F - f1) * 0.5D;
@@ -257,16 +252,17 @@ public class BlockInventoryStocker extends Block
 
 			if (items != null && items.stackSize > 0)
 			{
-				dropItems(world, inventory.getStackInSlot(l).copy(), i, j, k);
+				dropItem(world, inventory.getStackInSlot(l).copy(), i, j, k);
 			}
 		}
 	}
 
 	public static void preDestroyBlock(World world, int i, int j, int k)
 	{
-		TileEntity tile = world.getBlockTileEntity(i, j, k);
+		if (InventoryStocker.proxy.isClient()) return;
 
-		if (tile instanceof IInventory && !InventoryStocker.proxy.isClient())
+		TileEntity tile = world.getBlockTileEntity(i, j, k);
+		if (tile instanceof IInventory)
 		{
 			dropItems(world, (IInventory) tile, i, j, k);
 			tile.invalidate();
