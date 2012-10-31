@@ -64,7 +64,7 @@ public class ContainerInventoryStocker extends Container
 
 	//Updated function for transferStackInSlot(int slot)
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer p, int i)
+	public ItemStack func_82846_b(EntityPlayer p, int i)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(i);
