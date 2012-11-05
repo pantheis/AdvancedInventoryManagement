@@ -30,7 +30,7 @@ public class BlockInventoryStocker extends Block
 
 	public String getTextureFile()
 	{
-		return CommonProxy.BLOCK_PNG;
+		return Info.BLOCK_PNG;
 	}
 
 	public int getBlockTextureFromSide(int i)
@@ -65,7 +65,7 @@ public class BlockInventoryStocker extends Block
 			int side = Utils.lookupRotatedSide(i, dir);
 			int powered = (m & 8) >> 3;
 
-			//if (Utils.isDebug()) System.out.println("getBlockTexture - m = " + m);
+			//if (InventoryStocker.isDebugging) System.out.println("getBlockTexture - m = " + m);
 
 			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
 			if (side == 0) // Front
@@ -126,7 +126,7 @@ public class BlockInventoryStocker extends Block
 			if (entityplayer.isSneaking())
 			{
 				// Prevent GUI pop-up and handle block rotation
-				if (Utils.isDebug()) System.out.println("BlockInvStock: isServer && isSneaking");
+				if (Info.isDebugging) System.out.println("BlockInvStock: isServer && isSneaking");
 				if (entityplayer.getCurrentEquippedItem() == null)
 				{
 					TileEntity tile = world.getBlockTileEntity(x, y, z);
@@ -163,8 +163,8 @@ public class BlockInventoryStocker extends Block
 				((TileEntityInventoryStocker)tile).onUpdate();
 			}
 
-			/*if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
-			if (Utils.isDebug())
+			/*if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
+			if (InventoryStocker.isDebugging)
 			{
 				if (entityplayer instanceof EntityPlayerMP)
 				{
@@ -179,14 +179,14 @@ public class BlockInventoryStocker extends Block
 			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
 			return true;
 		}
-		if (Utils.isDebug()) System.out.println("BlockInvStock: onBlockActivated fallthrough - should not happen!");
+		if (Info.isDebugging) System.out.println("BlockInvStock: onBlockActivated fallthrough - should not happen!");
 		return true;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
-		//if (Utils.isDebug()) System.out.println("BlockInventoryStocker.createTileEntity");
+		//if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
 	}
 
@@ -216,7 +216,7 @@ public class BlockInventoryStocker extends Block
 	 */
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
+		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if (tile instanceof TileEntityInventoryStocker)
 		{
@@ -228,7 +228,7 @@ public class BlockInventoryStocker extends Block
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
 	{
 		preDestroyBlock(world, x, y, z);
-		if (Utils.isDebug()) System.out.println("BlockInventoryStocker.onBlockDestroyedByPlayer");
+		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onBlockDestroyedByPlayer");
 		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 

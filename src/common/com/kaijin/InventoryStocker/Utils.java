@@ -13,15 +13,6 @@ import cpw.mods.fml.common.asm.SideOnly;
 
 public class Utils
 {
-	// This is set by a configuration file property debug
-	public static boolean isDebug()
-	{
-		return InventoryStocker.isDebugging;
-	}
-
-	public static final String VERSION = "@VERSION@";
-	public static final String BUILD_NUMBER = "@BUILD_NUMBER@";
-
 	/**
 	 * 
 	 * @param fr    - Font Renderer handle

@@ -132,7 +132,7 @@ public class ContainerInventoryStocker extends Container
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-		if (Utils.isDebug())
+		if (Info.isDebugging)
 		{
 			System.out.println("gui.addCraftingToCrafters");
 			String n = ((EntityPlayerMP)par1ICrafting).username;
@@ -149,13 +149,13 @@ public class ContainerInventoryStocker extends Container
 	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
 		super.onCraftGuiClosed(par1EntityPlayer);
-		if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-client+server");
+		if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-client+server");
 		if (InventoryStocker.proxy.isServer())
 		{
-			if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-SERVER");
+			if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-SERVER");
 			if (guiPlayerList.contains(((EntityPlayerMP)par1EntityPlayer)))
 			{
-				if (Utils.isDebug())
+				if (Info.isDebugging)
 				{
 					System.out.println("gui.addCraftingToCrafters");
 					String n = ((EntityPlayerMP)par1EntityPlayer).username;

@@ -39,29 +39,30 @@ public class GuiInventoryStocker extends GuiContainer
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
 	{
-		int GuiTex = mc.renderEngine.getTexture(InventoryStocker.proxy.BLOCK_PNG);
+		final int GuiTex = mc.renderEngine.getTexture(Info.GUI_PNG);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(GuiTex);
 
 		// Upper left corner of GUI panel
-		int xLoc = (width - xSize) / 2; // Half the difference between screen width and GUI width
-		int yLoc = (height - ySize) / 2; // Half the difference between screen height and GUI height
-
+		final int xLoc = (width - xSize) / 2; // Half the difference between screen width and GUI width
+		final int yLoc = (height - ySize) / 2; // Half the difference between screen height and GUI height
+		final int xCenter = width / 2;
+		
 		this.drawTexturedModalRect(xLoc, yLoc, 0, 0, xSize, ySize);
 
-		fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.input"), xLoc + 8, yLoc + 6, 4210752);
-		fontRenderer.drawString(lang.translateKey(tile.getInvName()), xLoc + 68, yLoc + 6, 4210752);
-		fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.output"), xLoc + 116, yLoc + 6, 4210752);
+		Utils.drawCenteredText(fontRenderer, lang.translateKey(tile.getInvName()), xCenter, yLoc - 12, 4210752);
+		fontRenderer.drawString(lang.translateKey(Info.KEY_GUI_INPUT), xLoc + 8, yLoc + 6, 4210752);
+		fontRenderer.drawString(lang.translateKey(Info.KEY_GUI_OUTPUT), xLoc + 116, yLoc + 6, 4210752);
 		fontRenderer.drawString(lang.translateKey("container.inventory"), xLoc + 8, yLoc + 74, 4210752);
 
 		//Add snapshot text
 		if (tile.serverSnapshotState())
 		{
-			fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.ready"), xLoc + 73, yLoc + 20, 0x0000FF);
+			fontRenderer.drawString(lang.translateKey(Info.KEY_GUI_READY), xLoc + 73, yLoc + 20, 0x0000FF);
 		}
 		else
 		{
-			fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.notready"), xLoc + 63, yLoc + 20, 0xFF0000);
+			fontRenderer.drawString(lang.translateKey(Info.KEY_GUI_NOTREADY), xLoc + 63, yLoc + 20, 0xFF0000);
 		}
 
 		//GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
@@ -103,12 +104,12 @@ public class GuiInventoryStocker extends GuiContainer
 		{
 			if (tile.serverSnapshotState())
 			{
-				if (Utils.isDebug()) System.out.println("Button Pressed, clearing snapshot");
+				if (Info.isDebugging) System.out.println("Button Pressed, clearing snapshot");
 				tile.guiClearSnapshot();
 			}
 			else
 			{
-				if (Utils.isDebug()) System.out.println("Button Pressed, taking snapshot");
+				if (Info.isDebugging) System.out.println("Button Pressed, taking snapshot");
 				tile.guiTakeSnapshot();
 			}
 		}

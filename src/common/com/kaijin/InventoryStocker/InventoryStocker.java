@@ -23,24 +23,18 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "InventoryStocker", name="Inventory Stocker", version=Utils.VERSION, dependencies = "required-after:Forge@[4.1.1.251,)")
+@Mod(modid = Info.MOD_ID, name=Info.MOD_NAME, version=Info.VERSION, dependencies = Info.MOD_DEPENDENCIES)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
-clientPacketHandlerSpec = @SidedPacketHandler(channels = {"InventoryStocker"}, packetHandler = ClientPacketHandler.class),
-serverPacketHandlerSpec = @SidedPacketHandler(channels = ("InventoryStocker"), packetHandler = ServerPacketHandler.class))
+clientPacketHandlerSpec = @SidedPacketHandler(channels = {Info.PACKET_CHANNEL}, packetHandler = ClientPacketHandler.class),
+serverPacketHandlerSpec = @SidedPacketHandler(channels = (Info.PACKET_CHANNEL), packetHandler = ServerPacketHandler.class))
 public class InventoryStocker
 {
-	@SidedProxy(clientSide = "com.kaijin.InventoryStocker.ClientProxy", serverSide = "com.kaijin.InventoryStocker.CommonProxy")
+	@SidedProxy(clientSide = Info.PROXY_CLIENT, serverSide = Info.PROXY_SERVER)
 	public static CommonProxy proxy; //This object will be populated with the class that you choose for the environment
 	
-	@Instance("InventoryStocker")
+	@Instance(Info.MOD_ID)
 	public static InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
-
-	public static Block blockInventoryStocker;
-
-	public static int blockIDInventoryStocker;
-	public static boolean isDebugging;
 
 	@PreInit
 	public static void preInit(FMLPreInitializationEvent event)
@@ -49,13 +43,13 @@ public class InventoryStocker
 		{
 			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
 			configuration.load();
-			blockIDInventoryStocker = configuration.getBlock("InventoryStocker", 2490).getInt();
-			isDebugging = Boolean.parseBoolean((configuration.get(configuration.CATEGORY_GENERAL, "debug", false).value));
+			Info.blockIDInventoryStocker = configuration.getBlock("InventoryStocker", 2490).getInt();
+			Info.isDebugging = Boolean.parseBoolean((configuration.get(configuration.CATEGORY_GENERAL, "debug", false).value));
 			configuration.save();
 		}
 		catch (Exception var1)
 		{
-			System.out.println("[Inventory Stocker] Error while trying to access configuration!");
+			System.out.println("[" + Info.MOD_NAME + "] Error while trying to access configuration!");
 			throw new RuntimeException(var1);
 		}
 	}
@@ -63,29 +57,27 @@ public class InventoryStocker
 	@Init
 	public void load(FMLInitializationEvent event)
 	{
-		blockInventoryStocker = new BlockInventoryStocker(blockIDInventoryStocker, 0, Material.wood).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
-		LanguageRegistry.addName(blockInventoryStocker, "Inventory Stocker");
-		GameRegistry.registerBlock(blockInventoryStocker);
+		Info.blockInventoryStocker = new BlockInventoryStocker(Info.blockIDInventoryStocker, 0, Material.wood).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
+		GameRegistry.registerBlock(Info.blockInventoryStocker);
+
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "kaijin.inventoryStocker"); // Better TE reg key
 
-		GameRegistry.addRecipe(new ItemStack(blockInventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
+		GameRegistry.addRecipe(new ItemStack(Info.blockInventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
 
 		NetworkRegistry.instance().registerGuiHandler(this.instance, proxy);
 		proxy.load();
+
 		if (proxy.isServer())
 		{
-			FMLLog.getLogger().info ("InventoryStocker loaded.");
-		}
-		if (isDebugging)
-		{
-			FMLLog.getLogger().info("InventoryStocker debugging enabled.");
+			FMLLog.getLogger().info (Info.MOD_NAME + " loaded.");
 		}
 
-		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.input", "Input");
-		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.output", "Output");
-		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.ready", "Ready");
-		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.notready", "Not Ready");
-		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.ready", "Ready");
+		if (Info.isDebugging)
+		{
+			FMLLog.getLogger().info(Info.MOD_NAME + " debugging enabled.");
+		}
+
+		Info.registerStrings();
 	}
 }
