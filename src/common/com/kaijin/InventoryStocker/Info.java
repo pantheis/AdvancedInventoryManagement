@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ * Licensed as open source with restrictions. Please see attached LICENSE.txt.
+ ******************************************************************************/
+
 package com.kaijin.InventoryStocker;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -13,7 +18,7 @@ public class Info
 
 	public static final String MOD_ID = "InventoryStocker";
 	public static final String MOD_NAME = "Inventory Stocker";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[4.1.1.251,)";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[6.0.1.349,)";
 	public static final String PROXY_CLIENT = "com.kaijin.InventoryStocker.ClientProxy";
 	public static final String PROXY_SERVER = "com.kaijin.InventoryStocker.CommonProxy";
 	public static final String PACKET_CHANNEL = MOD_ID;
