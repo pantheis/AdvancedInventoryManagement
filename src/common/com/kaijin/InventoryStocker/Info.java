@@ -21,8 +21,15 @@ public class Info
 	public static final String KEY_GUI_INPUT = "kaijin.invStocker.guiStrings.input";
 	public static final String KEY_GUI_OUTPUT = "kaijin.invStocker.guiStrings.output";
 	public static final String KEY_GUI_READY = "kaijin.invStocker.guiStrings.ready";
-	public static final String KEY_GUI_NOTREADY = "kaijin.invStocker.guiStrings.notready";
-	//public static final String 
+	public static final String KEY_GUI_NOSCAN = "kaijin.invStocker.guiStrings.noScan";
+	public static final String KEY_GUI_WORKING = "kaijin.invStocker.guiStrings.working";
+	public static final String KEY_GUI_HALTED = "kaijin.invStocker.guiStrings.halted";
+	public static final String KEY_GUI_INSERT = "kaijin.invStocker.guiStrings.insert";
+	public static final String KEY_GUI_REPLACE = "kaijin.invStocker.guiStrings.replace";
+	public static final String KEY_GUI_NORMAL = "kaijin.invStocker.guiStrings.normal";
+	public static final String KEY_GUI_CLEAR = "kaijin.invStocker.guiButton.clear";
+	public static final String KEY_GUI_SCAN = "kaijin.invStocker.guiButton.scan";
+	public static final String KEY_GUI_MODE = "kaijin.invStocker.guiButton.mode";
 
 	// Global variables
 	public static boolean isDebugging;
@@ -38,6 +45,14 @@ public class Info
 		lang.addStringLocalization(KEY_GUI_INPUT, "Input");
 		lang.addStringLocalization(KEY_GUI_OUTPUT, "Output");
 		lang.addStringLocalization(KEY_GUI_READY, "Ready");
-		lang.addStringLocalization(KEY_GUI_NOTREADY, "Not Ready");
+		lang.addStringLocalization(KEY_GUI_NOSCAN, "No Scan");
+		lang.addStringLocalization(KEY_GUI_CLEAR, "Clear");
+		lang.addStringLocalization(KEY_GUI_SCAN, "Scan");
+		lang.addStringLocalization(KEY_GUI_WORKING, "Working");
+		lang.addStringLocalization(KEY_GUI_HALTED, "Halted");
+		lang.addStringLocalization(KEY_GUI_INSERT, "Insert");
+		lang.addStringLocalization(KEY_GUI_REPLACE, "Replace");
+		lang.addStringLocalization(KEY_GUI_NORMAL, "Normal");
+		lang.addStringLocalization(KEY_GUI_MODE, "Mode");
 	}
 }
