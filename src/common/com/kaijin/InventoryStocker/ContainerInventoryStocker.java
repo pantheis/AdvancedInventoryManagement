@@ -21,9 +21,9 @@ public class ContainerInventoryStocker extends Container
 	private TileEntityInventoryStocker tile;
 	private List<EntityPlayerMP> guiPlayerList = new ArrayList<EntityPlayerMP>();
 
-	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker inventorystockerinventory)
+	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker stocker)
 	{
-		this.tile = inventorystockerinventory;
+		tile = stocker;
 		int xCol;
 		int yRow;
 
@@ -31,7 +31,7 @@ public class ContainerInventoryStocker extends Container
 		{
 			for (xCol = 0; xCol < 3; ++xCol)
 			{
-				this.addSlotToContainer(new Slot(inventorystockerinventory, xCol + 3 * yRow, 8 + xCol * 18, 18 + yRow * 18));
+				this.addSlotToContainer(new Slot(stocker, xCol + 3 * yRow, 8 + xCol * 18, 28 + yRow * 18));
 			}
 		}
 
@@ -39,7 +39,7 @@ public class ContainerInventoryStocker extends Container
 		{
 			for (xCol = 0; xCol < 3; ++xCol)
 			{
-				this.addSlotToContainer(new Slot(inventorystockerinventory, 9 + xCol + 3 * yRow, 116 + xCol * 18, 18 + yRow * 18));
+				this.addSlotToContainer(new Slot(stocker, 9 + xCol + 3 * yRow, 116 + xCol * 18, 28 + yRow * 18));
 			}
 		}
 
@@ -132,7 +132,7 @@ public class ContainerInventoryStocker extends Container
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
-		if (Utils.isDebug())
+		if (Info.isDebugging)
 		{
 			System.out.println("gui.addCraftingToCrafters");
 			String n = ((EntityPlayerMP)par1ICrafting).username;
@@ -149,13 +149,13 @@ public class ContainerInventoryStocker extends Container
 	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
 	{
 		super.onCraftGuiClosed(par1EntityPlayer);
-		if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-client+server");
+		if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-client+server");
 		if (InventoryStocker.proxy.isServer())
 		{
-			if (Utils.isDebug()) System.out.println("gui.onCraftGuiClosed-SERVER");
+			if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-SERVER");
 			if (guiPlayerList.contains(((EntityPlayerMP)par1EntityPlayer)))
 			{
-				if (Utils.isDebug())
+				if (Info.isDebugging)
 				{
 					System.out.println("gui.addCraftingToCrafters");
 					String n = ((EntityPlayerMP)par1EntityPlayer).username;
