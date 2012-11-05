@@ -61,7 +61,7 @@ public class ServerPacketHandler implements IPacketHandler
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player)
 	{
-		if (Utils.isDebug()) System.out.println("ServerPacketHandler.onPacketData");
+		if (Info.isDebugging) System.out.println("ServerPacketHandler.onPacketData");
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.data));
 		//Read the first int to determine packet type
 		try
@@ -89,7 +89,7 @@ public class ServerPacketHandler implements IPacketHandler
 			{
 				ex.printStackTrace();
 			}
-			if (Utils.isDebug()) System.out.println("ServerPacketHandler: Attempting to get worldObj");
+			if (Info.isDebugging) System.out.println("ServerPacketHandler: Attempting to get worldObj");
 			World world = ((EntityPlayerMP)player).worldObj;
 
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
@@ -98,7 +98,7 @@ public class ServerPacketHandler implements IPacketHandler
 			if (tile instanceof TileEntityInventoryStocker)
 			{
 				//				String s = new Boolean(snapshot).toString();
-				//				if (Utils.isDebug()) System.out.println("ServerPacketHandler: tile.recvSnapshotReqiest: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
+				//				if (InventoryStocker.isDebugging) System.out.println("ServerPacketHandler: tile.recvSnapshotReqiest: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
 				((TileEntityInventoryStocker)tile).recvSnapshotRequest(snapshot);
 			}
 		}

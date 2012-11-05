@@ -61,7 +61,7 @@ public class ClientPacketHandler implements IPacketHandler
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player)
 	{
-		if (Utils.isDebug()) System.out.println("ClientPacketHandler.onPacketData");
+		if (Info.isDebugging) System.out.println("ClientPacketHandler.onPacketData");
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.data));
 		//Read the first int to determine packet type
 		try
@@ -90,7 +90,7 @@ public class ClientPacketHandler implements IPacketHandler
 				ex.printStackTrace();
 			}
 
-			if (Utils.isDebug()) System.out.println("ClientPacketHandler: Attempting to get theWorld");
+			if (Info.isDebugging) System.out.println("ClientPacketHandler: Attempting to get theWorld");
 			World world = FMLClientHandler.instance().getClient().theWorld;
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
 
@@ -98,7 +98,7 @@ public class ClientPacketHandler implements IPacketHandler
 			if (tile instanceof TileEntityInventoryStocker)
 			{
 				//				String s = new Boolean(snapshot).toString();
-				//				if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
+				//				if (InventoryStocker.isDebugging) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s + ", guid: " + ((TileEntityInventoryStocker)tile).myGUID);
 				//snapshot state message from server
 				((TileEntityInventoryStocker)tile).setSnapshotState(snapshot);
 			}
