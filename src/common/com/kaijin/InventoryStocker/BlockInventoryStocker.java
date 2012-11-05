@@ -121,65 +121,48 @@ public class BlockInventoryStocker extends Block
 		{
 			return !entityplayer.isSneaking();
 		}
-		else if (InventoryStocker.proxy.isServer())
+
+		if (entityplayer.isSneaking())
 		{
-			if (entityplayer.isSneaking())
+			// Prevent GUI pop-up and handle block rotation
+			if (Info.isDebugging) System.out.println("BlockInvStock: isServer && isSneaking");
+			if (entityplayer.getCurrentEquippedItem() == null)
 			{
-				// Prevent GUI pop-up and handle block rotation
-				if (Info.isDebugging) System.out.println("BlockInvStock: isServer && isSneaking");
-				if (entityplayer.getCurrentEquippedItem() == null)
+				TileEntity tile = world.getBlockTileEntity(x, y, z);
+				if (tile instanceof TileEntityInventoryStocker)
 				{
-					TileEntity tile = world.getBlockTileEntity(x, y, z);
-					if (tile instanceof TileEntityInventoryStocker)
-					{
-						int meta = ((TileEntityInventoryStocker)tile).metaInfo;
-						int dir = meta & 7; // Get orientation from first 3 bits of meta data
-						meta ^= dir; // Clear those bits
-						++dir; // Rotate
-
-						if (dir > 5)
-						{
-							dir = 0;    // Start over
-						}
-
-						meta |= dir; // Write orientation back to meta data value
-
-						((TileEntityInventoryStocker)tile).metaInfo = meta;
-						world.markBlockNeedsUpdate(x, y, z);
-					}
+					((TileEntityInventoryStocker)tile).rotateBlock();
 				}
-
-				// Prevent GUI popup when sneaking
-				// Allows you to place things directly on the inventory stocker, or rotate it, handled above
-				return false;
 			}
 
-			// If we got here, we're not sneaking, time to get to work opening the GUI
-			// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
-			//TODO Do we really actually need to do this still? What problem did it solve? If it still exists, can we do it differently? 
-			TileEntity tile = world.getBlockTileEntity(x, y, z);
-			if (tile instanceof TileEntityInventoryStocker)
-			{
-				((TileEntityInventoryStocker)tile).onUpdate();
-			}
-
-			/*if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
-			if (InventoryStocker.isDebugging)
-			{
-				if (entityplayer instanceof EntityPlayerMP)
-				{
-					System.out.println("Block-EntityPlayer instance of EntityPlayerMP");
-				}
-				else
-				{
-					System.out.println("Block-EntityPlayer NOT instance of EntityPlayerMP");
-				}
-			}*/
-
-			entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
-			return true;
+			// Prevent GUI popup when sneaking
+			// Allows you to place things directly on the inventory stocker, or rotate it, handled above
+			return false;
 		}
-		if (Info.isDebugging) System.out.println("BlockInvStock: onBlockActivated fallthrough - should not happen!");
+
+		// If we got here, we're not sneaking, time to get to work opening the GUI
+		// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
+		//TODO Do we really actually need to do this still? What problem did it solve? If it still exists, can we do it differently? 
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		//if (tile instanceof TileEntityInventoryStocker)
+		//{
+			//((TileEntityInventoryStocker)tile).onUpdate();
+		//}
+
+		/*if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.onBlockActivated.openGUI");
+		if (InventoryStocker.isDebugging)
+		{
+			if (entityplayer instanceof EntityPlayerMP)
+			{
+				System.out.println("Block-EntityPlayer instance of EntityPlayerMP");
+			}
+			else
+			{
+				System.out.println("Block-EntityPlayer NOT instance of EntityPlayerMP");
+			}
+		}*/
+
+		entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
 		return true;
 	}
 
@@ -220,7 +203,7 @@ public class BlockInventoryStocker extends Block
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if (tile instanceof TileEntityInventoryStocker)
 		{
-			((TileEntityInventoryStocker)tile).onUpdate();
+			((TileEntityInventoryStocker)tile).onBlockUpdate();
 		}
 		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
