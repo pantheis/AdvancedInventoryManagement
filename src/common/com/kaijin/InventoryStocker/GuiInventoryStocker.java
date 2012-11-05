@@ -8,7 +8,7 @@ package com.kaijin.InventoryStocker;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.StatCollector;
+import net.minecraft.src.StringTranslate;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,41 +19,19 @@ import cpw.mods.fml.common.asm.SideOnly;
 public class GuiInventoryStocker extends GuiContainer
 {
 	private TileEntityInventoryStocker tile;
-	// last button clicked
-	private GuiButton selectedButton = null;
 
 	// define button class wide
-	private GuiButton button = null;
+	private GuiButton buttonSnap = null;
+
+	protected static StringTranslate lang = StringTranslate.getInstance();
 
 	public GuiInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
 	{
 		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
-		this.tile = tileentityinventorystocker;
+		tile = tileentityinventorystocker;
 		xSize = 176;
 		ySize = 168;
-		button = new GuiButton(0, 0, 0, 40, 20, "");
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	//FIXME figure out what the (int par1, int par2) are for
-	protected void drawGuiContainerForegroundLayer(int par1, int par2)
-	{
-		this.fontRenderer.drawString("Input", 8, 6, 4210752);
-		this.fontRenderer.drawString(this.tile.getInvName(), 68, 6, 4210752);
-		this.fontRenderer.drawString("Output", 116, 6, 4210752);
-		this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-
-		//Add snapshot text
-		if (this.tile.serverSnapshotState())
-		{
-			this.fontRenderer.drawString("Ready", 73, 20, 0x0000FF);
-		}
-		else
-		{
-			this.fontRenderer.drawString("Not Ready", 63, 20, 0xFF0000);
-		}
+		buttonSnap = new GuiButton(0, 0, 0, 40, 20, "");
 	}
 
 	/**
@@ -61,21 +39,39 @@ public class GuiInventoryStocker extends GuiContainer
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
 	{
-		int GuiTex = this.mc.renderEngine.getTexture("/com/kaijin/InventoryStocker/textures/stocker.png");
+		int GuiTex = mc.renderEngine.getTexture(InventoryStocker.proxy.BLOCK_PNG);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(GuiTex);
-		int XOffset = (width - xSize) / 2; // X offset = Half the difference between screen width and GUI width
-		int YOffset = (height - ySize) / 2; // Y offset = half the difference between screen height and GUI height
-		this.drawTexturedModalRect(XOffset, YOffset, 0, 0, xSize, ySize);
+		mc.renderEngine.bindTexture(GuiTex);
+
+		// Upper left corner of GUI panel
+		int xLoc = (width - xSize) / 2; // Half the difference between screen width and GUI width
+		int yLoc = (height - ySize) / 2; // Half the difference between screen height and GUI height
+
+		this.drawTexturedModalRect(xLoc, yLoc, 0, 0, xSize, ySize);
+
+		fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.input"), xLoc + 8, yLoc + 6, 4210752);
+		fontRenderer.drawString(lang.translateKey(tile.getInvName()), xLoc + 68, yLoc + 6, 4210752);
+		fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.output"), xLoc + 116, yLoc + 6, 4210752);
+		fontRenderer.drawString(lang.translateKey("container.inventory"), xLoc + 8, yLoc + 74, 4210752);
+
+		//Add snapshot text
+		if (tile.serverSnapshotState())
+		{
+			fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.ready"), xLoc + 73, yLoc + 20, 0x0000FF);
+		}
+		else
+		{
+			fontRenderer.drawString(lang.translateKey("kaijin.invStocker.guiStrings.notready"), xLoc + 63, yLoc + 20, 0xFF0000);
+		}
 
 		//GuiButton(int ID, int XOffset, int YOffset, int Width, int Height, string Text)
 		//button definition is the full one with width and height
 		//defining button below, setting it look enabled and drawing it
 		//If you make changes to the button state, you must call .drawButton(mc, XOffset, YOffset)
-		button.xPosition = (this.width / 2) - 20;
-		button.yPosition = YOffset + 43;
-		button.displayString = this.tile.serverSnapshotState() ? "Clear" : "Scan";
-		button.drawButton(mc, mouseX, mouseY);
+		buttonSnap.xPosition = (width / 2) - 20;
+		buttonSnap.yPosition = yLoc + 43;
+		buttonSnap.displayString = tile.serverSnapshotState() ? "Clear" : "Scan";
+		buttonSnap.drawButton(mc, mouseX, mouseY);
 	}
 
 	//Copied mouseClicked function to get our button to make the "click" noise when clicked
@@ -84,11 +80,10 @@ public class GuiInventoryStocker extends GuiContainer
 	{
 		if (par3 == 0)
 		{
-			if (button.mousePressed(this.mc, par1, par2))
+			if (buttonSnap.mousePressed(this.mc, par1, par2))
 			{
-				this.selectedButton = button;
-				this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-				this.actionPerformed(button);
+				mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+				this.actionPerformed(buttonSnap);
 			}
 		}
 		super.mouseClicked(par1, par2, par3);
@@ -106,15 +101,15 @@ public class GuiInventoryStocker extends GuiContainer
 		}
 		if (button.id == 0)
 		{
-			if (this.tile.serverSnapshotState())
+			if (tile.serverSnapshotState())
 			{
 				if (Utils.isDebug()) System.out.println("Button Pressed, clearing snapshot");
-				this.tile.guiClearSnapshot();
+				tile.guiClearSnapshot();
 			}
 			else
 			{
 				if (Utils.isDebug()) System.out.println("Button Pressed, taking snapshot");
-				this.tile.guiTakeSnapshot();
+				tile.guiTakeSnapshot();
 			}
 		}
 

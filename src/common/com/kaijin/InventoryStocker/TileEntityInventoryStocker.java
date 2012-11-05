@@ -430,7 +430,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public String getInvName()
 	{
-		return "Stocker";
+		return "tile.kaijin.invStocker.name";
 	}
 
 	/**

@@ -37,8 +37,10 @@ public class InventoryStocker
 	@Instance("InventoryStocker")
 	public static InventoryStocker instance; //The instance of the mod that will be defined, populated, and callable
 
-	static int InventoryStockerBlockID;
-	static public boolean isDebugging;
+	public static Block blockInventoryStocker;
+
+	public static int blockIDInventoryStocker;
+	public static boolean isDebugging;
 
 	@PreInit
 	public static void preInit(FMLPreInitializationEvent event)
@@ -47,7 +49,7 @@ public class InventoryStocker
 		{
 			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
 			configuration.load();
-			InventoryStockerBlockID = configuration.getBlock("InventoryStocker", 2490).getInt();
+			blockIDInventoryStocker = configuration.getBlock("InventoryStocker", 2490).getInt();
 			isDebugging = Boolean.parseBoolean((configuration.get(configuration.CATEGORY_GENERAL, "debug", false).value));
 			configuration.save();
 		}
@@ -61,15 +63,14 @@ public class InventoryStocker
 	@Init
 	public void load(FMLInitializationEvent event)
 	{
-		InventoryStocker = new BlockInventoryStocker(InventoryStockerBlockID, 0, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("InventoryStocker").setCreativeTab(CreativeTabs.tabBlock);
-		LanguageRegistry.addName(InventoryStocker, "Inventory Stocker");
-		GameRegistry.registerBlock(InventoryStocker);
+		blockInventoryStocker = new BlockInventoryStocker(blockIDInventoryStocker, 0, Material.wood).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
+		LanguageRegistry.addName(blockInventoryStocker, "Inventory Stocker");
+		GameRegistry.registerBlock(blockInventoryStocker);
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
-		if (Utils.isDebug())
-		{
-			GameRegistry.addRecipe(new ItemStack(InventoryStocker, 16), new Object[] {"XX", "XX", 'X', Block.dirt}); // Testing Recipe
-		}
-		GameRegistry.addRecipe(new ItemStack(InventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
+		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "kaijin.inventoryStocker"); // Better TE reg key
+
+		GameRegistry.addRecipe(new ItemStack(blockInventoryStocker, 1), new Object[] {"RIR", "PCP", "RIR", 'C', Block.chest, 'I', Item.ingotIron, 'P', Block.pistonBase, 'R', Item.redstone});
+
 		NetworkRegistry.instance().registerGuiHandler(this.instance, proxy);
 		proxy.load();
 		if (proxy.isServer())
@@ -80,7 +81,11 @@ public class InventoryStocker
 		{
 			FMLLog.getLogger().info("InventoryStocker debugging enabled.");
 		}
-	}
 
-	public static Block InventoryStocker; 
+		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.input", "Input");
+		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.output", "Output");
+		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.ready", "Ready");
+		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.notready", "Not Ready");
+		LanguageRegistry.instance().addStringLocalization("kaijin.invStocker.guiStrings.ready", "Ready");
+	}
 }
