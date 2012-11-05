@@ -18,14 +18,12 @@ import cpw.mods.fml.common.asm.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiInventoryStocker extends GuiContainer
 {
-	private TileEntityInventoryStocker tile;
-
-	private CButton buttonSnap = null;
-	private CButton buttonMode = null;
-
-	private int xLoc;
-	private int yLoc;
-	private int xCenter;
+	protected TileEntityInventoryStocker tile;
+	protected CButton buttonSnap;
+	protected CButton buttonMode;
+	protected int xLoc;
+	protected int yLoc;
+	protected int xCenter;
 
 	protected static StringTranslate lang = StringTranslate.getInstance();
 
@@ -74,7 +72,7 @@ public class GuiInventoryStocker extends GuiContainer
 		Utils.drawRightAlignedText(fontRenderer, lang.translateKey(Info.KEY_GUI_OUTPUT), xLoc + xSize - 8, yLoc + 17, 4210752);
 
 		//Add snapshot text
-		if (tile.serverSnapshotState())
+		if (tile.hasSnapshot)
 		{
 			//Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_READY), xCenter, yLoc + 30, 0x0000FF, 0x000040);
 			if ((tile.metaInfo & 8) == 8)
@@ -93,7 +91,7 @@ public class GuiInventoryStocker extends GuiContainer
 			Utils.drawCenteredGlowingText(fontRenderer, line, xCenter, yLoc + 60, 0xFF0000, 0x400000);
 		}
 
-		int mode = 0; // Get mode from tile entity once implemented
+		int mode = tile.operationMode;
 		switch (mode)
 		{
 		case 0:
@@ -107,7 +105,7 @@ public class GuiInventoryStocker extends GuiContainer
 			break;
 		}
 
-		buttonSnap.displayString = lang.translateKey(tile.serverSnapshotState() ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
+		buttonSnap.displayString = lang.translateKey(tile.hasSnapshot ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
 		buttonSnap.drawButton(mc, mouseX, mouseY);
 		buttonMode.displayString = lang.translateKey(Info.KEY_GUI_MODE);
 		buttonMode.drawButton(mc, mouseX, mouseY);
@@ -139,23 +137,6 @@ public class GuiInventoryStocker extends GuiContainer
 	@Override
 	public void actionPerformed(GuiButton button)
 	{
-		if (button.id == 0)
-		{
-			if (tile.serverSnapshotState())
-			{
-				if (Info.isDebugging) System.out.println("Button Pressed, clearing snapshot");
-				tile.guiClearSnapshot();
-			}
-			else
-			{
-				if (Info.isDebugging) System.out.println("Button Pressed, taking snapshot");
-				tile.guiTakeSnapshot();
-			}
-		}
-		else if (button.id == 1)
-		{
-			// Switch modes
-		}
-
+		tile.sendButtonCommand(button.id);
 	}
 }

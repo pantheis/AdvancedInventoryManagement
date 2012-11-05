@@ -8,6 +8,9 @@ package com.kaijin.InventoryStocker;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityPlayerMP;
@@ -19,7 +22,7 @@ import net.minecraft.src.Slot;
 public class ContainerInventoryStocker extends Container
 {
 	private TileEntityInventoryStocker tile;
-	private List<EntityPlayerMP> guiPlayerList = new ArrayList<EntityPlayerMP>();
+	private int guiInfo = -1;
 
 	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker stocker)
 	{
@@ -57,6 +60,36 @@ public class ContainerInventoryStocker extends Container
 		}
 	}
 
+	@Override
+	public void updateCraftingResults()
+	{
+		int tileinfo = (tile.hasSnapshot ? 4 : 0) | (tile.operationMode & 3);
+		for (int crafterIndex = 0; crafterIndex < crafters.size(); ++crafterIndex)
+		{
+			ICrafting crafter = (ICrafting)crafters.get(crafterIndex);
+			if (guiInfo != tileinfo)
+			{
+				// Case 0
+				crafter.updateCraftingInventoryInfo(this, 0, tileinfo & 65535); // packet uses 16 bit short int
+			}
+		}
+		guiInfo = tileinfo;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void updateProgressBar(int param, int value)
+	{
+		if (Info.isDebugging) System.out.println("updateProgressBar param: " + param + " value: " + value);
+		switch (param)
+		{
+		case 0:
+			tile.operationMode = value & 3;
+			tile.hasSnapshot = (value & 4) == 4;
+		}
+	}
+
+	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
 		return this.tile.isUseableByPlayer(entityplayer);
@@ -91,79 +124,5 @@ public class ContainerInventoryStocker extends Container
 			}
 		}
 		return itemstack;
-	}
-
-//	public ItemStack transferStackInSlot(int par1)
-//	{
-//		ItemStack var2 = null;
-//		Slot var3 = (Slot)this.inventorySlots.get(par1);
-//
-//		if (var3 != null && var3.getHasStack())
-//		{
-//			ItemStack var4 = var3.getStack();
-//			var2 = var4.copy();
-//
-//			if (par1 < 18)
-//			{
-//				if (!this.mergeItemStack(var4, 18, this.inventorySlots.size(), true))
-//				{
-//					return null;
-//				}
-//			}
-//			else if (!this.mergeItemStack(var4, 0, 18, false))
-//			{
-//				return null;
-//			}
-//
-//			if (var4.stackSize == 0)
-//			{
-//				var3.putStack((ItemStack)null);
-//			}
-//			else
-//			{
-//				var3.onSlotChanged();
-//			}
-//		}
-//
-//		return var2;
-//	}
-
-	@Override
-	public void addCraftingToCrafters(ICrafting par1ICrafting)
-	{
-		super.addCraftingToCrafters(par1ICrafting);
-		if (Info.isDebugging)
-		{
-			System.out.println("gui.addCraftingToCrafters");
-			String n = ((EntityPlayerMP)par1ICrafting).username;
-			System.out.println("container.addCraftingToCrafters.server: " + n);
-		}
-		guiPlayerList.add(((EntityPlayerMP)par1ICrafting));
-		tile.sendSnapshotStateClient((EntityPlayerMP)(par1ICrafting));
-		tile.entityOpenList(guiPlayerList);
-	}
-	/**
-	 * Callback for when the crafting gui is closed.
-	 */
-	@Override
-	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
-	{
-		super.onCraftGuiClosed(par1EntityPlayer);
-		if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-client+server");
-		if (InventoryStocker.proxy.isServer())
-		{
-			if (Info.isDebugging) System.out.println("gui.onCraftGuiClosed-SERVER");
-			if (guiPlayerList.contains(((EntityPlayerMP)par1EntityPlayer)))
-			{
-				if (Info.isDebugging)
-				{
-					System.out.println("gui.addCraftingToCrafters");
-					String n = ((EntityPlayerMP)par1EntityPlayer).username;
-					System.out.println("gui.onCraftGuiClosed.RemoveNameFromList: " + n);
-				}
-				guiPlayerList.remove(((EntityPlayerMP)par1EntityPlayer));
-				tile.entityOpenList(guiPlayerList);
-			}
-		}
 	}
 }
