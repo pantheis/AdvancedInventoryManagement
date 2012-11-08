@@ -1361,12 +1361,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			e.printStackTrace();
 		}
 
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Info.PACKET_CHANNEL; // CHANNEL MAX 16 CHARS
-		packet.data = bytes.toByteArray();
-		packet.length = packet.data.length;
-
-		return packet;
+		return new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray());
 	}
 
 	/**
@@ -1391,12 +1386,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			e.printStackTrace();
 		}
 
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Info.PACKET_CHANNEL; // CHANNEL MAX 16 CHARS
-		packet.data = bytes.toByteArray();
-		packet.length = packet.data.length;
-
-		InventoryStocker.proxy.sendPacketToServer(packet);
+		InventoryStocker.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
 	}
 
 	// End networking section
