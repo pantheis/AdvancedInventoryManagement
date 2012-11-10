@@ -18,31 +18,16 @@ import cpw.mods.fml.common.network.Player;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static String BLOCK_PNG = "/com/kaijin/InventoryStocker/textures/terrain.png";
-
-	public void load()
-	{
-
-	}
+	public void load() {}
 
 	public boolean isClient()
 	{
-		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		if (side == Side.CLIENT)
-		{
-			return true;
-		}
-		return false;
+		return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
 	}
 
 	public boolean isServer()
 	{
-		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		if (side == Side.SERVER)
-		{
-			return true;
-		}
-		return false;
+		return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER;
 	}
 
 	public static void sendPacketToPlayer(Packet250CustomPayload packet, EntityPlayerMP player)

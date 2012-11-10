@@ -40,6 +40,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private ItemStack extendedChestSnapshot[];
 
 	public int metaInfo = 0;
+	public int operationMode = 0;
 
 	private boolean guiTakeSnapshot = false;
 	private boolean guiClearSnapshot = false;
@@ -47,8 +48,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean previousPoweredState = false;
 	private boolean lightState = false;
 
-	private boolean hasSnapshot = false;
-	private boolean serverHasSnapshot = false;
+	public boolean hasSnapshot = false;
 	private boolean lastSnapshotState = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
@@ -57,7 +57,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private TileEntityChest extendedChest = null;
 	private int remoteNumSlots = 0;
 	private String targetTileName = "none";
-	private List<EntityPlayerMP> remoteUsers = new ArrayList<EntityPlayerMP>();
 
 	private final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
 	private final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
@@ -70,63 +69,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	//TODO Record relative offset from stocker to reactor core when reactor workaround in use, for testing if chunk is loaded
 	private Coords reactorOffset = new Coords(0, 0, 0);
 
-	//public static int NextGUID = 1;
-	//public int myGUID;
-
 	public TileEntityInventoryStocker()
 	{
 		super();
-		//myGUID = NextGUID;
-		//if (Utils.isDebug()) System.out.println("New TE, GUID =" + this.myGUID);
-		//NextGUID++;
 	}
 
 	@Override
 	public boolean canUpdate()
 	{
 		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setSnapshotState(boolean state)
-	{
-		String s = new Boolean(state).toString();
-		if (Utils.isDebug()) System.out.println("ClientPacketHandler: tile.setSnapshotState: " + s);
-		this.serverHasSnapshot = state;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public boolean serverSnapshotState()
-	{
-		return serverHasSnapshot;
-	}
-
-	public void entityOpenList(List crafters)
-	{
-		this.remoteUsers = crafters;
-		if (Utils.isDebug())
-		{
-			System.out.println("entityOpenList");
-			for(int i=0; i < this.remoteUsers.size(); i++)
-			{
-				String n = this.remoteUsers.get(i).username;
-				System.out.println("NamesOnEntityList: " + n);
-			}
-		}
-	}
-
-	public void recvSnapshotRequest(boolean state)
-	{
-		if (state)
-		{
-			if (Utils.isDebug()) System.out.println("GUI: take snapshot request");
-			guiTakeSnapshot = true;
-		}
-		else
-		{
-			if (Utils.isDebug()) System.out.println("GUI: clear snapshot request");
-			guiClearSnapshot = true;
-		}
 	}
 
 	/**
@@ -138,35 +89,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return hasSnapshot;
 	}
 
-	public void guiTakeSnapshot()
-	{
-		if (InventoryStocker.proxy.isClient())
-		{
-			if (Utils.isDebug()) System.out.println("guiTakeSnapshot.sendSnapshotRequestServer");
-			sendSnapshotRequestServer(true);
-		}
-		else
-		{
-			guiTakeSnapshot = true;
-		}
-	}
-
-	public void guiClearSnapshot()
-	{
-		if (InventoryStocker.proxy.isClient())
-		{
-			if (Utils.isDebug()) System.out.println("guiClearSnapshot.sendSnapshotRequestServer");
-			sendSnapshotRequestServer(false);	
-		}
-		else
-		{
-			guiClearSnapshot = true;
-		}
-	}
-
 	public void clearSnapshot()
 	{
-		if (Utils.isDebug()) System.out.println("clearSnapshot()");
+		if (Info.isDebugging) System.out.println("clearSnapshot()");
 		lastTileEntity = null;
 		hasSnapshot = false;
 		targetTileName = "none";
@@ -176,25 +101,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		extendedChestSnapshot = null;
 		reactorWorkaround = false;
 		reactorWidth = 0;
-		sendSnapshotStateClients();	
 	}
 
 	/**
 	 * Called when neighboring blocks change or other cases where a state update is needed
 	 */
-	public void onUpdate()
+	public void onBlockUpdate()
 	{
 		if (!InventoryStocker.proxy.isClient())
 		{
 			// If snapshot target's chunk is not loaded, snapshot tests are skipped
 			if (isTargetChunkLoaded() && checkInvalidSnapshot() && validSnapshot())
 			{
-				if (Utils.isDebug()) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
+				if (Info.isDebugging) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
 				clearSnapshot();
 			}
 			// Flag to check adjacent blocks for tubes or pipes on next entity update tick
 			if (updateDelay <= 0) updateDelay = 1;
-			sendSnapshotStateClients();
 		}
 	}
 
@@ -203,7 +126,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	private void updateDoorStates()
 	{
-		//if (Utils.isDebug()) System.out.println("Update Door States");
+		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
 		int oldInfo = metaInfo;
 		int doorFlags = 0;
 		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord-1, zCoord,   Orientations.YPos) ? 16 : 0;
@@ -270,7 +193,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		// TODO Make sure the numbering and orientation matches up properly!
 		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
 		int i = getRotatedSideFromMetadata(side.ordinal());
-		//if (Utils.isDebug()) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
+		//if (InventoryStocker.isDebugging) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
 
 		if (i == 1)
 		{
@@ -285,7 +208,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		// TODO Make sure the numbering and orientation matches up properly!
 		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
 		int i = getRotatedSideFromMetadata(side.ordinal());
-		//if (Utils.isDebug()) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
+		//if (InventoryStocker.isDebugging) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
 
 		if (i == 0)
 		{
@@ -296,19 +219,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public int getRotatedSideFromMetadata(int side)
 	{
-		int dir = this.metaInfo & 7;
+		final int dir = this.metaInfo & 7;
 		return Utils.lookupRotatedSide(side, dir);
 	}
 
 	public int getBlockIDAtFace(int i)
 	{
-		ForgeDirection face = ForgeDirection.getOrientation(i);
+		final ForgeDirection face = ForgeDirection.getOrientation(i);
 		return worldObj.getBlockId(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
 	}
 
 	public TileEntity getTileAtFrontFace()
 	{
-		ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
+		final ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
 		return worldObj.getBlockTileEntity(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
 	}
 
@@ -430,7 +353,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	public String getInvName()
 	{
-		return "Stocker";
+		return "tile.kaijin.invStocker.name";
 	}
 
 	/**
@@ -449,11 +372,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
 
 			// Light status and direction
-			this.metaInfo = nbttagcompound.getInteger("Metainfo");
+			metaInfo = nbttagcompound.getInteger("Metainfo");
+			operationMode = nbttagcompound.getInteger("OpMode");
 
 			boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
 
-			if (Utils.isDebug()) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
+			if (Info.isDebugging) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
 
 			NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
 			NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
@@ -478,7 +402,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 
 			// Remote inventory snapshot
-			if (Utils.isDebug()) System.out.println("ReadNBT tagRemoteCount: " + nbttagremote.tagCount());
+			if (Info.isDebugging) System.out.println("ReadNBT tagRemoteCount: " + nbttagremote.tagCount());
 			if (nbttagremote.tagCount() != 0)
 			{
 				for (int i = 0; i < nbttagremote.tagCount(); ++i)
@@ -489,7 +413,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 					if (j >= 0 && j < remoteSnapshot.length)
 					{
 						remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
-						if (Utils.isDebug()) System.out.println("ReadNBT Remote Slot: " + j + " ItemID: " + remoteSnapshot[j].itemID);
+						if (Info.isDebugging) System.out.println("ReadNBT Remote Slot: " + j + " ItemID: " + remoteSnapshot[j].itemID);
 					}
 				}
 			}
@@ -509,7 +433,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 						if (j >= 0 && j < extendedChestSnapshot.length)
 						{
 							extendedChestSnapshot[j] = ItemStack.loadItemStackFromNBT(extSnapshot1);
-							if (Utils.isDebug()) System.out.println("ReadNBT Extended Slot: " + j + " ItemID: " + extendedChestSnapshot[j].itemID);
+							if (Info.isDebugging) System.out.println("ReadNBT Extended Slot: " + j + " ItemID: " + extendedChestSnapshot[j].itemID);
 						}
 					}
 				}
@@ -544,12 +468,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			NBTTagList nbttagremote = new NBTTagList();
 			if (remoteSnapshot != null)
 			{
-				if (Utils.isDebug()) System.out.println("writeNBT Target: " + targetTileName + " remoteInvSize:" + remoteSnapshot.length);
+				if (Info.isDebugging) System.out.println("writeNBT Target: " + targetTileName + " remoteInvSize:" + remoteSnapshot.length);
 				for (int i = 0; i < remoteSnapshot.length; i++)
 				{
 					if (remoteSnapshot[i] != null)
 					{
-						if (Utils.isDebug()) System.out.println("writeNBT Remote Slot: " + i + " ItemID: " + remoteSnapshot[i].itemID + " StackSize: " + this.remoteSnapshot[i].stackSize + " meta: " + this.remoteSnapshot[i].getItemDamage());
+						if (Info.isDebugging) System.out.println("writeNBT Remote Slot: " + i + " ItemID: " + remoteSnapshot[i].itemID + " StackSize: " + this.remoteSnapshot[i].stackSize + " meta: " + this.remoteSnapshot[i].getItemDamage());
 						NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
 						remoteSnapshot1.setByte("Slot", (byte)i);
 						remoteSnapshot[i].writeToNBT(remoteSnapshot1);
@@ -559,7 +483,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 			else
 			{
-				// if (Utils.isDebug()) System.out.println("writeNBT Remote Items is NULL!");
+				// if (InventoryStocker.isDebugging) System.out.println("writeNBT Remote Items is NULL!");
 			}
 			nbttagcompound.setTag("remoteSnapshot", nbttagremote);
 
@@ -571,7 +495,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				{
 					if (extendedChestSnapshot[i] != null)
 					{
-						if (Utils.isDebug()) System.out.println("writeNBT Extended Slot: " + i + " ItemID: " + extendedChestSnapshot[i].itemID + " StackSize: " + this.extendedChestSnapshot[i].stackSize + " meta: " + this.extendedChestSnapshot[i].getItemDamage());
+						if (Info.isDebugging) System.out.println("writeNBT Extended Slot: " + i + " ItemID: " + extendedChestSnapshot[i].itemID + " StackSize: " + this.extendedChestSnapshot[i].stackSize + " meta: " + this.extendedChestSnapshot[i].getItemDamage());
 						NBTTagCompound extSnapshot1 = new NBTTagCompound();
 						extSnapshot1.setByte("Slot", (byte)i);
 						extendedChestSnapshot[i].writeToNBT(extSnapshot1);
@@ -588,7 +512,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
 
 			// Light status and direction
-			nbttagcompound.setInteger("Metainfo", this.metaInfo);
+			nbttagcompound.setInteger("Metainfo", metaInfo);
+			nbttagcompound.setInteger("OpMode", operationMode);
 		}
 	}
 
@@ -602,11 +527,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (!InventoryStocker.proxy.isClient())
 		{
 			tileLoaded = true;
-			if (Utils.isDebug()) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
+			if (Info.isDebugging) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
 			TileEntity tile = getTileAtFrontFace();
 			if (tile == null)
 			{
-				if (Utils.isDebug()) System.out.println("onLoad tile = null");
+				if (Info.isDebugging) System.out.println("onLoad tile = null");
 				clearSnapshot();
 			}
 			else
@@ -614,7 +539,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				String tempName = tile.getClass().getName();
 				if (tempName.equals(targetTileName) && ((IInventory)tile).getSizeInventory() == remoteNumSlots)
 				{
-					if (Utils.isDebug()) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
+					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
 					lastTileEntity = tile;
 					if (tile instanceof TileEntityChest)
 					{
@@ -633,7 +558,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				}
 				else
 				{
-					if (Utils.isDebug()) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
+					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
 					clearSnapshot();
 				}
 			}
@@ -776,7 +701,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		this.targetTileName = tile.getClass().getName();
 		lastTileEntity = tile;
 		hasSnapshot = true;
-		if (Utils.isDebug()) System.out.println("Shapshot taken of targetTileName: " + this.targetTileName);
+		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + this.targetTileName);
 		return true;
 	}
 
@@ -894,13 +819,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	// Test if two item stacks' types match, while ignoring damage level if needed.  
 	protected boolean checkItemTypesMatch(ItemStack a, ItemStack b)
 	{
-		// if (Utils.isDebug()) System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
-		// if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
-		// if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
-		// if (Utils.isDebug()) System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
+		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
+		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
+		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
+		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
 
 		if (a.itemID == b.itemID)
-		{        
+		{
+			//FIXME Make sure to add test for stack tag equality!
 			// Ignore damage value of damageable items while testing for match!
 			if (a.isItemStackDamageable())
 				return true;
@@ -1076,7 +1002,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		TileEntity tile = getTileAtFrontFace();
 		if (!(tile instanceof IInventory)) // A null pointer will fail an instanceof test, so there's no need to independently check it.
 		{
-			if (Utils.isDebug())
+			if (Info.isDebugging)
 			{
 				if (tile == null) System.out.println("Invalid snapshot: Tile = null");
 				else System.out.println("Invalid snapshot: tileEntity has no IInventory interface");
@@ -1087,19 +1013,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		String tempName = tile.getClass().getName();
 		if (!tempName.equals(targetTileName))
 		{
-			if (Utils.isDebug()) System.out.println("Invalid snapshot: TileName Mismatched, detected TileName=" + tempName + " expected TileName=" + targetTileName);
+			if (Info.isDebugging) System.out.println("Invalid snapshot: TileName Mismatched, detected TileName=" + tempName + " expected TileName=" + targetTileName);
 			return true;
 		}
 
 		if (tile != lastTileEntity)
 		{
-			if (Utils.isDebug()) System.out.println("Invalid snapshot: tileEntity does not match lastTileEntity");
+			if (Info.isDebugging) System.out.println("Invalid snapshot: tileEntity does not match lastTileEntity");
 			return true;
 		}
 
 		if (((IInventory)tile).getSizeInventory() != this.remoteNumSlots)
 		{
-			if (Utils.isDebug())
+			if (Info.isDebugging)
 			{
 				System.out.println("Invalid snapshot: tileEntity inventory size has changed");
 				System.out.println("RemoteInvSize: " + ((IInventory)tile).getSizeInventory()+", Expecting: "+this.remoteNumSlots);
@@ -1113,7 +1039,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			// Look for adjacent chest
 			TileEntityChest foundChest = findDoubleChest();
 
-			if (Utils.isDebug())
+			if (Info.isDebugging)
 			{
 				if (foundChest == null)
 					System.out.println("Single Wooden Chest Found");
@@ -1124,7 +1050,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			// Check if it matches previous conditions
 			if (extendedChest != foundChest)
 			{
-				if (Utils.isDebug()) System.out.println("Invalid snapshot: Double chest configuration changed!");
+				if (Info.isDebugging) System.out.println("Invalid snapshot: Double chest configuration changed!");
 				return true;
 			}
 		}
@@ -1138,7 +1064,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				int currentWidth = countReactorChambers(core) + 3;
 				if (currentWidth != reactorWidth)
 				{
-					if (Utils.isDebug()) System.out.println("Invalid snapshot: Reactor size has changed!");
+					if (Info.isDebugging) System.out.println("Invalid snapshot: Reactor size has changed!");
 					return true;
 				}
 			}
@@ -1294,7 +1220,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		// See if this tileEntity instance has been properly loaded, if not, do some onLoad stuff to initialize or restore prior state
 		if (!tileLoaded)
 		{
-			if (Utils.isDebug()) System.out.println("tileLoaded false, running onLoad");
+			if (Info.isDebugging) System.out.println("tileLoaded false, running onLoad");
 			onLoad();
 		}
 
@@ -1305,23 +1231,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			if (updateDelay == 0) updateDoorStates();
 		}
 
-		// Check if the GUI or a client is asking us to take a snapshot
+		// Check if a snapshot has been requested
 		if (guiTakeSnapshot)
 		{
 			guiTakeSnapshot = false;
-			if (Utils.isDebug()) System.out.println("GUI take snapshot request");
+			if (Info.isDebugging) System.out.println("GUI take snapshot request");
 			TileEntity tile = getTileAtFrontFace();
 			if (tile != null && tile instanceof IInventory)
 			{
 				if (takeSnapShot(tile))
 				{
-					sendSnapshotStateClients();
+					//sendSnapshotStateClients();
 				}
 				else
 				{
 					// Failed to get a valid snapshot. Run this just in case to cleanly reset everything.
 					clearSnapshot();
-					if (Utils.isDebug()) System.out.println("updateEntity.guiTakeSnapshot_failed.clearSnapshot()");
+					if (Info.isDebugging) System.out.println("updateEntity.guiTakeSnapshot_failed.clearSnapshot()");
 				}
 			}
 		}
@@ -1330,7 +1256,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (guiClearSnapshot)
 		{
 			guiClearSnapshot = false;
-			if (Utils.isDebug()) System.out.println("updateEntity.guiClearSnapshot.clearSnapshot()");
+			if (Info.isDebugging) System.out.println("updateEntity.guiClearSnapshot.clearSnapshot()");
 			clearSnapshot();
 		}
 
@@ -1347,7 +1273,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (isPowered && tickTime == 0)
 		{
 			tickTime = tickDelay;
-			if (Utils.isDebug()) System.out.println("Powered");
+			if (Info.isDebugging) System.out.println("Powered");
 
 			// Turn on das blinkenlights!
 			if (!lightState) lightsOn();
@@ -1357,13 +1283,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				// Check for any situation in which the snapshot should be invalidated.
 				if (checkInvalidSnapshot())
 				{
-					if (Utils.isDebug()) System.out.println("updateEntity.checkInvalidSnapshot.clearSnapshot()");
+					if (Info.isDebugging) System.out.println("updateEntity.checkInvalidSnapshot.clearSnapshot()");
 					clearSnapshot();
 				}
 				else
 				{
 					// If we've made it here, it's time to stock the remote inventory.
-					if (Utils.isDebug()) System.out.println("updateEntity.stockInventory()");
+					if (Info.isDebugging) System.out.println("updateEntity.stockInventory()");
 					stockInventory();
 				}
 			}
@@ -1374,66 +1300,37 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 	}
 
-	/*
-	 * Start networking section
-	 */
-
-	@Override
-	public Packet250CustomPayload getDescriptionPacket()
+	public void rotateBlock()
 	{
-		if (Utils.isDebug()) System.out.println("te.getAuxillaryInfoPacket()");
-		return createExtraTEInfoPacket();
+		int dir = metaInfo & 7; // Get orientation from first 3 bits of meta data
+		metaInfo ^= dir; // Clear those bits
+		++dir; // Rotate
+		if (dir > 5) dir = 0; // Start over
+		metaInfo |= dir; // Write orientation back to meta data value
+		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 	}
 
-	private Packet250CustomPayload createSnapshotPacket()
-	{
-		//		String s = new Boolean(hasSnapshot).toString();
-		//		if (Utils.isDebug()) System.out.println("createSnapshotPacket: " + s);
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		DataOutputStream data = new DataOutputStream(bytes);
-		try
-		{
-			data.writeInt(0);
-			data.writeInt(this.xCoord);
-			data.writeInt(this.yCoord);
-			data.writeInt(this.zCoord);
-			data.writeBoolean(hasSnapshot);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+	// Start networking section
 
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
-		packet.data = bytes.toByteArray();
-		packet.length = packet.data.length;
-		return packet;
+	public void receiveSnapshotRequest()
+	{
+		if (hasSnapshot)
+		{
+			if (Info.isDebugging) System.out.println("GUI: clear snapshot request");
+			guiClearSnapshot = true;
+		}
+		else
+		{
+			if (Info.isDebugging) System.out.println("GUI: take snapshot request");
+			guiTakeSnapshot = true;
+		}
 	}
 
-	private Packet250CustomPayload createRotateRequestPacket()
+	public void receiveModeRequest() //TODO
 	{
-		if (Utils.isDebug()) System.out.println("te.createRotateRequestPacket");
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		DataOutputStream data = new DataOutputStream(bytes);
-		try
-		{
-			data.writeInt(1);
-			data.writeInt(this.xCoord);
-			data.writeInt(this.yCoord);
-			data.writeInt(this.zCoord);
-			data.writeBoolean(true);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
-		packet.data = bytes.toByteArray();
-		packet.length = packet.data.length;
-		return packet;
+		operationMode++;
+		if (operationMode > 2) operationMode = 0;
+		if (Info.isDebugging) System.out.println("Operation Mode: " + operationMode);
 	}
 
 	/**<pre>
@@ -1445,14 +1342,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 	 * @return Packet250CustomPayload
 	 */
-	private Packet250CustomPayload createExtraTEInfoPacket()
+	@Override
+	public Packet250CustomPayload getDescriptionPacket()
 	{
-		if (Utils.isDebug()) System.out.println("te.createExtraTEInfoPacket");
+		if (Info.isDebugging) System.out.println("te.getAuxillaryInfoPacket()");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
 		{
-			data.writeInt(1);
+			data.writeInt(0);
 			data.writeInt(this.xCoord);
 			data.writeInt(this.yCoord);
 			data.writeInt(this.zCoord);
@@ -1464,78 +1362,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
+		packet.channel = Info.PACKET_CHANNEL; // CHANNEL MAX 16 CHARS
 		packet.data = bytes.toByteArray();
 		packet.length = packet.data.length;
+
 		return packet;
 	}
 
 	/**
-	 * Sends a rotate request to the server to rotate the block
+	 * Sends a button click to the server.
+	 * @param button - 0 = snapshot, 1 = mode
 	 */
-	public void sendRotateRequestServer()
+	public void sendButtonCommand(int id)
 	{
-		if (Utils.isDebug()) System.out.println("te.sendRotateRequest");
-		Packet250CustomPayload packet = createRotateRequestPacket();
-		InventoryStocker.proxy.sendPacketToServer(packet);
-	}
-
-	/**
-	 * Sends an update packet to all clients with the rotation info
-	 */
-	public void sendExtraTEData()
-	{
-		if (Utils.isDebug()) System.out.println("te.sendExtraTEData");
-		Packet250CustomPayload packet = createExtraTEInfoPacket();
-		//Get the current dimensionID
-		int dimensionId = worldObj.getWorldInfo().getDimension();
-		//Send packet to all players within 240 blocks (15 chunk max view distance assumed)
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 256, dimensionId, packet);
-	}
-
-	/**
-	 * Sends a snapshot state to the client that just opened the GUI.
-	 * @param EntityPlayer
-	 */
-	public void sendSnapshotStateClient(EntityPlayerMP player)
-	{
-		if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClient");
-		//		String s = new Boolean(hasSnapshot).toString();
-		//		if (Utils.isDebug()) System.out.println("sendSnapshotStateClient: " + s);
-		Packet250CustomPayload packet = createSnapshotPacket();
-		InventoryStocker.proxy.sendPacketToPlayer(packet, player);
-	}
-
-	/**
-	 * Send snapshot state to all clients in the GUI open list.
-	 */
-	private void sendSnapshotStateClients()
-	{
-		if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClients");
-		//String s = new Boolean(hasSnapshot).toString();
-		//if (Utils.isDebug()) System.out.println("sendSnapshotStateClients(): " + s);
-
-		if (this.remoteUsers != null)
-		{
-			Packet250CustomPayload packet = createSnapshotPacket();
-			for (int i = 0; i < this.remoteUsers.size(); ++i)
-			{
-				//String n = remoteUsers.get(i).username;
-				//if (Utils.isDebug()) System.out.println("sendSnapshotStateClients.name:  " + n);
-				//CommonProxy.sendPacketToPlayer(remoteUsers.get(i), packet);
-				if (Utils.isDebug()) System.out.println("te.sendSnapshotStateClients-Actually sending");
-				InventoryStocker.proxy.sendPacketToPlayer(packet, remoteUsers.get(i));
-			}
-		}
-	}
-
-	/**
-	 * Sends a snapshot state request to the server.
-	 * @param state
-	 */
-	private void sendSnapshotRequestServer(boolean state)
-	{
-		if (Utils.isDebug()) System.out.println("sendSnapshotRequestServer");
+		if (Info.isDebugging) System.out.println("sendButtonCommand");
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try
@@ -1544,7 +1384,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			data.writeInt(this.xCoord);
 			data.writeInt(this.yCoord);
 			data.writeInt(this.zCoord);
-			data.writeBoolean(state);
+			data.writeInt(id);
 		}
 		catch(IOException e)
 		{
@@ -1552,14 +1392,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "InventoryStocker"; // CHANNEL MAX 16 CHARS
+		packet.channel = Info.PACKET_CHANNEL; // CHANNEL MAX 16 CHARS
 		packet.data = bytes.toByteArray();
 		packet.length = packet.data.length;
 
 		InventoryStocker.proxy.sendPacketToServer(packet);
 	}
 
-	/*
-	 * End networking section
-	 */
+	// End networking section
 }
