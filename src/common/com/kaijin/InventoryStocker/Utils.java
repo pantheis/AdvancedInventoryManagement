@@ -5,56 +5,137 @@
 
 package com.kaijin.InventoryStocker;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 
 public class Utils
 {
-	// This is set by a configuration file property debug
-	public static boolean isDebug()
+	/**
+	 * 
+	 * @param fr    - Font Renderer handle
+	 * @param text  - Text to display
+	 * @param xLoc  - x location
+	 * @param yLoc  - y location
+	 * @param color - Color
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawCenteredText(FontRenderer fr, String text, int xLoc, int yLoc, int color)
 	{
-		return InventoryStocker.isDebugging;
+		fr.drawString(text, xLoc - fr.getStringWidth(text) / 2, yLoc, color);
 	}
 
-	public static final String VERSION = "@VERSION@";
-	public static final String BUILD_NUMBER = "@BUILD_NUMBER@";
+	/**
+	 * 
+	 * @param fr    - Font Renderer handle
+	 * @param text  - Text to display
+	 * @param xLoc  - x location
+	 * @param yLoc  - y location
+	 * @param color - Color
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawRightAlignedText(FontRenderer fr, String text, int xLoc, int yLoc, int color)
+	{
+		fr.drawString(text, xLoc - fr.getStringWidth(text), yLoc, color);
+	}
+
+	private static final int MASKR = 0xFF0000;
+	private static final int MASKG = 0x00FF00;
+	private static final int MASKB = 0x0000FF;
 
 	/**
-	 * Returns a SHA-256 hex hash string of the string passed to it
-	 * @param string
-	 * @return String
+	 * Individually multiply R, G, B color components by scalar value to dim or brighten the color.
+	 * Does not check for overflow. Beware when using values over 1.0F.
+	 * @param color - original color
+	 * @param brightnessFactor - should be positive and <> 1.0F
+	 * @return - modified color
 	 */
-	public static String hashSHA1(String string)
+	public static int multiplyColorComponents(int color, float brightnessFactor)
 	{
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		}
-		catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		md.update(string.getBytes());
+		return ((int)(brightnessFactor * (color & MASKR)) & MASKR)
+			 | ((int)(brightnessFactor * (color & MASKG)) & MASKG)
+			 | ((int)(brightnessFactor * (color & MASKB)) & MASKB);
+	}
 
-		byte byteData[] = md.digest();
+	public static int interpolateColors(int a, int b, float lerp)
+	{
+		final int MASK1 = 0xff00ff; 
+		final int MASK2 = 0x00ff00; 
 
-		//convert the byte to hex format method 1
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < byteData.length; i++) {
-			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		int f2 = (int)(256 * lerp);
+		int f1 = 256 - f2;
+
+		return ((((( a & MASK1 ) * f1 ) + ( ( b & MASK1 ) * f2 )) >> 8 ) & MASK1 ) 
+			 | ((((( a & MASK2 ) * f1 ) + ( ( b & MASK2 ) * f2 )) >> 8 ) & MASK2 );
+	}
+
+	public static final int GUIBACKGROUNDCOLOR = 0xC6C6C6;
+
+	public static int overlayColors(int base, int over)
+	{
+		final float rDiff = 1F - ((float)(base & MASKR) / MASKR);
+		final float gDiff = 1F - ((float)(base & MASKG) / MASKG);
+		final float bDiff = 1F - ((float)(base & MASKB) / MASKB);
+
+		final int r2 = (over & MASKR);
+		final int g2 = (over & MASKG);
+		final int b2 = (over & MASKB);
+
+		return base + ((int)(rDiff * r2) & MASKR) + ((int)(gDiff * g2) & MASKG) + ((int)(bDiff * b2) & MASKB);
+	}
+
+	private static final int oX[] = {0, -1, 0, 1};
+	private static final int oY[] = {-1, 0, 1, 0};
+
+	/**
+	 * Draws right-aligned text with a 'glow' surrounding it. 
+	 * @param fr    - Font Renderer handle
+	 * @param text  - Text to display
+	 * @param xLoc  - x location (upper right corner)
+	 * @param yLoc  - y location (upper right corner)
+	 * @param color - Main Color
+	 * @param glowColor - Surrounding Color
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawRightAlignedGlowingText(FontRenderer fr, String text, int xLoc, int yLoc, int color, int glowColor)
+	{
+		drawGlowingText(fr, text, xLoc - fr.getStringWidth(text), yLoc, color, glowColor);
+	}
+
+	/**
+	 * Draws centered text with a 'glow' surrounding it. 
+	 * @param fr    - Font Renderer handle
+	 * @param text  - Text to display
+	 * @param xLoc  - x location (top center)
+	 * @param yLoc  - y location (top center)
+	 * @param color - Main Color
+	 * @param glowColor - Surrounding Color
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawCenteredGlowingText(FontRenderer fr, String text, int xLoc, int yLoc, int color, int glowColor)
+	{
+		drawGlowingText(fr, text, xLoc - fr.getStringWidth(text) / 2, yLoc, color, glowColor);
+	}
+
+	/**
+	 * Draws left-aligned text with a 'glow' surrounding it. 
+	 * @param fr    - Font Renderer handle
+	 * @param text  - Text to display
+	 * @param xLoc  - x location (upper left corner)
+	 * @param yLoc  - y location (upper left corner)
+	 * @param color - Main Color
+	 * @param glowColor - Surrounding Color
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawGlowingText(FontRenderer fr, String text, int xLoc, int yLoc, int color, int glowColor)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			fr.drawString(text, xLoc + oX[i], yLoc + oY[i], glowColor);
 		}
-
-		//System.out.println("Hex format : " + sb.toString());
-
-		//convert the byte to hex format method 2
-		StringBuffer hexString = new StringBuffer();
-		for (int i=0;i<byteData.length;i++) {
-			String hex=Integer.toHexString(0xff & byteData[i]);
-			if(hex.length()==1) hexString.append('0');
-			hexString.append(hex);
-		}
-		//System.out.println("Hex format : " + hexString.toString());
-		return hexString.toString();
+		fr.drawString(text, xLoc, yLoc, color);
 	}
 
 	/*
@@ -81,5 +162,20 @@ public class Utils
 				{4, 4, 4, 5, 1, 0}
 			};
 		return table[side][orientation];
+	}
+
+	public static NBTTagCompound getOrCreateStackTag(ItemStack itemStack)
+	{
+		if (itemStack != null)
+		{
+			NBTTagCompound tag = itemStack.getTagCompound();
+			if (tag == null)
+			{
+				tag = new NBTTagCompound();
+				itemStack.setTagCompound(tag);
+			}
+			return tag;
+		}
+		return null;
 	}
 }
