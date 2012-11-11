@@ -91,17 +91,19 @@ public class GuiInventoryStocker extends GuiContainer
 			Utils.drawCenteredGlowingText(fontRenderer, line, xCenter, yLoc + 60, 0xFF0000, 0x400000);
 		}
 
-		int mode = tile.operationMode;
-		switch (mode)
+		switch (tile.operationMode)
 		{
-		case 0:
+		case NORMAL:
 			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_NORMAL), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
-		case 1:
+		case REPLACE:
 			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_REPLACE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
-		case 2:
+		case INSERT:
 			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_INSERT), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
+			break;
+		case REMOVE:
+			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_REMOVE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
 		}
 
