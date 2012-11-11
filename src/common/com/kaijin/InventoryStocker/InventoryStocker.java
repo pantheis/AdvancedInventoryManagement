@@ -57,7 +57,7 @@ public class InventoryStocker
 	@Init
 	public void load(FMLInitializationEvent event)
 	{
-		Info.blockInventoryStocker = new BlockInventoryStocker(Info.blockIDInventoryStocker, 0, Material.wood).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
+		Info.blockInventoryStocker = new BlockInventoryStocker(Info.blockIDInventoryStocker, 0, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
 		GameRegistry.registerBlock(Info.blockInventoryStocker);
 
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
