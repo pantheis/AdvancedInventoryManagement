@@ -29,6 +29,7 @@ public class Info
 	public static final String KEY_GUI_NOSCAN = "kaijin.invStocker.guiStrings.noScan";
 	public static final String KEY_GUI_WORKING = "kaijin.invStocker.guiStrings.working";
 	public static final String KEY_GUI_HALTED = "kaijin.invStocker.guiStrings.halted";
+	public static final String KEY_GUI_REMOVE = "kaijin.invStocker.guiStrings.remove";
 	public static final String KEY_GUI_INSERT = "kaijin.invStocker.guiStrings.insert";
 	public static final String KEY_GUI_REPLACE = "kaijin.invStocker.guiStrings.replace";
 	public static final String KEY_GUI_NORMAL = "kaijin.invStocker.guiStrings.normal";
@@ -55,6 +56,7 @@ public class Info
 		lang.addStringLocalization(KEY_GUI_SCAN, "Scan");
 		lang.addStringLocalization(KEY_GUI_WORKING, "Working");
 		lang.addStringLocalization(KEY_GUI_HALTED, "Halted");
+		lang.addStringLocalization(KEY_GUI_REMOVE, "Remove");
 		lang.addStringLocalization(KEY_GUI_INSERT, "Insert");
 		lang.addStringLocalization(KEY_GUI_REPLACE, "Replace");
 		lang.addStringLocalization(KEY_GUI_NORMAL, "Normal");

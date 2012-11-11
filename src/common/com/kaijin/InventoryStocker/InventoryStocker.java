@@ -49,7 +49,7 @@ public class InventoryStocker
 		}
 		catch (Exception var1)
 		{
-			System.out.println("[" + Info.MOD_NAME + "] Error while trying to access configuration!");
+			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Error while trying to access configuration!");
 			throw new RuntimeException(var1);
 		}
 	}
@@ -70,7 +70,7 @@ public class InventoryStocker
 
 		if (proxy.isServer())
 		{
-			FMLLog.getLogger().info (Info.MOD_NAME + " loaded.");
+			FMLLog.getLogger().info(Info.MOD_NAME + " loaded.");
 		}
 
 		if (Info.isDebugging)
