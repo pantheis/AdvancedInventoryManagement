@@ -63,7 +63,9 @@ public class ContainerInventoryStocker extends Container
 	@Override
 	public void updateCraftingResults()
 	{
-		int tileinfo = (tile.hasSnapshot ? 4 : 0) | (tile.operationMode & 3);
+		super.updateCraftingResults(); // Make sure to synch inventory updates to the client too!
+
+		int tileinfo = (tile.hasSnapshot ? 4 : 0) | (tile.operationMode.ordinal() & 3);
 		for (int crafterIndex = 0; crafterIndex < crafters.size(); ++crafterIndex)
 		{
 			ICrafting crafter = (ICrafting)crafters.get(crafterIndex);
@@ -84,7 +86,7 @@ public class ContainerInventoryStocker extends Container
 		switch (param)
 		{
 		case 0:
-			tile.operationMode = value & 3;
+			tile.operationMode = StockMode.getMode(value & 3);
 			tile.hasSnapshot = (value & 4) == 4;
 		}
 	}
