@@ -40,7 +40,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private ItemStack extendedChestSnapshot[];
 
 	public int metaInfo = 0;
-	public int operationMode = 0;
+	public StockMode operationMode = StockMode.NORMAL;
 
 	private boolean guiTakeSnapshot = false;
 	private boolean guiClearSnapshot = false;
@@ -190,10 +190,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
-		// TODO Make sure the numbering and orientation matches up properly!
 		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
 		int i = getRotatedSideFromMetadata(side.ordinal());
-		//if (InventoryStocker.isDebugging) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
 
 		if (i == 1)
 		{
@@ -205,10 +203,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		// TODO Make sure the numbering and orientation matches up properly!
 		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
 		int i = getRotatedSideFromMetadata(side.ordinal());
-		//if (InventoryStocker.isDebugging) System.out.println("side.ordinal(): " + side.ordinal() + " face: " + i);
 
 		if (i == 0)
 		{
@@ -373,7 +369,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 			// Light status and direction
 			metaInfo = nbttagcompound.getInteger("Metainfo");
-			operationMode = nbttagcompound.getInteger("OpMode");
+			operationMode = StockMode.getMode(nbttagcompound.getInteger("OpMode"));
 
 			boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
 
@@ -513,7 +509,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 
 			// Light status and direction
 			nbttagcompound.setInteger("Metainfo", metaInfo);
-			nbttagcompound.setInteger("OpMode", operationMode);
+			nbttagcompound.setInteger("OpMode", operationMode.ordinal());
 		}
 	}
 
@@ -759,15 +755,20 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				pass++;
 			} while (workDone && pass < 100);
 		}
-		else do
+		else
 		{
-			workDone = false;
-			for (int slot = startSlot; slot < endSlot; slot++)
+			do
 			{
-				workDone |= processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
-			}
-			pass++;
-		} while (workDone && pass < 100);
+				workDone = false;
+				for (int slot = startSlot; slot < endSlot; slot++)
+				{
+					workDone |= processSlot(slot, (IInventory)lastTileEntity, remoteSnapshot);
+				}
+				pass++;
+			} while (workDone && pass < 100);
+		}
+
+		if (pass > 0) this.onInventoryChanged();
 	}
 
 	protected boolean processSlot(int slot, IInventory tile, ItemStack[] snapshot)
@@ -776,10 +777,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		ItemStack s = snapshot[slot];
 		if (i == null)
 		{
-			if (s == null)
-				return false; // Slot is and should be empty. Next!
+			if (s == null) return false; // Slot is and should be empty. Next!
 
-			// Slot is empty but shouldn't be. Add what belongs there.
+			// Slot is empty but shouldn't be. Add what belongs there, if allowed.
+			if (!operationMode.allowInsert) return false;
 			return addItemToRemote(slot, tile, snapshot, snapshot[slot].stackSize);
 		}
 		else
@@ -787,8 +788,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			// Slot is occupied. Figure out if contents belong there.
 			if (s == null)
 			{
-				// Nope! Slot should be empty. Need to remove this.
+				// Nope! Slot should be empty. Need to remove this. (Assuming mode allows it)
 				// Call helper function to do that here, and then move on to next slot
+				if (!operationMode.allowRemove) return false;
 				return removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
 			}
 
@@ -797,20 +799,23 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			{
 				// Matched. Compare stack sizes. Try to ensure there's not too much or too little.
 				int amtNeeded = snapshot[slot].stackSize - tile.getStackInSlot(slot).stackSize;
-				if (amtNeeded > 0)
+				if (amtNeeded > 0 && operationMode.allowInsert)
 					return addItemToRemote(slot, tile, snapshot, amtNeeded);
-				if (amtNeeded < 0)
-					return removeItemFromRemote(slot, tile, -amtNeeded); // Note the negation.
+				if (amtNeeded < 0 && operationMode.allowRemove)
+					return removeItemFromRemote(slot, tile, -amtNeeded); // Make it positive and remove that many.
 				// The size is already the same and we've nothing to do. Hooray!
 				return false;
 			}
 			else
 			{
-				// Wrong item type in slot! Try to remove what doesn't belong and add what does.
-				boolean ret;
-				ret = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
-				if (tile.getStackInSlot(slot) == null)
-					ret = addItemToRemote(slot, tile, snapshot, snapshot[slot].stackSize);
+				// Wrong item type in slot! Check mode and if allowed, try to remove what doesn't belong and add what does.
+				boolean ret = false;
+				if ((operationMode.allowRemove && operationMode.allowInsert) || (operationMode.allowReplace && canAdd(snapshot[slot])))
+				{
+					ret = removeItemFromRemote(slot, tile, tile.getStackInSlot(slot).stackSize);
+					if (tile.getStackInSlot(slot) == null)
+						ret = addItemToRemote(slot, tile, snapshot, snapshot[slot].stackSize);
+				}
 				return ret;
 			}
 		} // else
@@ -819,20 +824,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	// Test if two item stacks' types match, while ignoring damage level if needed.  
 	protected boolean checkItemTypesMatch(ItemStack a, ItemStack b)
 	{
-		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: a: "+ a +" b: "+ b +"");
-		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .isStackable() a: "+ a.isStackable() +" b: "+ b.isStackable() +"");
-		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .getItemDamage() a: "+ a.getItemDamage() +" b: "+ b.getItemDamage() +"");
-		// if (InventoryStocker.isDebugging) System.out.println("checkItemTypesMatch: .isItemStackDamageable() a: "+ a.isItemStackDamageable() +" b: "+ b.isItemStackDamageable() +"");
-
 		if (a.itemID == b.itemID)
 		{
-			//FIXME Make sure to add test for stack tag equality!
-			// Ignore damage value of damageable items while testing for match!
+			// Ignore damage value of damageable (and thus unstackable) items while testing for match!
 			if (a.isItemStackDamageable())
 				return true;
 
-			// Already tested ItemID, so a.isItemEqual(b) would be partially redundant.
-			if (a.getItemDamage() == b.getItemDamage())
+			// Verify that item damage values and stack tags are equal
+			if (a.getItemDamage() == b.getItemDamage() && ItemStack.func_77970_a(a, b))
 				return true;
 		}
 		return false;
@@ -953,6 +952,16 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		return partialMove;
 	}
 
+	private boolean canAdd(ItemStack desired)
+	{
+		if (desired == null) return false;
+		for (int i = 17; i >= 0; i--) // Scan Output section as well in case desired items were removed for being in the wrong slot
+		{
+			if (contents[i] != null && checkItemTypesMatch(contents[i], desired)) return true;
+		}
+		return false;
+	}
+/*
 	private void debugSnapshotDataClient()
 	{
 		if (InventoryStocker.proxy.isClient())
@@ -980,7 +989,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			System.out.println("Server detected TileName=" + tempName + " expected TileName=" + targetTileName);
 		}
 	}
-
+*/
 	/**
 	 * Will check if our snapshot should be invalidated.
 	 * Returns true if snapshot is invalid, false otherwise.
@@ -1326,11 +1335,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 	}
 
-	public void receiveModeRequest() //TODO
+	public void receiveModeRequest()
 	{
-		operationMode++;
-		if (operationMode > 2) operationMode = 0;
-		if (Info.isDebugging) System.out.println("Operation Mode: " + operationMode);
+		operationMode = StockMode.next(operationMode);
+		//if (Info.isDebugging) System.out.println("Operation Mode: " + operationMode.ordinal());
 	}
 
 	/**<pre>
