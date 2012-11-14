@@ -432,38 +432,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	}
 
 	/**
-	 * See code used in getTileAtFrontFace, getBlockIDAtFace, isTargetChunkLoaded.
-	 * That method avoids unnecessarily frequent object creation and subsequent garbage collection
-	 * @return
-	 */
-	@Deprecated
-	public Coords getLocFrontFace()
-	{
-		int dir = this.metaInfo & 7;
-		return getLocAtFace(dir);
-	}
-
-	/**
-	 * See code used in getTileAtFrontFace, getBlockIDAtFace, isTargetChunkLoaded.
-	 * That method avoids unnecessarily frequent object creation and subsequent garbage collection
-	 * @return
-	 */
-	@Deprecated
-	public Coords getLocAtFace(int i)
-	{
-		/**
-		 *      0: -Y (bottom side)
-		 *      1: +Y (top side)
-		 *      2: -Z (west side)
-		 *      3: +Z (east side)
-		 *      4: -X (north side)
-		 *      5: +x (south side)
-		 */
-		ForgeDirection side = ForgeDirection.getOrientation(i);
-		return new Coords(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ);
-	}
-
-	/**
 	 * This function will take a snapshot of the IInventory of the TileEntity passed to it.
 	 * This will be a copy of the remote inventory as it looks when this function is called.
 	 * 
