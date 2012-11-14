@@ -126,17 +126,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private void updateDoorStates()
 	{
 		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
-		int oldInfo = metaInfo;
 		int doorFlags = 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.DOWN)  ? 16  : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.UP)    ? 32  : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.NORTH) ? 64  : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.SOUTH) ? 128 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.WEST)  ? 256 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.EAST)  ? 512 : 0;
-		metaInfo ^= (metaInfo & 1008); // 1008 = bits 4 through 9 (zero based), this sets them to 0 without having to know what other bits need preservation
-		metaInfo |= doorFlags;
-		if (metaInfo != oldInfo) worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		for (int i = 0; i < 6; i++)
+		{
+			doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.getOrientation(i))  ? 16 << i : 0; // 16 is bit 4
+		}
+
+		final int oldFlags = metaInfo & 1008;  // 1008 = bits 4 through 9 (zero based)
+		if (doorFlags != oldFlags)
+		{
+			metaInfo ^= oldFlags; // doing this resets bits 4-9 to 0 without having to know what other bits need preservation
+			metaInfo |= doorFlags;
+			worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	/**
