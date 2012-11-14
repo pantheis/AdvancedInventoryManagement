@@ -14,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import buildcraft.api.core.Orientations;
 import buildcraft.api.transport.IPipeConnection;
 
 import net.minecraft.src.Block;
@@ -129,12 +128,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
 		int oldInfo = metaInfo;
 		int doorFlags = 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord-1, zCoord,   Orientations.YPos) ? 16 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord+1, zCoord,   Orientations.YNeg) ? 32 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1, Orientations.ZPos) ? 64 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1, Orientations.ZNeg) ? 128 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord-1, yCoord,   zCoord,   Orientations.XPos) ? 256 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord+1, yCoord,   zCoord,   Orientations.XNeg) ? 512 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord-1, zCoord,   ForgeDirection.UP) ? 16 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord+1, zCoord,   ForgeDirection.DOWN) ? 32 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1, ForgeDirection.SOUTH) ? 64 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1, ForgeDirection.NORTH) ? 128 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord-1, yCoord,   zCoord,   ForgeDirection.EAST) ? 256 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord+1, yCoord,   zCoord,   ForgeDirection.WEST) ? 512 : 0;
 		metaInfo ^= (metaInfo & 1008); // 1008 = bits 4 through 9 (zero based), this sets them to 0 without having to know what other bits need preservation
 		metaInfo |= doorFlags;
 		if (metaInfo != oldInfo) worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
@@ -161,9 +160,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 * All pipe tile entities implement IPipeConnection.
 	 * Call isPipeConnected with the direction pointing back toward our block.
 	 */
-	private boolean findTubeOrPipeAt(int x, int y, int z, Orientations dir)
+	private boolean findTubeOrPipeAt(int x, int y, int z, ForgeDirection dir)
 	{
-		if (worldObj.blockExists(x, y, z))
+		if (worldObj.blockExists(x, y, z) && dir != ForgeDirection.UNKNOWN)
 		{
 			// BuildCraft Pipe test
 			TileEntity tile = worldObj.getBlockTileEntity(x,  y, z);
@@ -831,7 +830,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				return true;
 
 			// Verify that item damage values and stack tags are equal
-			if (a.getItemDamage() == b.getItemDamage() && ItemStack.func_77970_a(a, b))
+			if (a.getItemDamage() == b.getItemDamage() && ItemStack.areItemStackTagsEqual(a, b))
 				return true;
 		}
 		return false;
