@@ -128,12 +128,12 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
 		int oldInfo = metaInfo;
 		int doorFlags = 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord-1, zCoord,   ForgeDirection.UP) ? 16 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord+1, zCoord,   ForgeDirection.DOWN) ? 32 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1, ForgeDirection.SOUTH) ? 64 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1, ForgeDirection.NORTH) ? 128 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord-1, yCoord,   zCoord,   ForgeDirection.EAST) ? 256 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord+1, yCoord,   zCoord,   ForgeDirection.WEST) ? 512 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.DOWN)  ? 16  : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.UP)    ? 32  : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.NORTH) ? 64  : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.SOUTH) ? 128 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.WEST)  ? 256 : 0;
+		doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.EAST)  ? 512 : 0;
 		metaInfo ^= (metaInfo & 1008); // 1008 = bits 4 through 9 (zero based), this sets them to 0 without having to know what other bits need preservation
 		metaInfo |= doorFlags;
 		if (metaInfo != oldInfo) worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
@@ -164,11 +164,15 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		if (worldObj.blockExists(x, y, z) && dir != ForgeDirection.UNKNOWN)
 		{
+			x += dir.offsetX;
+			y += dir.offsetY;
+			z += dir.offsetZ;
+
 			// BuildCraft Pipe test
 			TileEntity tile = worldObj.getBlockTileEntity(x,  y, z);
 			if (tile instanceof IPipeConnection)
 			{
-				return ((IPipeConnection)tile).isPipeConnected(dir);
+				return ((IPipeConnection)tile).isPipeConnected(dir.getOpposite());
 			}
 
 			// RedPower Tube test
