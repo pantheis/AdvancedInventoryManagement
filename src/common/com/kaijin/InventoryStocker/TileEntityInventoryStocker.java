@@ -49,7 +49,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean lightState = false;
 
 	public boolean hasSnapshot = false;
-	private boolean isSnapshotValid = false;
+	public boolean isSnapshotValid = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
 	private TileEntity lastTileEntity = null;
