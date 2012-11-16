@@ -28,6 +28,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -48,11 +49,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean lightState = false;
 
 	public boolean hasSnapshot = false;
-	private boolean lastSnapshotState = false;
+	private boolean isSnapshotValid = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
 	private TileEntity lastTileEntity = null;
-	private TileEntity tileFrontFace = null;
 	private TileEntityChest extendedChest = null;
 	private int remoteNumSlots = 0;
 	private String targetTileName = "none";
@@ -60,9 +60,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
 	private final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
 
-	private final int tickDelay = 9; // How long (in ticks) to wait between stocking operations
+	private final int tickDelay = 10; // How long (in ticks) to wait between stocking operations
 	private int tickTime = 0;
-	
+
 	private int updateDelay = 0; // For delayed pipe/tube door updating
 
 	//TODO Record relative offset from stocker to reactor core when reactor workaround in use, for testing if chunk is loaded
@@ -87,6 +87,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
 			reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
+			if (remoteNumSlots > 0) hasSnapshot = true;
+			isSnapshotValid = false;
 
 			// Light status and direction
 			metaInfo = nbttagcompound.getInteger("Metainfo");
@@ -245,40 +247,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			tileLoaded = true;
 			if (Info.isDebugging) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
-			TileEntity tile = getTileAtFrontFace();
-			if (tile == null)
-			{
-				if (Info.isDebugging) System.out.println("onLoad tile = null");
-				clearSnapshot();
-			}
-			else
-			{
-				String tempName = tile.getClass().getName();
-				if (tempName.equals(targetTileName) && ((IInventory)tile).getSizeInventory() == remoteNumSlots)
-				{
-					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
-					lastTileEntity = tile;
-					if (tile instanceof TileEntityChest)
-					{
-						extendedChest = findDoubleChest();
-					}
-					else
-					{
-						//TODO Something needs to be checking for target-chunk-not-loaded state in THIS function
-						// and make sure that the process isn't considered complete until that state has resolved.
-						// Reactor cores could be in an adjacent chunk even when stocker is vertically oriented.
-						// When horizontal, any tile entity could potentially be in a not-yet-loaded chunk.
-						// Also, update javadoc for this function.
-						findReactorCore(tile);
-					}
-					hasSnapshot = true;
-				}
-				else
-				{
-					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
-					clearSnapshot();
-				}
-			}
+			isSnapshotValid = !checkInvalidSnapshot();
 		}
 	}
 
@@ -288,7 +257,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public boolean validSnapshot()
 	{
-		return hasSnapshot;
+		return isSnapshotValid;
 	}
 
 	public void clearSnapshot()
@@ -296,7 +265,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (Info.isDebugging) System.out.println("clearSnapshot()");
 		lastTileEntity = null;
 		hasSnapshot = false;
-		targetTileName = "none";
+		isSnapshotValid = false;
+		targetTileName = "None";
 		remoteSnapshot = null;
 		remoteNumSlots = 0;
 		extendedChest = null;
@@ -312,11 +282,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	{
 		if (!InventoryStocker.proxy.isClient())
 		{
-			// If snapshot target's chunk is not loaded, snapshot tests are skipped
-			if (isTargetChunkLoaded() && checkInvalidSnapshot() && validSnapshot())
+			if (hasSnapshot)
 			{
-				if (Info.isDebugging) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
-				clearSnapshot();
+				isSnapshotValid = !checkInvalidSnapshot();
 			}
 			// Flag to check adjacent blocks for tubes or pipes on next entity update tick
 			if (updateDelay <= 0) updateDelay = 1;
@@ -545,10 +513,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 *  get remote entity class name and store it as targetTile, which also ends up being stored in our
 		 *  own NBT tables so our tile will remember what was there after chunk unloads/restarts/etc
 		 */
-		this.targetTileName = tile.getClass().getName();
+		targetTileName = tile.getClass().getName();
 		lastTileEntity = tile;
 		hasSnapshot = true;
-		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + this.targetTileName);
+		isSnapshotValid = true;
+		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + targetTileName);
 		return true;
 	}
 /*
@@ -856,7 +825,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 */
 		if (!isTargetChunkLoaded())
 		{
-			return false;
+			return true;
 		}
 
 		TileEntity tile = getTileAtFrontFace();
@@ -874,12 +843,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (!tempName.equals(targetTileName))
 		{
 			if (Info.isDebugging) System.out.println("Invalid snapshot: TileName Mismatched, detected TileName=" + tempName + " expected TileName=" + targetTileName);
-			return true;
-		}
-
-		if (tile != lastTileEntity)
-		{
-			if (Info.isDebugging) System.out.println("Invalid snapshot: tileEntity does not match lastTileEntity");
 			return true;
 		}
 
@@ -908,11 +871,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 
 			// Check if it matches previous conditions
-			if (extendedChest != foundChest)
+			if ((extendedChest == null) != (foundChest == null))
 			{
 				if (Info.isDebugging) System.out.println("Invalid snapshot: Double chest configuration changed!");
 				return true;
 			}
+
+			extendedChest = foundChest;
 		}
 
 		// Deal with nuclear reactor special case
@@ -930,6 +895,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 		}
 
+		lastTileEntity = tile;
 		return false;
 	}
 
@@ -1105,15 +1071,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			TileEntity tile = getTileAtFrontFace();
 			if (tile != null && tile instanceof IInventory)
 			{
-				if (takeSnapShot(tile))
-				{
-					//sendSnapshotStateClients();
-				}
-				else
+				if (!takeSnapShot(tile))
 				{
 					// Failed to get a valid snapshot. Run this just in case to cleanly reset everything.
 					clearSnapshot();
-					if (Info.isDebugging) System.out.println("updateEntity.guiTakeSnapshot_failed.clearSnapshot()");
+					if (Info.isDebugging) System.out.println("Take snapshot failed: clearing snapshot");
 				}
 			}
 		}
@@ -1122,7 +1084,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (guiClearSnapshot)
 		{
 			guiClearSnapshot = false;
-			if (Info.isDebugging) System.out.println("updateEntity.guiClearSnapshot.clearSnapshot()");
+			if (Info.isDebugging) System.out.println("GUI clear snapshot request");
 			clearSnapshot();
 		}
 
@@ -1136,33 +1098,29 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 
 		// If we are powered and previously weren't or timer has expired, it's time to go to work.
-		if (isPowered && tickTime == 0)
+		if (isPowered)
 		{
-			tickTime = tickDelay;
-			if (Info.isDebugging) System.out.println("Powered");
+			tickTime--;
+			//if (Info.isDebugging) System.out.println("Powered");
 
 			// Turn on das blinkenlights!
 			if (!lightState) lightsOn();
 
-			if (hasSnapshot)
+			if (tickTime <= 0)
 			{
-				// Check for any situation in which the snapshot should be invalidated.
-				if (checkInvalidSnapshot())
+				tickTime = tickDelay;
+				if (hasSnapshot)
 				{
-					if (Info.isDebugging) System.out.println("updateEntity.checkInvalidSnapshot.clearSnapshot()");
-					clearSnapshot();
-				}
-				else
-				{
-					// If we've made it here, it's time to stock the remote inventory.
-					if (Info.isDebugging) System.out.println("updateEntity.stockInventory()");
-					stockInventory();
+					// Check for any situation in which the snapshot should be considered invalid.
+					isSnapshotValid = !checkInvalidSnapshot();
+					if (isSnapshotValid)
+					{
+						// If we've made it here, it's time to stock the remote inventory.
+						if (Info.isDebugging) System.out.println("updateEntity.stockInventory()");
+						stockInventory();
+					}
 				}
 			}
-		}
-		else if (tickTime > 0)
-		{
-			tickTime--;
 		}
 	}
 
@@ -1340,17 +1298,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		try
 		{
 			data.writeInt(0);
-			data.writeInt(this.xCoord);
-			data.writeInt(this.yCoord);
-			data.writeInt(this.zCoord);
-			data.writeInt(this.metaInfo);
+			data.writeInt(xCoord);
+			data.writeInt(yCoord);
+			data.writeInt(zCoord);
+			data.writeInt(metaInfo);
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Server failed to create description packet. (Details: " + e.toString() + ")");
 		}
 
-		return new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray());
+		Packet250CustomPayload packet = new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray());
+		packet.isChunkDataPacket = true;
+		return packet;
 	}
 
 	/**
@@ -1372,7 +1332,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Client failed to create button command packet. (Details: " + e.toString() + ")");
 		}
 
 		InventoryStocker.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
