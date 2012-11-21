@@ -8,11 +8,22 @@ package com.kaijin.InventoryStocker;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 public class Utils
 {
+	public boolean isClient()
+	{
+		return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
+	}
+
+	public boolean isServer()
+	{
+		return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER;
+	}
+
 	/**
 	 * 
 	 * @param fr    - Font Renderer handle
