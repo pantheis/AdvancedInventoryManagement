@@ -27,6 +27,7 @@ public class Info
 	public static final String KEY_GUI_OUTPUT = "kaijin.invStocker.guiStrings.output";
 	public static final String KEY_GUI_READY = "kaijin.invStocker.guiStrings.ready";
 	public static final String KEY_GUI_NOSCAN = "kaijin.invStocker.guiStrings.noScan";
+	public static final String KEY_GUI_INVALID = "kaijin.invStocker.guiStrings.invalid";
 	public static final String KEY_GUI_WORKING = "kaijin.invStocker.guiStrings.working";
 	public static final String KEY_GUI_HALTED = "kaijin.invStocker.guiStrings.halted";
 	public static final String KEY_GUI_REMOVE = "kaijin.invStocker.guiStrings.remove";
@@ -52,6 +53,7 @@ public class Info
 		lang.addStringLocalization(KEY_GUI_OUTPUT, "Output");
 		lang.addStringLocalization(KEY_GUI_READY, "Ready");
 		lang.addStringLocalization(KEY_GUI_NOSCAN, "No Scan");
+		lang.addStringLocalization(KEY_GUI_INVALID, "Invalid");
 		lang.addStringLocalization(KEY_GUI_CLEAR, "Clear");
 		lang.addStringLocalization(KEY_GUI_SCAN, "Scan");
 		lang.addStringLocalization(KEY_GUI_WORKING, "Working");

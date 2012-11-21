@@ -14,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import buildcraft.api.core.Orientations;
 import buildcraft.api.transport.IPipeConnection;
 
 import net.minecraft.src.Block;
@@ -29,6 +28,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -49,11 +49,10 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private boolean lightState = false;
 
 	public boolean hasSnapshot = false;
-	private boolean lastSnapshotState = false;
+	public boolean isSnapshotValid = false;
 	private boolean reactorWorkaround = false;
 	private int reactorWidth = 0;
 	private TileEntity lastTileEntity = null;
-	private TileEntity tileFrontFace = null;
 	private TileEntityChest extendedChest = null;
 	private int remoteNumSlots = 0;
 	private String targetTileName = "none";
@@ -61,9 +60,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	private final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
 	private final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
 
-	private final int tickDelay = 9; // How long (in ticks) to wait between stocking operations
+	private final int tickDelay = 10; // How long (in ticks) to wait between stocking operations
 	private int tickTime = 0;
-	
+
 	private int updateDelay = 0; // For delayed pipe/tube door updating
 
 	//TODO Record relative offset from stocker to reactor core when reactor workaround in use, for testing if chunk is loaded
@@ -72,284 +71,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	public TileEntityInventoryStocker()
 	{
 		super();
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-
-	/**
-	 * Returns current value of hasSnapshot
-	 * @return
-	 */
-	public boolean validSnapshot()
-	{
-		return hasSnapshot;
-	}
-
-	public void clearSnapshot()
-	{
-		if (Info.isDebugging) System.out.println("clearSnapshot()");
-		lastTileEntity = null;
-		hasSnapshot = false;
-		targetTileName = "none";
-		remoteSnapshot = null;
-		remoteNumSlots = 0;
-		extendedChest = null;
-		extendedChestSnapshot = null;
-		reactorWorkaround = false;
-		reactorWidth = 0;
-	}
-
-	/**
-	 * Called when neighboring blocks change or other cases where a state update is needed
-	 */
-	public void onBlockUpdate()
-	{
-		if (!InventoryStocker.proxy.isClient())
-		{
-			// If snapshot target's chunk is not loaded, snapshot tests are skipped
-			if (isTargetChunkLoaded() && checkInvalidSnapshot() && validSnapshot())
-			{
-				if (Info.isDebugging) System.out.println("onUpdate.!isClient.checkInvalidSnapshot.clearSnapshot");
-				clearSnapshot();
-			}
-			// Flag to check adjacent blocks for tubes or pipes on next entity update tick
-			if (updateDelay <= 0) updateDelay = 1;
-		}
-	}
-
-	/**
-	 * Called to discover neighboring pipe and tube connections 
-	 */
-	private void updateDoorStates()
-	{
-		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
-		int oldInfo = metaInfo;
-		int doorFlags = 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord-1, zCoord,   Orientations.YPos) ? 16 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord+1, zCoord,   Orientations.YNeg) ? 32 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord-1, Orientations.ZPos) ? 64 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord,   yCoord,   zCoord+1, Orientations.ZNeg) ? 128 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord-1, yCoord,   zCoord,   Orientations.XPos) ? 256 : 0;
-		doorFlags |= findTubeOrPipeAt(xCoord+1, yCoord,   zCoord,   Orientations.XNeg) ? 512 : 0;
-		metaInfo ^= (metaInfo & 1008); // 1008 = bits 4 through 9 (zero based), this sets them to 0 without having to know what other bits need preservation
-		metaInfo |= doorFlags;
-		if (metaInfo != oldInfo) worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-	}
-
-	/**
-	 * @param x coord of block to test
-	 * @param y coord of block to test
-	 * @param z coord of block to test
-	 * @param direction in BC API Orientations
-	 * @return boolean
-	 * <pre>
-	 * RedPower connections:
-	 *
-	 * Meta  Tile Entity
-	 * 8     eloraam.machine.TileTube
-	 * 9     eloraam.machine.TileRestrictTube
-	 * 10    eloraam.machine.TileRedstoneTube
-	 *
-	 * All are block class: eloraam.base.BlockMicro
-	 * 
-	 * Buildcraft connections:
-	 * 
-	 * All pipe tile entities implement IPipeConnection.
-	 * Call isPipeConnected with the direction pointing back toward our block.
-	 */
-	private boolean findTubeOrPipeAt(int x, int y, int z, Orientations dir)
-	{
-		if (worldObj.blockExists(x, y, z))
-		{
-			// BuildCraft Pipe test
-			TileEntity tile = worldObj.getBlockTileEntity(x,  y, z);
-			if (tile instanceof IPipeConnection)
-			{
-				return ((IPipeConnection)tile).isPipeConnected(dir);
-			}
-
-			// RedPower Tube test
-			int ID = worldObj.getBlockId(x, y, z);
-			if (ID > 0)
-			{
-				String type = Block.blocksList[ID].getClass().getName();
-				if (type.endsWith("eloraam.base.BlockMicro"))
-				{
-					int m = worldObj.getBlockMetadata(x, y, z);
-					return (m >= 8) && (m <= 10);
-				}
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
-		int i = getRotatedSideFromMetadata(side.ordinal());
-
-		if (i == 1)
-		{
-			return 9;    // access output section, 9-17
-		}
-		return 0; // access input section, 0-8
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
-		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
-		int i = getRotatedSideFromMetadata(side.ordinal());
-
-		if (i == 0)
-		{
-			return 0; // Front has no inventory access
-		}
-		return 9;
-	}
-
-	public int getRotatedSideFromMetadata(int side)
-	{
-		final int dir = this.metaInfo & 7;
-		return Utils.lookupRotatedSide(side, dir);
-	}
-
-	public int getBlockIDAtFace(int i)
-	{
-		final ForgeDirection face = ForgeDirection.getOrientation(i);
-		return worldObj.getBlockId(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
-	}
-
-	public TileEntity getTileAtFrontFace()
-	{
-		final ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
-		return worldObj.getBlockTileEntity(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
-	}
-
-	/**
-	 * Will check if the chunk the block at the front face is in is loaded
-	 * @return boolean
-	 */
-	private boolean isTargetChunkLoaded()
-	{
-		//TODO Test with reactors where stocker is attached to a chamber and separated from core by a block.
-		if (reactorWorkaround)
-		{
-			// The chamber and core may not be in the same chunk! Store core location somewhere and check that instead.
-			return worldObj.blockExists(xCoord + reactorOffset.x, yCoord + reactorOffset.y, zCoord + reactorOffset.z);
-		}
-		else
-		{
-			ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
-			return worldObj.blockExists(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
-		}
-	}
-
-	/**
-	 * See code used in getTileAtFrontFace, getBlockIDAtFace, isTargetChunkLoaded.
-	 * That method avoids unnecessarily frequent object creation and subsequent garbage collection
-	 * @return
-	 */
-	@Deprecated
-	public Coords getLocFrontFace()
-	{
-		int dir = this.metaInfo & 7;
-		return getLocAtFace(dir);
-	}
-
-	/**
-	 * See code used in getTileAtFrontFace, getBlockIDAtFace, isTargetChunkLoaded.
-	 * That method avoids unnecessarily frequent object creation and subsequent garbage collection
-	 * @return
-	 */
-	@Deprecated
-	public Coords getLocAtFace(int i)
-	{
-		/**
-		 *      0: -Y (bottom side)
-		 *      1: +Y (top side)
-		 *      2: -Z (west side)
-		 *      3: +Z (east side)
-		 *      4: -X (north side)
-		 *      5: +x (south side)
-		 */
-		ForgeDirection side = ForgeDirection.getOrientation(i);
-		return new Coords(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ);
-	}
-
-	public int getSizeInventory()
-	{
-		return 18;
-	}
-
-	public ItemStack getStackInSlot(int i)
-	{
-		return contents[i];
-	}
-
-	public ItemStack decrStackSize(int par1, int par2)
-	{
-		if (this.contents[par1] != null)
-		{
-			ItemStack var3;
-
-			if (this.contents[par1].stackSize <= par2)
-			{
-				var3 = this.contents[par1];
-				this.contents[par1] = null;
-				this.onInventoryChanged();
-				return var3;
-			}
-			else
-			{
-				var3 = this.contents[par1].splitStack(par2);
-
-				if (this.contents[par1].stackSize == 0)
-				{
-					this.contents[par1] = null;
-				}
-
-				this.onInventoryChanged();
-				return var3;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	public ItemStack getStackInSlotOnClosing(int var1)
-	{
-		if (this.contents[var1] == null)
-		{
-			return null;
-		}
-
-		ItemStack stack = this.contents[var1];
-		this.contents[var1] = null;
-		return stack;
-	}
-
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.contents[i] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
-		{
-			itemstack.stackSize = getInventoryStackLimit();
-		}
-		this.onInventoryChanged();
-	}
-
-	public String getInvName()
-	{
-		return "tile.kaijin.invStocker.name";
 	}
 
 	/**
@@ -366,6 +87,8 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
 			reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
 			reactorWidth = nbttagcompound.getInteger("reactorWidth");
+			if (remoteNumSlots > 0) hasSnapshot = true;
+			isSnapshotValid = false;
 
 			// Light status and direction
 			metaInfo = nbttagcompound.getInteger("Metainfo");
@@ -524,73 +247,169 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			tileLoaded = true;
 			if (Info.isDebugging) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
-			TileEntity tile = getTileAtFrontFace();
-			if (tile == null)
-			{
-				if (Info.isDebugging) System.out.println("onLoad tile = null");
-				clearSnapshot();
-			}
-			else
-			{
-				String tempName = tile.getClass().getName();
-				if (tempName.equals(targetTileName) && ((IInventory)tile).getSizeInventory() == remoteNumSlots)
-				{
-					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" MATCHED!");
-					lastTileEntity = tile;
-					if (tile instanceof TileEntityChest)
-					{
-						extendedChest = findDoubleChest();
-					}
-					else
-					{
-						//TODO Something needs to be checking for target-chunk-not-loaded state in THIS function
-						// and make sure that the process isn't considered complete until that state has resolved.
-						// Reactor cores could be in an adjacent chunk even when stocker is vertically oriented.
-						// When horizontal, any tile entity could potentially be in a not-yet-loaded chunk.
-						// Also, update javadoc for this function.
-						findReactorCore(tile);
-					}
-					hasSnapshot = true;
-				}
-				else
-				{
-					if (Info.isDebugging) System.out.println("onLoad, target name="+tempName+" stored name="+targetTileName+" NOT matched.");
-					clearSnapshot();
-				}
-			}
+			isSnapshotValid = !checkInvalidSnapshot();
 		}
 	}
-
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-		{
-			return false;
-		}
-
-		return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
-	}
-
-	public void openChest() {}
-
-	public void closeChest() {}
 
 	/**
+	 * Returns current value of hasSnapshot
+	 * @return
+	 */
+	public boolean validSnapshot()
+	{
+		return isSnapshotValid;
+	}
+
+	public void clearSnapshot()
+	{
+		if (Info.isDebugging) System.out.println("clearSnapshot()");
+		lastTileEntity = null;
+		hasSnapshot = false;
+		isSnapshotValid = false;
+		targetTileName = "None";
+		remoteSnapshot = null;
+		remoteNumSlots = 0;
+		extendedChest = null;
+		extendedChestSnapshot = null;
+		reactorWorkaround = false;
+		reactorWidth = 0;
+	}
+
+	/**
+	 * Called when neighboring blocks change or other cases where a state update is needed
+	 */
+	public void onBlockUpdate()
+	{
+		if (!InventoryStocker.proxy.isClient())
+		{
+			if (hasSnapshot)
+			{
+				isSnapshotValid = !checkInvalidSnapshot();
+			}
+			// Flag to check adjacent blocks for tubes or pipes on next entity update tick
+			if (updateDelay <= 0) updateDelay = 1;
+		}
+	}
+
+	/**
+	 * Called to discover neighboring pipe and tube connections 
+	 */
+	private void updateDoorStates()
+	{
+		//if (InventoryStocker.isDebugging) System.out.println("Update Door States");
+		int doorFlags = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.getOrientation(i))  ? 16 << i : 0; // 16 is bit 4
+		}
+
+		final int oldFlags = metaInfo & 1008;  // 1008 = bits 4 through 9 (zero based)
+		if (doorFlags != oldFlags)
+		{
+			metaInfo ^= oldFlags; // doing this resets bits 4-9 to 0 without having to know what other bits need preservation
+			metaInfo |= doorFlags;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+
+	/**
+	 * @param x coord of starting point
+	 * @param y coord of starting point
+	 * @param z coord of starting point
+	 * @param dir ForgeDirection toward block to check
+	 * @return true if something was found
+	 * <pre>
+	 * RedPower connections:
+	 *
+	 * Meta  Tile Entity
+	 * 8     eloraam.machine.TileTube
+	 * 9     eloraam.machine.TileRestrictTube
+	 * 10    eloraam.machine.TileRedstoneTube
+	 *
+	 * All are block class: eloraam.base.BlockMicro
 	 * 
-	 * @param tile
-	 * @return boolean<p>
+	 * Buildcraft connections:
+	 * 
+	 * All pipe tile entities implement IPipeConnection.
+	 * Call isPipeConnected with the direction pointing back toward our block.
+	 */
+	private boolean findTubeOrPipeAt(int x, int y, int z, ForgeDirection dir)
+	{
+		x += dir.offsetX;
+		y += dir.offsetY;
+		z += dir.offsetZ;
+		if (worldObj.blockExists(x, y, z) && dir != ForgeDirection.UNKNOWN)
+		{
+			// BuildCraft Pipe test
+			TileEntity tile = worldObj.getBlockTileEntity(x,  y, z);
+			if (tile instanceof IPipeConnection)
+			{
+				return ((IPipeConnection)tile).isPipeConnected(dir.getOpposite());
+			}
+
+			// RedPower Tube test
+			int ID = worldObj.getBlockId(x, y, z);
+			if (ID > 0)
+			{
+				String type = Block.blocksList[ID].getClass().getName();
+				if (type.endsWith("eloraam.base.BlockMicro"))
+				{
+					int m = worldObj.getBlockMetadata(x, y, z);
+					return (m >= 8) && (m <= 10);
+				}
+			}
+		}
+		return false;
+	}
+
+	public int getRotatedSideFromMetadata(int side)
+	{
+		final int dir = this.metaInfo & 7;
+		return Utils.lookupRotatedSide(side, dir);
+	}
+
+	public int getBlockIDAtFace(int i)
+	{
+		final ForgeDirection face = ForgeDirection.getOrientation(i);
+		return worldObj.getBlockId(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
+	}
+
+	public TileEntity getTileAtFrontFace()
+	{
+		final ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
+		return worldObj.getBlockTileEntity(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
+	}
+
+	/**
+	 * Will check if the chunk the block at the front face is in is loaded
+	 * @return boolean
+	 */
+	private boolean isTargetChunkLoaded()
+	{
+		//TODO Test with reactors where stocker is attached to a chamber and separated from core by a block.
+		if (reactorWorkaround)
+		{
+			// The chamber and core may not be in the same chunk! Store core location somewhere and check that instead.
+			return worldObj.blockExists(xCoord + reactorOffset.x, yCoord + reactorOffset.y, zCoord + reactorOffset.z);
+		}
+		else
+		{
+			ForgeDirection face = ForgeDirection.getOrientation(metaInfo & 7);
+			return worldObj.blockExists(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ);
+		}
+	}
+
+	/**
 	 * This function will take a snapshot of the IInventory of the TileEntity passed to it.
 	 * This will be a copy of the remote inventory as it looks when this function is called.
 	 * 
-	 * It will check that the TileEntity passed to it actually implements IInventory and
+	 * <p>It will check that the TileEntity passed to it actually implements IInventory and
 	 * return false doing nothing if it does not.
 	 * 
-	 * Will return true if it successfully took a snapshot.
+	 * <p>Will return true if it successfully took a snapshot.
+	 * 
+	 * @param tile
+	 * @return boolean
 	 */
 	public boolean takeSnapShot(TileEntity tile)
 	{
@@ -694,13 +513,14 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 *  get remote entity class name and store it as targetTile, which also ends up being stored in our
 		 *  own NBT tables so our tile will remember what was there after chunk unloads/restarts/etc
 		 */
-		this.targetTileName = tile.getClass().getName();
+		targetTileName = tile.getClass().getName();
 		lastTileEntity = tile;
 		hasSnapshot = true;
-		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + this.targetTileName);
+		isSnapshotValid = true;
+		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + targetTileName);
 		return true;
 	}
-
+/*
 	public boolean inputGridIsEmpty()
 	{
 		for (int i=0; i<9; i++)
@@ -712,7 +532,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		return true;
 	}
-
+*/
 	protected void stockInventory()
 	{
 		// Verify target is in a loaded chunk before beginning
@@ -831,7 +651,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 				return true;
 
 			// Verify that item damage values and stack tags are equal
-			if (a.getItemDamage() == b.getItemDamage() && ItemStack.func_77970_a(a, b))
+			if (a.getItemDamage() == b.getItemDamage() && ItemStack.areItemStackTagsEqual(a, b))
 				return true;
 		}
 		return false;
@@ -1005,7 +825,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		 */
 		if (!isTargetChunkLoaded())
 		{
-			return false;
+			return true;
 		}
 
 		TileEntity tile = getTileAtFrontFace();
@@ -1023,12 +843,6 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (!tempName.equals(targetTileName))
 		{
 			if (Info.isDebugging) System.out.println("Invalid snapshot: TileName Mismatched, detected TileName=" + tempName + " expected TileName=" + targetTileName);
-			return true;
-		}
-
-		if (tile != lastTileEntity)
-		{
-			if (Info.isDebugging) System.out.println("Invalid snapshot: tileEntity does not match lastTileEntity");
 			return true;
 		}
 
@@ -1057,11 +871,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 
 			// Check if it matches previous conditions
-			if (extendedChest != foundChest)
+			if ((extendedChest == null) != (foundChest == null))
 			{
 				if (Info.isDebugging) System.out.println("Invalid snapshot: Double chest configuration changed!");
 				return true;
 			}
+
+			extendedChest = foundChest;
 		}
 
 		// Deal with nuclear reactor special case
@@ -1079,6 +895,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			}
 		}
 
+		lastTileEntity = tile;
 		return false;
 	}
 
@@ -1185,7 +1002,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		lightState = false;
 		int lights = this.metaInfo & 8; // Grab current state of lights
 		this.metaInfo ^= lights; // Toggles lights off if they're on (this two step method avoids worrying about retaining an unknown number of other bits)
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	private void lightsOn()
@@ -1193,7 +1010,13 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		lightState = true;
 		// Turn on das blinkenlights!
 		this.metaInfo |= 8; // Turn lights on
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public boolean canUpdate()
+	{
+		return true;
 	}
 
 	@Override
@@ -1221,7 +1044,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			//{
 				// This allows client-side animation of texture over time, which would not happen without updating the block
 				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
-				//worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+				//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			//}
 			return;
 		}
@@ -1248,15 +1071,11 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			TileEntity tile = getTileAtFrontFace();
 			if (tile != null && tile instanceof IInventory)
 			{
-				if (takeSnapShot(tile))
-				{
-					//sendSnapshotStateClients();
-				}
-				else
+				if (!takeSnapShot(tile))
 				{
 					// Failed to get a valid snapshot. Run this just in case to cleanly reset everything.
 					clearSnapshot();
-					if (Info.isDebugging) System.out.println("updateEntity.guiTakeSnapshot_failed.clearSnapshot()");
+					if (Info.isDebugging) System.out.println("Take snapshot failed: clearing snapshot");
 				}
 			}
 		}
@@ -1265,7 +1084,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (guiClearSnapshot)
 		{
 			guiClearSnapshot = false;
-			if (Info.isDebugging) System.out.println("updateEntity.guiClearSnapshot.clearSnapshot()");
+			if (Info.isDebugging) System.out.println("GUI clear snapshot request");
 			clearSnapshot();
 		}
 
@@ -1279,33 +1098,29 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 
 		// If we are powered and previously weren't or timer has expired, it's time to go to work.
-		if (isPowered && tickTime == 0)
+		if (isPowered)
 		{
-			tickTime = tickDelay;
-			if (Info.isDebugging) System.out.println("Powered");
+			tickTime--;
+			//if (Info.isDebugging) System.out.println("Powered");
 
 			// Turn on das blinkenlights!
 			if (!lightState) lightsOn();
 
-			if (hasSnapshot)
+			if (tickTime <= 0)
 			{
-				// Check for any situation in which the snapshot should be invalidated.
-				if (checkInvalidSnapshot())
+				tickTime = tickDelay;
+				if (hasSnapshot)
 				{
-					if (Info.isDebugging) System.out.println("updateEntity.checkInvalidSnapshot.clearSnapshot()");
-					clearSnapshot();
-				}
-				else
-				{
-					// If we've made it here, it's time to stock the remote inventory.
-					if (Info.isDebugging) System.out.println("updateEntity.stockInventory()");
-					stockInventory();
+					// Check for any situation in which the snapshot should be considered invalid.
+					isSnapshotValid = !checkInvalidSnapshot();
+					if (isSnapshotValid)
+					{
+						// If we've made it here, it's time to stock the remote inventory.
+						if (Info.isDebugging) System.out.println("updateEntity.stockInventory()");
+						stockInventory();
+					}
 				}
 			}
-		}
-		else if (tickTime > 0)
-		{
-			tickTime--;
 		}
 	}
 
@@ -1316,7 +1131,135 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		++dir; // Rotate
 		if (dir > 5) dir = 0; // Start over
 		metaInfo |= dir; // Write orientation back to meta data value
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	// IInventory
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 18;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return contents[i];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int par1, int par2)
+	{
+		if (this.contents[par1] != null)
+		{
+			ItemStack var3;
+
+			if (this.contents[par1].stackSize <= par2)
+			{
+				var3 = this.contents[par1];
+				this.contents[par1] = null;
+				this.onInventoryChanged();
+				return var3;
+			}
+			else
+			{
+				var3 = this.contents[par1].splitStack(par2);
+
+				if (this.contents[par1].stackSize == 0)
+				{
+					this.contents[par1] = null;
+				}
+
+				this.onInventoryChanged();
+				return var3;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int var1)
+	{
+		if (this.contents[var1] == null)
+		{
+			return null;
+		}
+
+		ItemStack stack = this.contents[var1];
+		this.contents[var1] = null;
+		return stack;
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		this.contents[i] = itemstack;
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+		{
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+		this.onInventoryChanged();
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return "tile.kaijin.invStocker.name";
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 64;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+		{
+			return false;
+		}
+
+		return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+	}
+
+	@Override
+	public void openChest() {}
+
+	@Override
+	public void closeChest() {}
+
+	// ISidedInventory
+
+	@Override
+	public int getStartInventorySide(ForgeDirection side)
+	{
+		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
+		int i = getRotatedSideFromMetadata(side.ordinal());
+
+		if (i == 1)
+		{
+			return 9;    // access output section, 9-17
+		}
+		return 0; // access input section, 0-8
+	}
+
+	@Override
+	public int getSizeInventorySide(ForgeDirection side)
+	{
+		// Sides (0-5) are: Top, Bottom, Front, Back, Left, Right
+		int i = getRotatedSideFromMetadata(side.ordinal());
+
+		if (i == 0)
+		{
+			return 0; // Front has no inventory access
+		}
+		return 9;
 	}
 
 	// Start networking section
@@ -1341,13 +1284,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		//if (Info.isDebugging) System.out.println("Operation Mode: " + operationMode.ordinal());
 	}
 
-	/**<pre>
-	 * This function returns a Packet250CustomPayload:
-	 *   byte 1: x location of TileEntity
-	 *   byte 2: y location of TileEntity
-	 *   byte 3: z location of TileEntity
-	 *   byte 4: int "metadata", with rotation and light state info as bits</pre>
-
+	/**
+	 * This function returns a packet carrying the metaInfo field needed on the client in order to
+	 * display the correct textures.
 	 * @return Packet250CustomPayload
 	 */
 	@Override
@@ -1359,17 +1298,19 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		try
 		{
 			data.writeInt(0);
-			data.writeInt(this.xCoord);
-			data.writeInt(this.yCoord);
-			data.writeInt(this.zCoord);
-			data.writeInt(this.metaInfo);
+			data.writeInt(xCoord);
+			data.writeInt(yCoord);
+			data.writeInt(zCoord);
+			data.writeInt(metaInfo);
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Server failed to create description packet. (Details: " + e.toString() + ")");
 		}
 
-		return new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray());
+		Packet250CustomPayload packet = new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray());
+		packet.isChunkDataPacket = true;
+		return packet;
 	}
 
 	/**
@@ -1391,7 +1332,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Client failed to create button command packet. (Details: " + e.toString() + ")");
 		}
 
 		InventoryStocker.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));

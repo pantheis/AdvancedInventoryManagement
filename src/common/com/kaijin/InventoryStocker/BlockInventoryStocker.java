@@ -143,7 +143,7 @@ public class BlockInventoryStocker extends Block
 		// If we got here, we're not sneaking, time to get to work opening the GUI
 		// Duplicate part of onNeighborBlockChange to ensure status is up-to-date before GUI opens
 		//TODO Do we really actually need to do this still? What problem did it solve? If it still exists, can we do it differently? 
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		//TileEntity tile = world.getBlockTileEntity(x, y, z);
 		//if (tile instanceof TileEntityInventoryStocker)
 		//{
 			//((TileEntityInventoryStocker)tile).onUpdate();

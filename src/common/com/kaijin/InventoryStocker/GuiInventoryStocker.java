@@ -72,7 +72,7 @@ public class GuiInventoryStocker extends GuiContainer
 		Utils.drawRightAlignedText(fontRenderer, lang.translateKey(Info.KEY_GUI_OUTPUT), xLoc + xSize - 8, yLoc + 17, 4210752);
 
 		//Add snapshot text
-		if (tile.hasSnapshot)
+		if (tile.isSnapshotValid)
 		{
 			//Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_READY), xCenter, yLoc + 30, 0x0000FF, 0x000040);
 			if ((tile.metaInfo & 8) == 8)
@@ -86,8 +86,16 @@ public class GuiInventoryStocker extends GuiContainer
 		}
 		else
 		{
-			final boolean alternate = (tile.metaInfo & 8) == 8 && (((int)tile.worldObj.getWorldTime()) & 32) == 32;
-			final String line = alternate ? lang.translateKey(Info.KEY_GUI_HALTED) : lang.translateKey(Info.KEY_GUI_NOSCAN);
+			final String line;
+			if (tile.hasSnapshot)
+			{
+				final boolean alternate = (tile.metaInfo & 8) == 8 && (((int)tile.worldObj.getWorldTime()) & 32) == 32;
+				line = alternate ? lang.translateKey(Info.KEY_GUI_HALTED) : lang.translateKey(Info.KEY_GUI_INVALID);
+			}
+			else
+			{
+				line = lang.translateKey(Info.KEY_GUI_NOSCAN);
+			}
 			Utils.drawCenteredGlowingText(fontRenderer, line, xCenter, yLoc + 60, 0xFF0000, 0x400000);
 		}
 
@@ -107,7 +115,7 @@ public class GuiInventoryStocker extends GuiContainer
 			break;
 		}
 
-		buttonSnap.displayString = lang.translateKey(tile.hasSnapshot ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
+		buttonSnap.displayString = lang.translateKey(tile.isSnapshotValid ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
 		buttonSnap.drawButton(mc, mouseX, mouseY);
 		buttonMode.displayString = lang.translateKey(Info.KEY_GUI_MODE);
 		buttonMode.drawButton(mc, mouseX, mouseY);

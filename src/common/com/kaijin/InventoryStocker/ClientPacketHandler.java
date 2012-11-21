@@ -86,7 +86,7 @@ public class ClientPacketHandler implements IPacketHandler
 				}
 
 				((TileEntityInventoryStocker)tile).metaInfo = Metainfo;
-				world.markBlockNeedsUpdate(x, y, z);
+				world.markBlockForUpdate(x, y, z);
 				//if (Info.isDebugging) System.out.println("Packet 0 processed by client");
 			}
 		}
