@@ -11,7 +11,7 @@
 	<property name="files.minecraft.dir" value="jars"/>
 	<property name="clean_mcp"           value="clean"/>
     
-	<property name="clean.name"          value="mcp719_f601353_clean.zip"/>
+	<property name="clean.name"          value="mcp723_f640394_clean.zip"/>
 
 	<property name="classes.dir"         value="${build.dir}/classes"/>
 	<property name="jar.dir"             value="${build.dir}/dist"/>
@@ -21,8 +21,8 @@
 
 	<property name="mcpsrc.dir"          value="${mcp.dir}/src/minecraft"/>
 
-	<property name="mcp.version"         value="719"/>
-	<property name="forge.version"       value="6.0.1.353"/>
+	<property name="mcp.version"         value="723"/>
+	<property name="forge.version"       value="6.4.0.394"/>
 	<property name="mymod.version"       value="1.0"/>
 
 	<available property="forge-exists" file="${clean_mcp}/${clean.name}"/>
