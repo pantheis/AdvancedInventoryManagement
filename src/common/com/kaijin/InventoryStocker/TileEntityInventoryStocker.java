@@ -308,7 +308,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			metaInfo ^= oldFlags; // doing this resets bits 4-9 to 0 without having to know what other bits need preservation
 			metaInfo |= doorFlags;
-			worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -1002,7 +1002,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		lightState = false;
 		int lights = this.metaInfo & 8; // Grab current state of lights
 		this.metaInfo ^= lights; // Toggles lights off if they're on (this two step method avoids worrying about retaining an unknown number of other bits)
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	private void lightsOn()
@@ -1010,7 +1010,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		lightState = true;
 		// Turn on das blinkenlights!
 		this.metaInfo |= 8; // Turn lights on
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -1044,7 +1044,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			//{
 				// This allows client-side animation of texture over time, which would not happen without updating the block
 				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
-				//worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+				//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			//}
 			return;
 		}
@@ -1131,7 +1131,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		++dir; // Rotate
 		if (dir > 5) dir = 0; // Start over
 		metaInfo |= dir; // Write orientation back to meta data value
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	// IInventory

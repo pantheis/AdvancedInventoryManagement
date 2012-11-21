@@ -72,7 +72,7 @@ public class ContainerInventoryStocker extends Container
 			if (guiInfo != tileinfo)
 			{
 				// Case 0
-				crafter.updateCraftingInventoryInfo(this, 0, tileinfo & 65535); // packet uses 16 bit short int
+				crafter.sendProgressBarUpdate(this, 0, tileinfo & 65535); // packet uses 16 bit short int
 			}
 		}
 		guiInfo = tileinfo;
