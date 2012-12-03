@@ -28,11 +28,13 @@ public class BlockInventoryStocker extends Block
 		super(i, j, material);
 	}
 
+	@Override
 	public String getTextureFile()
 	{
 		return Info.BLOCK_PNG;
 	}
 
+	@Override
 	public int getBlockTextureFromSide(int i)
 	{
 		switch (i)
@@ -55,6 +57,7 @@ public class BlockInventoryStocker extends Block
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Override
 	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
 	{
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
@@ -88,7 +91,7 @@ public class BlockInventoryStocker extends Block
 		return i;
 	}
 
-	private int determineOrientation(World world, int x, int y, int z, EntityPlayer player)
+	private int determineOrientation(World world, int x, int y, int z, EntityLiving player)
 	{
 		if (player.rotationPitch > 45D)
 		{
@@ -104,9 +107,10 @@ public class BlockInventoryStocker extends Block
 		return dir == 0 ? 3 : (dir == 1 ? 4 : (dir == 2 ? 2 : (dir == 3 ? 5 : 0)));
 	}
 
+	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
 	{
-		int dir = determineOrientation(world, x, y, z, (EntityPlayer)par5EntityLiving);
+		int dir = determineOrientation(world, x, y, z, par5EntityLiving);
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if(tile instanceof TileEntityInventoryStocker)
 		{
@@ -197,6 +201,7 @@ public class BlockInventoryStocker extends Block
 	 * so we can update our textures. We also use it to verify the attached storage inventory hasn't been
 	 * removed or changed.
 	 */
+	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
 		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
@@ -208,11 +213,10 @@ public class BlockInventoryStocker extends Block
 		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
 
-	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
+	@Override
+	public void breakBlock(World world, int x, int y, int z, int id, int meta)
 	{
 		preDestroyBlock(world, x, y, z);
-		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onBlockDestroyedByPlayer");
-		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 
 	public static void dropItem(World world, ItemStack stack, int i, int j, int k)
