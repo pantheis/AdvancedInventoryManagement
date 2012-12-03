@@ -214,11 +214,9 @@ public class BlockInventoryStocker extends Block
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int par1)
+	public void breakBlock(World world, int x, int y, int z, int id, int meta)
 	{
 		preDestroyBlock(world, x, y, z);
-		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onBlockDestroyedByPlayer");
-		super.onBlockDestroyedByPlayer(world, x, y, z, par1);
 	}
 
 	public static void dropItem(World world, ItemStack stack, int i, int j, int k)
