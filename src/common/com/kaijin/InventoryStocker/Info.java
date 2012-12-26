@@ -5,8 +5,8 @@
 
 package com.kaijin.InventoryStocker;
 
+import net.minecraft.block.Block;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import net.minecraft.src.Block;
 
 public class Info
 {
@@ -18,7 +18,7 @@ public class Info
 
 	public static final String MOD_ID = "InventoryStocker";
 	public static final String MOD_NAME = "Inventory Stocker";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[6.0.1.349,)";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[6.5.0.471,)";
 	public static final String PROXY_CLIENT = "com.kaijin.InventoryStocker.ClientProxy";
 	public static final String PROXY_SERVER = "com.kaijin.InventoryStocker.CommonProxy";
 	public static final String PACKET_CHANNEL = MOD_ID;
