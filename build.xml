@@ -3,7 +3,7 @@
 	<!-- Properties -->
 
 	<property name="mod.name"            value="InventoryStocker"/>
-	<property name="mod.dir"             value="InventoryStocker"/>
+	<property name="mod.dir"             value="Inventory Stocker"/>
 	<property name="build.dir"           value="${mod.dir}/build"/>
 	<property name="src.dir"             value="${mod.dir}/src"/>
 	<property name="res.dir"             value="${mod.dir}/resources"/>
