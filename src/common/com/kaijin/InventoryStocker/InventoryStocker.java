@@ -58,7 +58,7 @@ public class InventoryStocker
 	public void load(FMLInitializationEvent event)
 	{
 		Info.blockInventoryStocker = new BlockInventoryStocker(Info.blockIDInventoryStocker, 0, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
-		GameRegistry.registerBlock(Info.blockInventoryStocker);
+		GameRegistry.registerBlock(Info.blockInventoryStocker, "InventoryStocker");
 
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "InventoryStocker");
 		GameRegistry.registerTileEntity(TileEntityInventoryStocker.class, "kaijin.inventoryStocker"); // Better TE reg key

@@ -56,9 +56,9 @@ public class ContainerInventoryStocker extends Container
 	}
 
 	@Override
-	public void updateCraftingResults()
+	public void detectAndSendChanges()
 	{
-		super.updateCraftingResults(); // Make sure to synch inventory updates to the client too!
+		super.detectAndSendChanges(); // Make sure to synch inventory updates to the client too!
 
 		int tileinfo = (tile.hasSnapshot ? 8 : 0) | (tile.isSnapshotValid ? 4 : 0) | (tile.operationMode.ordinal() & 3);
 		for (int crafterIndex = 0; crafterIndex < crafters.size(); ++crafterIndex)
