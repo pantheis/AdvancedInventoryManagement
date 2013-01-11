@@ -5,7 +5,7 @@
 
 package com.kaijin.InventoryStocker;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockInventoryStocker extends Block
+public class BlockInventoryStocker extends BlockContainer
 {
 	public BlockInventoryStocker(int i, int j, Material material)
 	{
@@ -170,7 +170,13 @@ public class BlockInventoryStocker extends Block
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata)
+	public TileEntity createNewTileEntity(World var1)
+	{
+		return null;
+	}
+	
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		//if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.createTileEntity");
 		return new TileEntityInventoryStocker();
