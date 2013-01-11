@@ -68,82 +68,79 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
-		if (!InventoryStocker.proxy.isClient())
+		super.readFromNBT(nbttagcompound);
+
+		// Read extra NBT stuff here
+		targetTileName = nbttagcompound.getString("targetTileName");
+		remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
+		reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
+		reactorWidth = nbttagcompound.getInteger("reactorWidth");
+		if (remoteNumSlots > 0) hasSnapshot = true;
+		isSnapshotValid = false;
+
+		// Light status and direction
+		metaInfo = nbttagcompound.getInteger("Metainfo");
+		operationMode = StockMode.getMode(nbttagcompound.getInteger("OpMode"));
+
+		boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
+
+		if (Info.isDebugging) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
+
+		NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+		NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
+
+		contents = new ItemStack[this.getSizeInventory()];
+		remoteSnapshot = null;
+		if (remoteNumSlots != 0)
 		{
-			super.readFromNBT(nbttagcompound);
+			remoteSnapshot = new ItemStack[remoteNumSlots];
+		}
 
-			// Read extra NBT stuff here
-			targetTileName = nbttagcompound.getString("targetTileName");
-			remoteNumSlots = nbttagcompound.getInteger("remoteSnapshotSize");
-			reactorWorkaround = nbttagcompound.getBoolean("reactorWorkaround");
-			reactorWidth = nbttagcompound.getInteger("reactorWidth");
-			if (remoteNumSlots > 0) hasSnapshot = true;
-			isSnapshotValid = false;
+		// Our inventory
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 255;
 
-			// Light status and direction
-			metaInfo = nbttagcompound.getInteger("Metainfo");
-			operationMode = StockMode.getMode(nbttagcompound.getInteger("OpMode"));
-
-			boolean extendedChestFlag = nbttagcompound.getBoolean("extendedChestFlag");
-
-			if (Info.isDebugging) System.out.println("ReadNBT: "+targetTileName+" remoteInvSize:"+remoteNumSlots);
-
-			NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
-			NBTTagList nbttagremote = nbttagcompound.getTagList("remoteSnapshot");
-
-			contents = new ItemStack[this.getSizeInventory()];
-			remoteSnapshot = null;
-			if (remoteNumSlots != 0)
+			if (j >= 0 && j < contents.length)
 			{
-				remoteSnapshot = new ItemStack[remoteNumSlots];
+				contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
+		}
 
-			// Our inventory
-			for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		// Remote inventory snapshot
+		if (Info.isDebugging) System.out.println("ReadNBT tagRemoteCount: " + nbttagremote.tagCount());
+		if (nbttagremote.tagCount() != 0)
+		{
+			for (int i = 0; i < nbttagremote.tagCount(); ++i)
 			{
-				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-				int j = nbttagcompound1.getByte("Slot") & 255;
+				NBTTagCompound remoteSnapshot1 = (NBTTagCompound)nbttagremote.tagAt(i);
+				int j = remoteSnapshot1.getByte("Slot") & 255;
 
-				if (j >= 0 && j < contents.length)
+				if (j >= 0 && j < remoteSnapshot.length)
 				{
-					contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+					remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
+					if (Info.isDebugging) System.out.println("ReadNBT Remote Slot: " + j + " ItemID: " + remoteSnapshot[j].itemID);
 				}
 			}
+		}
 
-			// Remote inventory snapshot
-			if (Info.isDebugging) System.out.println("ReadNBT tagRemoteCount: " + nbttagremote.tagCount());
-			if (nbttagremote.tagCount() != 0)
+		// Double chest second inventory snapshot
+		if (extendedChestFlag)
+		{
+			extendedChestSnapshot = new ItemStack[remoteNumSlots];
+			NBTTagList nbttagextended = nbttagcompound.getTagList("extendedSnapshot");
+			if (nbttagextended.tagCount() != 0)
 			{
-				for (int i = 0; i < nbttagremote.tagCount(); ++i)
+				for (int i = 0; i < nbttagextended.tagCount(); ++i)
 				{
-					NBTTagCompound remoteSnapshot1 = (NBTTagCompound)nbttagremote.tagAt(i);
-					int j = remoteSnapshot1.getByte("Slot") & 255;
+					NBTTagCompound extSnapshot1 = (NBTTagCompound)nbttagextended.tagAt(i);
+					int j = extSnapshot1.getByte("Slot") & 255;
 
-					if (j >= 0 && j < remoteSnapshot.length)
+					if (j >= 0 && j < extendedChestSnapshot.length)
 					{
-						remoteSnapshot[j] = ItemStack.loadItemStackFromNBT(remoteSnapshot1);
-						if (Info.isDebugging) System.out.println("ReadNBT Remote Slot: " + j + " ItemID: " + remoteSnapshot[j].itemID);
-					}
-				}
-			}
-
-			// Double chest second inventory snapshot
-			if (extendedChestFlag)
-			{
-				extendedChestSnapshot = new ItemStack[remoteNumSlots];
-				NBTTagList nbttagextended = nbttagcompound.getTagList("extendedSnapshot");
-				if (nbttagextended.tagCount() != 0)
-				{
-					for (int i = 0; i < nbttagextended.tagCount(); ++i)
-					{
-						NBTTagCompound extSnapshot1 = (NBTTagCompound)nbttagextended.tagAt(i);
-						int j = extSnapshot1.getByte("Slot") & 255;
-
-						if (j >= 0 && j < extendedChestSnapshot.length)
-						{
-							extendedChestSnapshot[j] = ItemStack.loadItemStackFromNBT(extSnapshot1);
-							if (Info.isDebugging) System.out.println("ReadNBT Extended Slot: " + j + " ItemID: " + extendedChestSnapshot[j].itemID);
-						}
+						extendedChestSnapshot[j] = ItemStack.loadItemStackFromNBT(extSnapshot1);
+						if (Info.isDebugging) System.out.println("ReadNBT Extended Slot: " + j + " ItemID: " + extendedChestSnapshot[j].itemID);
 					}
 				}
 			}
@@ -155,75 +152,72 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
-		if (!InventoryStocker.proxy.isClient())
+		super.writeToNBT(nbttagcompound);
+
+		// Our inventory
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int i = 0; i < contents.length; ++i)
 		{
-			super.writeToNBT(nbttagcompound);
-
-			// Our inventory
-			NBTTagList nbttaglist = new NBTTagList();
-			for (int i = 0; i < contents.length; ++i)
+			if (this.contents[i] != null)
 			{
-				if (this.contents[i] != null)
-				{
-					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-					nbttagcompound1.setByte("Slot", (byte)i);
-					contents[i].writeToNBT(nbttagcompound1);
-					nbttaglist.appendTag(nbttagcompound1);
-				}
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte)i);
+				contents[i].writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
 			}
-			nbttagcompound.setTag("Items", nbttaglist);
-
-			// Remote inventory snapshot
-			NBTTagList nbttagremote = new NBTTagList();
-			if (remoteSnapshot != null)
-			{
-				if (Info.isDebugging) System.out.println("writeNBT Target: " + targetTileName + " remoteInvSize:" + remoteSnapshot.length);
-				for (int i = 0; i < remoteSnapshot.length; i++)
-				{
-					if (remoteSnapshot[i] != null)
-					{
-						if (Info.isDebugging) System.out.println("writeNBT Remote Slot: " + i + " ItemID: " + remoteSnapshot[i].itemID + " StackSize: " + this.remoteSnapshot[i].stackSize + " meta: " + this.remoteSnapshot[i].getItemDamage());
-						NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
-						remoteSnapshot1.setByte("Slot", (byte)i);
-						remoteSnapshot[i].writeToNBT(remoteSnapshot1);
-						nbttagremote.appendTag(remoteSnapshot1);
-					}
-				}
-			}
-			else
-			{
-				// if (InventoryStocker.isDebugging) System.out.println("writeNBT Remote Items is NULL!");
-			}
-			nbttagcompound.setTag("remoteSnapshot", nbttagremote);
-
-			if (extendedChest != null)
-			{
-				// Double chest second inventory snapshot
-				NBTTagList nbttagextended = new NBTTagList();
-				for (int i = 0; i < extendedChestSnapshot.length; i++)
-				{
-					if (extendedChestSnapshot[i] != null)
-					{
-						if (Info.isDebugging) System.out.println("writeNBT Extended Slot: " + i + " ItemID: " + extendedChestSnapshot[i].itemID + " StackSize: " + this.extendedChestSnapshot[i].stackSize + " meta: " + this.extendedChestSnapshot[i].getItemDamage());
-						NBTTagCompound extSnapshot1 = new NBTTagCompound();
-						extSnapshot1.setByte("Slot", (byte)i);
-						extendedChestSnapshot[i].writeToNBT(extSnapshot1);
-						nbttagremote.appendTag(extSnapshot1);
-					}
-				}
-				nbttagcompound.setTag("extendedSnapshot", nbttagextended);
-			}
-
-			nbttagcompound.setString("targetTileName", targetTileName);
-			nbttagcompound.setInteger("remoteSnapshotSize", remoteNumSlots);
-			nbttagcompound.setBoolean("reactorWorkaround", reactorWorkaround);
-			nbttagcompound.setInteger("reactorWidth", reactorWidth);
-			nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
-
-			// Light status and direction
-			nbttagcompound.setInteger("Metainfo", metaInfo);
-			nbttagcompound.setInteger("OpMode", operationMode.ordinal());
 		}
+		nbttagcompound.setTag("Items", nbttaglist);
+
+		// Remote inventory snapshot
+		NBTTagList nbttagremote = new NBTTagList();
+		if (remoteSnapshot != null)
+		{
+			if (Info.isDebugging) System.out.println("writeNBT Target: " + targetTileName + " remoteInvSize:" + remoteSnapshot.length);
+			for (int i = 0; i < remoteSnapshot.length; i++)
+			{
+				if (remoteSnapshot[i] != null)
+				{
+					if (Info.isDebugging) System.out.println("writeNBT Remote Slot: " + i + " ItemID: " + remoteSnapshot[i].itemID + " StackSize: " + this.remoteSnapshot[i].stackSize + " meta: " + this.remoteSnapshot[i].getItemDamage());
+					NBTTagCompound remoteSnapshot1 = new NBTTagCompound();
+					remoteSnapshot1.setByte("Slot", (byte)i);
+					remoteSnapshot[i].writeToNBT(remoteSnapshot1);
+					nbttagremote.appendTag(remoteSnapshot1);
+				}
+			}
+		}
+		else
+		{
+			// if (InventoryStocker.isDebugging) System.out.println("writeNBT Remote Items is NULL!");
+		}
+		nbttagcompound.setTag("remoteSnapshot", nbttagremote);
+
+		if (extendedChest != null)
+		{
+			// Double chest second inventory snapshot
+			NBTTagList nbttagextended = new NBTTagList();
+			for (int i = 0; i < extendedChestSnapshot.length; i++)
+			{
+				if (extendedChestSnapshot[i] != null)
+				{
+					if (Info.isDebugging) System.out.println("writeNBT Extended Slot: " + i + " ItemID: " + extendedChestSnapshot[i].itemID + " StackSize: " + this.extendedChestSnapshot[i].stackSize + " meta: " + this.extendedChestSnapshot[i].getItemDamage());
+					NBTTagCompound extSnapshot1 = new NBTTagCompound();
+					extSnapshot1.setByte("Slot", (byte)i);
+					extendedChestSnapshot[i].writeToNBT(extSnapshot1);
+					nbttagremote.appendTag(extSnapshot1);
+				}
+			}
+			nbttagcompound.setTag("extendedSnapshot", nbttagextended);
+		}
+
+		nbttagcompound.setString("targetTileName", targetTileName);
+		nbttagcompound.setInteger("remoteSnapshotSize", remoteNumSlots);
+		nbttagcompound.setBoolean("reactorWorkaround", reactorWorkaround);
+		nbttagcompound.setInteger("reactorWidth", reactorWidth);
+		nbttagcompound.setBoolean("extendedChestFlag", extendedChest != null);
+
+		// Light status and direction
+		nbttagcompound.setInteger("Metainfo", metaInfo);
+		nbttagcompound.setInteger("OpMode", operationMode.ordinal());
 	}
 
 	/**
@@ -510,7 +504,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		if (Info.isDebugging) System.out.println("Shapshot taken of targetTileName: " + targetTileName);
 		return true;
 	}
-/*
+	/*
 	public boolean inputGridIsEmpty()
 	{
 		for (int i=0; i<9; i++)
@@ -522,7 +516,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		return true;
 	}
-*/
+	 */
 	protected void stockInventory()
 	{
 		// Verify target is in a loaded chunk before beginning
@@ -771,7 +765,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		}
 		return false;
 	}
-/*
+	/*
 	private void debugSnapshotDataClient()
 	{
 		if (InventoryStocker.proxy.isClient())
@@ -799,7 +793,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			System.out.println("Server detected TileName=" + tempName + " expected TileName=" + targetTileName);
 		}
 	}
-*/
+	 */
 	/**
 	 * Will check if our snapshot should be invalidated.
 	 * Returns true if snapshot is invalid, false otherwise.
@@ -960,7 +954,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			return temp;
 		}
-		
+
 		return null;
 	}
 
@@ -1032,9 +1026,9 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		{
 			//if (isPowered)
 			//{
-				// This allows client-side animation of texture over time, which would not happen without updating the block
-				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
-				//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			// This allows client-side animation of texture over time, which would not happen without updating the block
+			//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
+			//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			//}
 			return;
 		}
