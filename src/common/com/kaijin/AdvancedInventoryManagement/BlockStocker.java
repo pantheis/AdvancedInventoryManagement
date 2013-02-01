@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvancedInventoryManagement;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -20,9 +20,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockInventoryStocker extends BlockContainer
+public class BlockStocker extends BlockContainer
 {
-	public BlockInventoryStocker(int i, int j, Material material)
+	public BlockStocker(int i, int j, Material material)
 	{
 		super(i, j, material);
 	}
@@ -60,9 +60,9 @@ public class BlockInventoryStocker extends BlockContainer
 	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
 	{
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-		if (tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityStocker)
 		{
-			int m = ((TileEntityInventoryStocker)tile).metaInfo;
+			int m = ((TileEntityStocker)tile).metaInfo;
 			int dir = m & 7;
 			int side = Utils.lookupRotatedSide(i, dir);
 			int powered = (m & 8) >> 3;
@@ -111,16 +111,16 @@ public class BlockInventoryStocker extends BlockContainer
 	{
 		int dir = determineOrientation(world, x, y, z, par5EntityLiving);
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if(tile instanceof TileEntityInventoryStocker)
+		if(tile instanceof TileEntityStocker)
 		{
-			((TileEntityInventoryStocker)tile).metaInfo = dir;
+			((TileEntityStocker)tile).metaInfo = dir;
 		}
 	}
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		if (InventoryStocker.proxy.isClient())
+		if (AdvancedInventoryManagement.proxy.isClient())
 		{
 			return !entityplayer.isSneaking();
 		}
@@ -132,9 +132,9 @@ public class BlockInventoryStocker extends BlockContainer
 			if (entityplayer.getCurrentEquippedItem() == null)
 			{
 				TileEntity tile = world.getBlockTileEntity(x, y, z);
-				if (tile instanceof TileEntityInventoryStocker)
+				if (tile instanceof TileEntityStocker)
 				{
-					((TileEntityInventoryStocker)tile).rotateBlock();
+					((TileEntityStocker)tile).rotateBlock();
 				}
 			}
 
@@ -165,7 +165,7 @@ public class BlockInventoryStocker extends BlockContainer
 			}
 		}*/
 
-		entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
+		entityplayer.openGui(AdvancedInventoryManagement.instance, 1, world, x, y, z);
 		return true;
 	}
 
@@ -179,7 +179,7 @@ public class BlockInventoryStocker extends BlockContainer
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		//if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.createTileEntity");
-		return new TileEntityInventoryStocker();
+		return new TileEntityStocker();
 	}
 
 	@Override
@@ -211,9 +211,9 @@ public class BlockInventoryStocker extends BlockContainer
 	{
 		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if (tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityStocker)
 		{
-			((TileEntityInventoryStocker)tile).onBlockUpdate();
+			((TileEntityStocker)tile).onBlockUpdate();
 		}
 		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
@@ -251,7 +251,7 @@ public class BlockInventoryStocker extends BlockContainer
 
 	public static void preDestroyBlock(World world, int i, int j, int k)
 	{
-		if (InventoryStocker.proxy.isClient()) return;
+		if (AdvancedInventoryManagement.proxy.isClient()) return;
 
 		TileEntity tile = world.getBlockTileEntity(i, j, k);
 		if (tile instanceof IInventory)

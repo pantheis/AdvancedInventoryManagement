@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvancedInventoryManagement;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -23,7 +23,7 @@ import net.minecraftforge.common.ISidedInventory;
 import buildcraft.api.transport.IPipeConnection;
 import cpw.mods.fml.common.FMLLog;
 
-public class TileEntityInventoryStocker extends TileEntity implements IInventory, ISidedInventory
+public class TileEntityStocker extends TileEntity implements IInventory, ISidedInventory
 {
 	private ItemStack[] contents = new ItemStack[this.getSizeInventory()];
 	private ItemStack remoteSnapshot[];
@@ -58,7 +58,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	//TODO Record relative offset from stocker to reactor core when reactor workaround in use, for testing if chunk is loaded
 	private Coords reactorOffset = new Coords(0, 0, 0);
 
-	public TileEntityInventoryStocker()
+	public TileEntityStocker()
 	{
 		super();
 	}
@@ -227,7 +227,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void onLoad()
 	{
-		if (!InventoryStocker.proxy.isClient())
+		if (!AdvancedInventoryManagement.proxy.isClient())
 		{
 			tileLoaded = true;
 			if (Info.isDebugging) System.out.println("onLoad, remote inv size = " + remoteNumSlots);
@@ -264,7 +264,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 	 */
 	public void onBlockUpdate()
 	{
-		if (!InventoryStocker.proxy.isClient())
+		if (!AdvancedInventoryManagement.proxy.isClient())
 		{
 			if (hasSnapshot)
 			{
@@ -1022,7 +1022,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 		// This code is probably not needed, but maintaining it here just in case
 		// The above comment is probably no longer needed, but was left here despite the referenced code apparently being MIA
 
-		if (InventoryStocker.proxy.isClient())
+		if (AdvancedInventoryManagement.proxy.isClient())
 		{
 			//if (isPowered)
 			//{
@@ -1319,7 +1319,7 @@ public class TileEntityInventoryStocker extends TileEntity implements IInventory
 			FMLLog.getLogger().info("[" + Info.MOD_NAME + "] Client failed to create button command packet. (Details: " + e.toString() + ")");
 		}
 
-		InventoryStocker.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
+		AdvancedInventoryManagement.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
 	}
 
 	// End networking section

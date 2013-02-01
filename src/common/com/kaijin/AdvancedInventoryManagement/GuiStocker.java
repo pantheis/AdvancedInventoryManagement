@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvancedInventoryManagement;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -16,9 +16,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiInventoryStocker extends GuiContainer
+public class GuiStocker extends GuiContainer
 {
-	protected TileEntityInventoryStocker tile;
+	protected TileEntityStocker tile;
 	protected CButton buttonSnap;
 	protected CButton buttonMode;
 	protected int xLoc;
@@ -27,9 +27,9 @@ public class GuiInventoryStocker extends GuiContainer
 
 	protected static StringTranslate lang = StringTranslate.getInstance();
 
-	public GuiInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker tileentityinventorystocker)
+	public GuiStocker(InventoryPlayer playerinventory, TileEntityStocker tileentityinventorystocker)
 	{
-		super(new ContainerInventoryStocker(playerinventory, tileentityinventorystocker));
+		super(new ContainerStocker(playerinventory, tileentityinventorystocker));
 		tile = tileentityinventorystocker;
 		xSize = 176;
 		ySize = 168;

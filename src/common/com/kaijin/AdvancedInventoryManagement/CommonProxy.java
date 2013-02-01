@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvancedInventoryManagement;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,12 +51,12 @@ public class CommonProxy implements IGuiHandler
 
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-		if (!(tile instanceof TileEntityInventoryStocker))
+		if (!(tile instanceof TileEntityStocker))
 		{
 			return null;
 		}
 
-		return new ContainerInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
+		return new ContainerStocker(player.inventory, (TileEntityStocker)tile);
 	}
 
 	@Override
@@ -70,10 +70,10 @@ public class CommonProxy implements IGuiHandler
 
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-		if (!(tile instanceof TileEntityInventoryStocker))
+		if (!(tile instanceof TileEntityStocker))
 		{
 			return null;
 		}
-		return new GuiInventoryStocker(player.inventory, (TileEntityInventoryStocker)tile);
+		return new GuiStocker(player.inventory, (TileEntityStocker)tile);
 	}
 }

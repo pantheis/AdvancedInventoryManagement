@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvancedInventoryManagement;
 
 import net.minecraft.block.Block;
 import cpw.mods.fml.common.registry.LanguageRegistry;

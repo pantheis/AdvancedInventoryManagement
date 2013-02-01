@@ -2,25 +2,17 @@
  * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
-package com.kaijin.InventoryStocker;
 
-public class Coords
+package com.kaijin.AdvancedInventoryManagement;
+
+import net.minecraftforge.client.MinecraftForgeClient;
+
+public class ClientProxy extends CommonProxy
 {
-	public int x;
-	public int y;
-	public int z;
-	
-	public Coords(int x, int y, int z)
+	@Override
+	public void load()
 	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-	
-	public void set(int x, int y, int z)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		MinecraftForgeClient.preloadTexture(Info.BLOCK_PNG);
+		MinecraftForgeClient.preloadTexture(Info.GUI_PNG);
 	}
 }
