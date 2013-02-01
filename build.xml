@@ -1,9 +1,9 @@
-<project name="Inventory Stocker" basedir="../" default="main">
+<project name="AdvancedInventoryManagement" basedir="../" default="main">
 	<property environment="env" />
 	<!-- Properties -->
 
-	<property name="mod.name"            value="InventoryStocker"/>
-	<property name="mod.dir"             value="Inventory Stocker"/>
+	<property name="mod.name"            value="AdvancedInventoryManagement"/>
+	<property name="mod.dir"             value="AdvancedInventoryManagement"/>
 	<property name="build.dir"           value="${mod.dir}/build"/>
 	<property name="src.dir"             value="${mod.dir}/src"/>
 	<property name="res.dir"             value="${mod.dir}/resources"/>
