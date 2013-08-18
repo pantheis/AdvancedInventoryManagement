@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

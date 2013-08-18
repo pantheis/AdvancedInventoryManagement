@@ -1,9 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2012 Yancarlo Ramsey and CJ Bowman
+ * Copyright (c) 2012-2013 Yancarlo Ramsey and CJ Bowman
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
-
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -76,9 +75,8 @@ public class CButton extends GuiButton
 
 			if (texture != null)
 			{
-				int textureID = mc.renderEngine.getTexture(texture);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				mc.renderEngine.bindTexture(textureID);
+				mc.renderEngine.bindTexture(texture);
 			}
 
 			isHovering = xLoc >= xPosition && yLoc >= yPosition && xLoc < xPosition + width && yLoc < yPosition + height;
@@ -95,14 +93,16 @@ public class CButton extends GuiButton
 
 			int defaultColor = color;
 			int renderColor = defaultColor;
+			
 			if (!enabled)
 			{
-				renderColor = -6250336;
+			    renderColor = -6250336;
 			}
 			else if (isHovering)
 			{
-				renderColor = hoverColor;
+			    renderColor = hoverColor;
 			}
+
 			fr.drawString(displayString, xPosition + (width - fr.getStringWidth(displayString)) / 2, yPosition + (height - 7) / 2, renderColor);
 		}
     }

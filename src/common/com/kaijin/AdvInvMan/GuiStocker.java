@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -61,9 +61,8 @@ public class GuiStocker extends GuiContainer
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
 	{
-		final int GuiTex = mc.renderEngine.getTexture(Info.GUI_PNG);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(GuiTex);
+		mc.renderEngine.bindTexture(Info.GUI_PNG);
 
 		this.drawTexturedModalRect(xLoc, yLoc, 0, 0, xSize, ySize);
 

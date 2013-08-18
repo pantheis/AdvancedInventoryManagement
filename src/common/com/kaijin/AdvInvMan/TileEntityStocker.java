@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -1320,6 +1320,18 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 		}
 
 		AdvancedInventoryManagement.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
+	}
+
+	@Override
+	public boolean isInvNameLocalized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isStackValidForSlot(int i, ItemStack itemstack) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	// End networking section

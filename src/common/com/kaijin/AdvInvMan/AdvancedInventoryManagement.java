@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -44,7 +44,7 @@ public class AdvancedInventoryManagement
 			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
 			configuration.load();
 			Info.blockIDInventoryStocker = configuration.getBlock("InventoryStocker", 2490).getInt();
-			Info.isDebugging = Boolean.parseBoolean((configuration.get(configuration.CATEGORY_GENERAL, "debug", false).value));
+			Info.isDebugging = (configuration.get(configuration.CATEGORY_GENERAL, "debug", Info.isDebugging).getBoolean(Info.isDebugging));
 			configuration.save();
 		}
 		catch (Exception var1)
@@ -57,7 +57,7 @@ public class AdvancedInventoryManagement
 	@Init
 	public void load(FMLInitializationEvent event)
 	{
-		Info.blockInventoryStocker = new BlockStocker(Info.blockIDInventoryStocker, 0, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setBlockName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
+		Info.blockInventoryStocker = new BlockStocker(Info.blockIDInventoryStocker, Material.ground).setHardness(0.75F).setResistance(5F).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("kaijin.invStocker").setCreativeTab(CreativeTabs.tabDecorations);
 		GameRegistry.registerBlock(Info.blockInventoryStocker, "InventoryStocker");
 
 		GameRegistry.registerTileEntity(TileEntityStocker.class, "InventoryStocker");

@@ -1,4 +1,4 @@
-package com.kaijin.AdvancedInventoryManagement;
+package com.kaijin.AdvInvMan;
 
 public enum StockMode
 {
