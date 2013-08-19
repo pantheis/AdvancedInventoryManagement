@@ -22,9 +22,12 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-
 public class BlockStocker extends BlockContainer
 {
+	protected Icon iconFront[];
+	protected Icon iconBack[][];
+	protected Icon iconSide[][];
+
 	public BlockStocker(int i, Material material)
 	{
 		super(i, material);
@@ -33,87 +36,85 @@ public class BlockStocker extends BlockContainer
 	@Override
 	public void registerIcons(IconRegister iconRegister)
 	{
-		//TODO register proper side/top/bottom textures
+		//TODO - Convert side/top/bottom texture files to new format
+		iconFront = new Icon[3];
+		iconBack = new Icon[2][2];
+		iconSide = new Icon[2][2];
+
+		iconFront[0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-Off");
+		iconFront[1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-On");
+		iconFront[2] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-Covered");
+		iconBack[0][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Shut-Off");
+		iconBack[0][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Open-Off");
+		iconBack[1][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Shut-On");
+		iconBack[1][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Open-On");
+		iconSide[0][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Shut-Off");
+		iconSide[0][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Open-Off");
+		iconSide[1][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Shut-On");
+		iconSide[1][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Open-On");
 	}
 
 	//Textures in the world
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextures(IBlockAccess blocks, int x, int y, int z, int side)
 	{
+		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
+		if (tile instanceof TileEntityStocker)
+		{
+			int m = ((TileEntityStocker)tile).metaInfo;
+			int dir = m & 7;
+			int face = Utils.lookupRotatedSide(side, dir);
+			int powered = (m & 8) >> 3;
+
+			//if (InventoryStocker.isDebugging) System.out.println("getBlockTexture - m = " + m);
+
+			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
+			if (face == 0) // Front
+			{
+				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
+				//int time = (int)tile.worldObj.getWorldTime();
+				//return 2 + powered * (((time >> 2) & 3) + 1);
+				return iconFront[powered];
+			}
+
+			int open = (1 & (m >> (side + 3))); // Bit i + 4 shifted to the 1's place and isolated
+
+			if (face == 1) // Back
+			{
+				return  iconBack[powered][open];
+			}
+
+			return iconSide[powered][open];
+		}
 		return blockIcon;
 		//TODO return proper block textures  
 	}
-	
+
 	//Textures in your inventory
 	@Override
 	public Icon getIcon(int side, int meta)
 	{
-		return blockIcon;
-		//TODO textures in inventory
+		switch (side)
+		{
+		case 0: // Bottom
+			return iconBack[0][0];
+		case 1: // Top
+			return iconFront[2];
+		// case 2: // North
+		// case 3: // South
+		// case 4: // West
+		// case 5: // East
+		default:
+			return iconSide[0][0];
+		}
 	}
-	
+
 //	@Override
 //	public String getTextureFile()
 //	{
 //		return Info.BLOCK_PNG;
 //	}
 //
-//	@Override
-//	public int getBlockTextureFromSide(int i)
-//	{
-//		switch (i)
-//		{
-//		case 0: // Bottom
-//			return 16;
-//
-//		case 1: // Top
-//			return 0;
-//
-//		case 2: // North
-//			return 16;
-//
-//		case 3: // South
-//			return 16;
-//
-//		default: // 4-5 West-East
-//			return 16;
-//		}
-//	}
-
-//	@SideOnly(Side.CLIENT)
-//	@Override
-//	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
-//	{
-//		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-//		if (tile instanceof TileEntityStocker)
-//		{
-//			int m = ((TileEntityStocker)tile).metaInfo;
-//			int dir = m & 7;
-//			int side = Utils.lookupRotatedSide(i, dir);
-//			int powered = (m & 8) >> 3;
-//
-//			//if (InventoryStocker.isDebugging) System.out.println("getBlockTexture - m = " + m);
-//
-//			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-//			if (side == 0) // Front
-//			{
-//				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
-//				//int time = (int)tile.worldObj.getWorldTime();
-//				//return 2 + powered * (((time >> 2) & 3) + 1);
-//				return 1 + powered;
-//			}
-//
-//			int open = (2 & (m >> (i + 3))); // Bit i + 4 shifted to the 2's place and isolated
-//
-//			if (side == 1) // Back
-//			{
-//				return 32 + powered + open;
-//			}
-//
-//			return 16 + powered + open; // Top, Bottom, Left, Right
-//		}
-//		return i;
-//	}
 
 	private int determineOrientation(World world, int x, int y, int z, EntityLiving player)
 	{
@@ -141,7 +142,7 @@ public class BlockStocker extends BlockContainer
 			((TileEntityStocker)tile).metaInfo = dir;
 		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
@@ -199,7 +200,7 @@ public class BlockStocker extends BlockContainer
 	{
 		return null;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
