@@ -36,7 +36,6 @@ public class BlockStocker extends BlockContainer
 	@Override
 	public void registerIcons(IconRegister iconRegister)
 	{
-		//TODO - Convert side/top/bottom texture files to new format
 		iconFront = new Icon[3];
 		iconBack = new Icon[2][2];
 		iconSide = new Icon[2][2];
@@ -77,7 +76,7 @@ public class BlockStocker extends BlockContainer
 				return iconFront[powered];
 			}
 
-			int open = (1 & (m >> (side + 3))); // Bit i + 4 shifted to the 1's place and isolated
+			int open = (1 & (m >> (side + 4))); // Bit i + 4 shifted to the 1's place and isolated
 
 			if (face == 1) // Back
 			{
@@ -87,7 +86,6 @@ public class BlockStocker extends BlockContainer
 			return iconSide[powered][open];
 		}
 		return blockIcon;
-		//TODO return proper block textures  
 	}
 
 	//Textures in your inventory

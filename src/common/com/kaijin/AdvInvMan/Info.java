@@ -13,8 +13,7 @@ public class Info
 	public static final String VERSION = "@VERSION@";
 	public static final String BUILD_NUMBER = "@BUILD_NUMBER@";
 
-	public static final String BLOCK_PNG = "/com/kaijin/InventoryStocker/textures/blockInventoryStocker.png";
-	public static final String GUI_PNG = "/com/kaijin/InventoryStocker/textures/guiInventoryStocker.png";
+	public static final String GUI_PNG = "/com/kaijin/AdvancedInventoryManagement/textures/guiInventoryStocker.png";
 
 	public static final String MOD_ID = "InventoryStocker";
 	public static final String MOD_NAME = "Inventory Stocker";
