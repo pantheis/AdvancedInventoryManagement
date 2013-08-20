@@ -15,12 +15,12 @@ public class Info
 
 	public static final String GUI_PNG = "/com/kaijin/AdvancedInventoryManagement/textures/guiInventoryStocker.png";
 
-	public static final String MOD_ID = "InventoryStocker";
-	public static final String MOD_NAME = "Inventory Stocker";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[6.5.0.471,)";
+	public static final String MOD_ID = "AdvancedInventoryManagement";
+	public static final String MOD_NAME = "Advanced Inventory Management";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[7.8.1.738,)";
 	public static final String PROXY_CLIENT = "com.kaijin.AdvInvMan.ClientProxy";
 	public static final String PROXY_SERVER = "com.kaijin.AdvInvMan.CommonProxy";
-	public static final String PACKET_CHANNEL = MOD_ID;
+	public static final String PACKET_CHANNEL = "kaijinAdvInvMan";
 
 	public static final String KEY_GUI_INPUT = "kaijin.invStocker.guiStrings.input";
 	public static final String KEY_GUI_OUTPUT = "kaijin.invStocker.guiStrings.output";

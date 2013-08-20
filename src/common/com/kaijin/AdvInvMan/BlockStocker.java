@@ -40,17 +40,17 @@ public class BlockStocker extends BlockContainer
 		iconBack = new Icon[2][2];
 		iconSide = new Icon[2][2];
 
-		iconFront[0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-Off");
-		iconFront[1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-On");
-		iconFront[2] = iconRegister.registerIcon(Info.MOD_ID + ":StockerFront-Covered");
-		iconBack[0][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Shut-Off");
-		iconBack[0][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Open-Off");
-		iconBack[1][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Shut-On");
-		iconBack[1][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerBack-Open-On");
-		iconSide[0][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Shut-Off");
-		iconSide[0][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Open-Off");
-		iconSide[1][0] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Shut-On");
-		iconSide[1][1] = iconRegister.registerIcon(Info.MOD_ID + ":StockerSide-Open-On");
+		iconFront[0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-Off");
+		iconFront[1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-On");
+		iconFront[2] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-Covered");
+		iconBack[0][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Shut-Off");
+		iconBack[0][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Open-Off");
+		iconBack[1][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Shut-On");
+		iconBack[1][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Open-On");
+		iconSide[0][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Shut-Off");
+		iconSide[0][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Open-Off");
+		iconSide[1][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Shut-On");
+		iconSide[1][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Open-On");
 	}
 
 	//Textures in the world
