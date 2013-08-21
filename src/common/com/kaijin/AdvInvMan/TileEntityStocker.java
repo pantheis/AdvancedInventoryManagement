@@ -286,6 +286,7 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 		{
 			doorFlags |= findTubeOrPipeAt(xCoord, yCoord, zCoord, ForgeDirection.getOrientation(i))  ? 16 << i : 0; // 16 is bit 4
 		}
+		//System.out.println("meta: " + metaInfo);
 
 		final int oldFlags = metaInfo & 1008;  // 1008 = bits 4 through 9 (zero based)
 		if (doorFlags != oldFlags)

@@ -55,8 +55,10 @@ public class BlockStocker extends BlockContainer
 
 	//Textures in the world
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTextures(IBlockAccess blocks, int x, int y, int z, int side)
+	@Override
+	public Icon getBlockTexture(IBlockAccess blocks, int x, int y, int z, int side)
 	{
+		//System.out.println("getBlockTextures: x = " + x + ", y = " + y + ", z = " + z + ", side = " + side);
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
 		if (tile instanceof TileEntityStocker)
 		{
@@ -65,7 +67,7 @@ public class BlockStocker extends BlockContainer
 			int face = Utils.lookupRotatedSide(side, dir);
 			int powered = (m & 8) >> 3;
 
-			//if (InventoryStocker.isDebugging) System.out.println("getBlockTexture - m = " + m);
+			//System.out.println("getBlockTextures: m = " + m + ", dir = " + dir + ", face = " + face + ", powered = " + powered);
 
 			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
 			if (face == 0) // Front

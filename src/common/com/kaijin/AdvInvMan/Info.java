@@ -17,7 +17,7 @@ public class Info
 
 	public static final String MOD_ID = "AdvancedInventoryManagement";
 	public static final String MOD_NAME = "Advanced Inventory Management";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[7.8.1.738,)";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[7.8.0.696,)";
 	public static final String PROXY_CLIENT = "com.kaijin.AdvInvMan.ClientProxy";
 	public static final String PROXY_SERVER = "com.kaijin.AdvInvMan.CommonProxy";
 	public static final String PACKET_CHANNEL = "kaijinAdvInvMan";
