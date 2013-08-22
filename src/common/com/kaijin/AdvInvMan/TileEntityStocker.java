@@ -12,6 +12,7 @@ import java.io.IOException;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,7 +20,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
+//import net.minecraftforge.common.ISidedInventory;
 import buildcraft.api.transport.IPipeConnection;
 import cpw.mods.fml.common.FMLLog;
 
@@ -46,6 +47,9 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 	private TileEntityChest extendedChest = null;
 	private int remoteNumSlots = 0;
 	private String targetTileName = "none";
+
+	private final int[] inputSides = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+	private final int[] outputSides = {9, 10, 11, 12, 13, 14, 15, 16, 17};
 
 	private final String classnameIC2ReactorCore = "TileEntityNuclearReactor";
 	private final String classnameIC2ReactorChamber = "TileEntityReactorChamber";
@@ -1197,6 +1201,12 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 	}
 
 	@Override
+	public boolean isInvNameLocalized()
+	{
+		return true;
+	}
+
+	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
@@ -1219,9 +1229,40 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 	@Override
 	public void closeChest() {}
 
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return true;
+	}
+
 	// ISidedInventory
 
 	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	{
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
+	{
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		int face = getRotatedSideFromMetadata(side);
+		if (face == 1)
+		{
+			return outputSides;    // access output section, 9-17
+		}
+		return inputSides; // access input section, 0-8
+	}
+
+/*	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		// Sides (0-5) are: Front, Back, Top, Bottom, Right, Left
@@ -1246,6 +1287,7 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 		}
 		return 9;
 	}
+*/
 
 	// Start networking section
 
@@ -1321,18 +1363,6 @@ public class TileEntityStocker extends TileEntity implements IInventory, ISidedI
 		}
 
 		AdvancedInventoryManagement.proxy.sendPacketToServer(new Packet250CustomPayload(Info.PACKET_CHANNEL, bytes.toByteArray()));
-	}
-
-	@Override
-	public boolean isInvNameLocalized() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack) {
-		// TODO Auto-generated method stub
-		return true;
 	}
 
 	// End networking section

@@ -9,6 +9,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -116,7 +117,7 @@ public class BlockStocker extends BlockContainer
 //	}
 //
 
-	private int determineOrientation(World world, int x, int y, int z, EntityLiving player)
+	private int determineOrientation(World world, int x, int y, int z, EntityLivingBase player)
 	{
 		if (player.rotationPitch > 45D)
 		{
@@ -133,9 +134,9 @@ public class BlockStocker extends BlockContainer
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving EntityLiving, ItemStack itemstack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
 	{
-		int dir = determineOrientation(world, x, y, z, EntityLiving);
+		int dir = determineOrientation(world, x, y, z, entity);
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if(tile instanceof TileEntityStocker)
 		{

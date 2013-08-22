@@ -8,7 +8,9 @@ package com.kaijin.AdvInvMan;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.StringTranslate;
+import net.minecraft.util.ResourceLocation;
+//import net.minecraft.util.StringTranslate;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,7 +27,7 @@ public class GuiStocker extends GuiContainer
 	protected int yLoc;
 	protected int xCenter;
 
-	protected static StringTranslate lang = StringTranslate.getInstance();
+	//protected static StringTranslate lang = StringTranslate.getInstance();
 
 	public GuiStocker(InventoryPlayer playerinventory, TileEntityStocker tileentityinventorystocker)
 	{
@@ -62,25 +64,25 @@ public class GuiStocker extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(Info.GUI_PNG);
+		mc.renderEngine.func_110577_a(new ResourceLocation(Info.MOD_ID.toLowerCase(), Info.GUI_PNG));
 
 		this.drawTexturedModalRect(xLoc, yLoc, 0, 0, xSize, ySize);
 
-		Utils.drawCenteredText(fontRenderer, lang.translateKey(tile.getInvName()), xCenter, yLoc + 6, 4210752);
-		fontRenderer.drawString(lang.translateKey(Info.KEY_GUI_INPUT), xLoc + 8, yLoc + 17, 4210752);
-		Utils.drawRightAlignedText(fontRenderer, lang.translateKey(Info.KEY_GUI_OUTPUT), xLoc + xSize - 8, yLoc + 17, 4210752);
+		Utils.drawCenteredText(fontRenderer, StatCollector.translateToLocal(tile.getInvName()), xCenter, yLoc + 6, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal(Info.KEY_GUI_INPUT), xLoc + 8, yLoc + 17, 4210752);
+		Utils.drawRightAlignedText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_OUTPUT), xLoc + xSize - 8, yLoc + 17, 4210752);
 
 		//Add snapshot text
 		if (tile.isSnapshotValid)
 		{
-			//Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_READY), xCenter, yLoc + 30, 0x0000FF, 0x000040);
+			//Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_READY), xCenter, yLoc + 30, 0x0000FF, 0x000040);
 			if ((tile.metaInfo & 8) == 8)
 			{
-				Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_WORKING), xCenter, yLoc + 60, 0x40FF40, 0x082008);
+				Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_WORKING), xCenter, yLoc + 60, 0x40FF40, 0x082008);
 			}
 			else
 			{
-				Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_READY), xCenter, yLoc + 60, 0x40FF40, 0x082008);
+				Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_READY), xCenter, yLoc + 60, 0x40FF40, 0x082008);
 			}
 		}
 		else
@@ -89,11 +91,11 @@ public class GuiStocker extends GuiContainer
 			if (tile.hasSnapshot)
 			{
 				final boolean alternate = (tile.metaInfo & 8) == 8 && (((int)tile.worldObj.getWorldTime()) & 32) == 32;
-				line = alternate ? lang.translateKey(Info.KEY_GUI_HALTED) : lang.translateKey(Info.KEY_GUI_INVALID);
+				line = alternate ? StatCollector.translateToLocal(Info.KEY_GUI_HALTED) : StatCollector.translateToLocal(Info.KEY_GUI_INVALID);
 			}
 			else
 			{
-				line = lang.translateKey(Info.KEY_GUI_NOSCAN);
+				line = StatCollector.translateToLocal(Info.KEY_GUI_NOSCAN);
 			}
 			Utils.drawCenteredGlowingText(fontRenderer, line, xCenter, yLoc + 60, 0xFF0000, 0x400000);
 		}
@@ -101,22 +103,22 @@ public class GuiStocker extends GuiContainer
 		switch (tile.operationMode)
 		{
 		case NORMAL:
-			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_NORMAL), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
+			Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_NORMAL), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
 		case REPLACE:
-			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_REPLACE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
+			Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_REPLACE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
 		case INSERT:
-			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_INSERT), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
+			Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_INSERT), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
 		case REMOVE:
-			Utils.drawCenteredGlowingText(fontRenderer, lang.translateKey(Info.KEY_GUI_REMOVE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
+			Utils.drawCenteredGlowingText(fontRenderer, StatCollector.translateToLocal(Info.KEY_GUI_REMOVE), xCenter, yLoc + 70, 0x40FFFF, 0x082020);
 			break;
 		}
 
-		buttonSnap.displayString = lang.translateKey(tile.isSnapshotValid ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
+		buttonSnap.displayString = StatCollector.translateToLocal(tile.isSnapshotValid ? Info.KEY_GUI_CLEAR : Info.KEY_GUI_SCAN);
 		buttonSnap.drawButton(mc, mouseX, mouseY);
-		buttonMode.displayString = lang.translateKey(Info.KEY_GUI_MODE);
+		buttonMode.displayString = StatCollector.translateToLocal(Info.KEY_GUI_MODE);
 		buttonMode.drawButton(mc, mouseX, mouseY);
 	}
 
