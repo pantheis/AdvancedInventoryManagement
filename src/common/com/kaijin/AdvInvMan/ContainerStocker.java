@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,12 +14,12 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ContainerInventoryStocker extends Container
+public class ContainerStocker extends Container
 {
-	private TileEntityInventoryStocker tile;
+	private TileEntityStocker tile;
 	private int guiInfo = -1;
 
-	public ContainerInventoryStocker(InventoryPlayer playerinventory, TileEntityInventoryStocker stocker)
+	public ContainerStocker(InventoryPlayer playerinventory, TileEntityStocker stocker)
 	{
 		tile = stocker;
 		int xCol;
