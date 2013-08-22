@@ -3,7 +3,7 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;

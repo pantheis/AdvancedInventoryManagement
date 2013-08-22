@@ -3,23 +3,20 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvInvMan;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class ClientPacketHandler implements IPacketHandler
+public class ServerPacketHandler implements IPacketHandler
 {
 	/*
 	 * Packet format:
@@ -28,9 +25,9 @@ public class ClientPacketHandler implements IPacketHandler
 	 *   int 2: y location of TileEntity
 	 *   int 3: z location of TileEntity
 	 * Currently available packet types
-	 * Server:
-	 *   0=
-	 *      int 4: "metadata", sync client TE rotation and lights with server
+	 * Client:
+	 *   0= button click
+	 *      int 4: button ID (0 = snapshot, 1 = mode)
 	 */
 
 	@Override
@@ -50,17 +47,18 @@ public class ClientPacketHandler implements IPacketHandler
 			return;
 		}
 
-		int x = 0;
-		int y = 0;
-		int z = 0;
 		World world;
 		TileEntity tile;
+		int x;
+		int y;
+		int z;
+
 		try
 		{
 			x = stream.readInt();
 			y = stream.readInt();
 			z = stream.readInt();
-			world = FMLClientHandler.instance().getClient().theWorld;
+			world = ((EntityPlayerMP)player).worldObj;
 			tile = world.getBlockTileEntity(x, y, z);
 		}
 		catch (Exception ex)
@@ -69,15 +67,14 @@ public class ClientPacketHandler implements IPacketHandler
 			return;
 		}
 
-		//check if the tile we're looking at is an Inventory Stocker tile
-		if (tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityStocker)
 		{
 			if (packetType == 0)
 			{
-				int Metainfo = 0;
+				int button = 0;
 				try
 				{
-					Metainfo = stream.readInt();
+					button = stream.readInt();
 				}
 				catch (Exception ex)
 				{
@@ -85,9 +82,18 @@ public class ClientPacketHandler implements IPacketHandler
 					return;
 				}
 
-				((TileEntityInventoryStocker)tile).metaInfo = Metainfo;
-				world.markBlockForUpdate(x, y, z);
-				//if (Info.isDebugging) System.out.println("Packet 0 processed by client");
+				//System.out.println("Packet 0 processed by server. Button ID: " + button);
+				switch (button)
+				{
+				case 0:
+					((TileEntityStocker)tile).receiveSnapshotRequest();
+					break;
+				case 1:
+					((TileEntityStocker)tile).receiveModeRequest();
+					break;
+				default:
+					System.out.println("Unknown button field in received packet: " + button);
+				}
 			}
 		}
 	}

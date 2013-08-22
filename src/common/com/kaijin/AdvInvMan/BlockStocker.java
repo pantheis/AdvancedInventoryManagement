@@ -3,92 +3,118 @@
  * Licensed as open source with restrictions. Please see attached LICENSE.txt.
  ******************************************************************************/
 
-package com.kaijin.InventoryStocker;
+package com.kaijin.AdvInvMan;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-
-public class BlockInventoryStocker extends BlockContainer
+public class BlockStocker extends BlockContainer
 {
-	public BlockInventoryStocker(int i, int j, Material material)
+	protected Icon iconFront[];
+	protected Icon iconBack[][];
+	protected Icon iconSide[][];
+
+	public BlockStocker(int i, Material material)
 	{
-		super(i, j, material);
+		super(i, material);
 	}
 
 	@Override
-	public String getTextureFile()
+	public void registerIcons(IconRegister iconRegister)
 	{
-		return Info.BLOCK_PNG;
+		iconFront = new Icon[3];
+		iconBack = new Icon[2][2];
+		iconSide = new Icon[2][2];
+
+		iconFront[0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-Off");
+		iconFront[1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-On");
+		iconFront[2] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerFront-Covered");
+		iconBack[0][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Shut-Off");
+		iconBack[0][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Open-Off");
+		iconBack[1][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Shut-On");
+		iconBack[1][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerBack-Open-On");
+		iconSide[0][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Shut-Off");
+		iconSide[0][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Open-Off");
+		iconSide[1][0] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Shut-On");
+		iconSide[1][1] = iconRegister.registerIcon(Info.MOD_ID.toLowerCase() + ":StockerSide-Open-On");
 	}
 
-	@Override
-	public int getBlockTextureFromSide(int i)
-	{
-		switch (i)
-		{
-		case 0: // Bottom
-			return 16;
-
-		case 1: // Top
-			return 0;
-
-		case 2: // North
-			return 16;
-
-		case 3: // South
-			return 16;
-
-		default: // 4-5 West-East
-			return 16;
-		}
-	}
-
+	//Textures in the world
 	@SideOnly(Side.CLIENT)
 	@Override
-	public int getBlockTexture(IBlockAccess blocks, int x, int y, int z, int i)
+	public Icon getBlockTexture(IBlockAccess blocks, int x, int y, int z, int side)
 	{
+		//System.out.println("getBlockTextures: x = " + x + ", y = " + y + ", z = " + z + ", side = " + side);
 		TileEntity tile = blocks.getBlockTileEntity(x, y, z);
-		if (tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityStocker)
 		{
-			int m = ((TileEntityInventoryStocker)tile).metaInfo;
+			int m = ((TileEntityStocker)tile).metaInfo;
 			int dir = m & 7;
-			int side = Utils.lookupRotatedSide(i, dir);
+			int face = Utils.lookupRotatedSide(side, dir);
 			int powered = (m & 8) >> 3;
 
-			//if (InventoryStocker.isDebugging) System.out.println("getBlockTexture - m = " + m);
+			//System.out.println("getBlockTextures: m = " + m + ", dir = " + dir + ", face = " + face + ", powered = " + powered);
 
 			// Sides (0-5) are: Front, Back, Top, Bottom, Left, Right
-			if (side == 0) // Front
+			if (face == 0) // Front
 			{
 				//TODO Removing animation for now, unless a way to do it without spamming renderer updates can be devised
 				//int time = (int)tile.worldObj.getWorldTime();
 				//return 2 + powered * (((time >> 2) & 3) + 1);
-				return 1 + powered;
+				return iconFront[powered];
 			}
 
-			int open = (2 & (m >> (i + 3))); // Bit i + 4 shifted to the 2's place and isolated
+			int open = (1 & (m >> (side + 4))); // Bit i + 4 shifted to the 1's place and isolated
 
-			if (side == 1) // Back
+			if (face == 1) // Back
 			{
-				return 32 + powered + open;
+				return  iconBack[powered][open];
 			}
 
-			return 16 + powered + open; // Top, Bottom, Left, Right
+			return iconSide[powered][open];
 		}
-		return i;
+		return blockIcon;
 	}
+
+	//Textures in your inventory
+	@Override
+	public Icon getIcon(int side, int meta)
+	{
+		switch (side)
+		{
+		case 0: // Bottom
+			return iconBack[0][0];
+		case 1: // Top
+			return iconFront[2];
+		// case 2: // North
+		// case 3: // South
+		// case 4: // West
+		// case 5: // East
+		default:
+			return iconSide[0][0];
+		}
+	}
+
+//	@Override
+//	public String getTextureFile()
+//	{
+//		return Info.BLOCK_PNG;
+//	}
+//
 
 	private int determineOrientation(World world, int x, int y, int z, EntityLiving player)
 	{
@@ -107,20 +133,20 @@ public class BlockInventoryStocker extends BlockContainer
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving EntityLiving, ItemStack itemstack)
 	{
-		int dir = determineOrientation(world, x, y, z, par5EntityLiving);
+		int dir = determineOrientation(world, x, y, z, EntityLiving);
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if(tile instanceof TileEntityInventoryStocker)
+		if(tile instanceof TileEntityStocker)
 		{
-			((TileEntityInventoryStocker)tile).metaInfo = dir;
+			((TileEntityStocker)tile).metaInfo = dir;
 		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
 	{
-		if (InventoryStocker.proxy.isClient())
+		if (AdvancedInventoryManagement.proxy.isClient())
 		{
 			return !entityplayer.isSneaking();
 		}
@@ -132,9 +158,9 @@ public class BlockInventoryStocker extends BlockContainer
 			if (entityplayer.getCurrentEquippedItem() == null)
 			{
 				TileEntity tile = world.getBlockTileEntity(x, y, z);
-				if (tile instanceof TileEntityInventoryStocker)
+				if (tile instanceof TileEntityStocker)
 				{
-					((TileEntityInventoryStocker)tile).rotateBlock();
+					((TileEntityStocker)tile).rotateBlock();
 				}
 			}
 
@@ -165,7 +191,7 @@ public class BlockInventoryStocker extends BlockContainer
 			}
 		}*/
 
-		entityplayer.openGui(InventoryStocker.instance, 1, world, x, y, z);
+		entityplayer.openGui(AdvancedInventoryManagement.instance, 1, world, x, y, z);
 		return true;
 	}
 
@@ -174,12 +200,12 @@ public class BlockInventoryStocker extends BlockContainer
 	{
 		return null;
 	}
-	
+
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public TileEntity createTileEntity(World world, int metadata)
 	{
 		//if (InventoryStocker.isDebugging) System.out.println("BlockInventoryStocker.createTileEntity");
-		return new TileEntityInventoryStocker();
+		return new TileEntityStocker();
 	}
 
 	@Override
@@ -211,9 +237,9 @@ public class BlockInventoryStocker extends BlockContainer
 	{
 		if (Info.isDebugging) System.out.println("BlockInventoryStocker.onNeighborBlockChange");
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if (tile instanceof TileEntityInventoryStocker)
+		if (tile instanceof TileEntityStocker)
 		{
-			((TileEntityInventoryStocker)tile).onBlockUpdate();
+			((TileEntityStocker)tile).onBlockUpdate();
 		}
 		super.onNeighborBlockChange(world, x, y, z, blockID);
 	}
@@ -251,7 +277,7 @@ public class BlockInventoryStocker extends BlockContainer
 
 	public static void preDestroyBlock(World world, int i, int j, int k)
 	{
-		if (InventoryStocker.proxy.isClient()) return;
+		if (AdvancedInventoryManagement.proxy.isClient()) return;
 
 		TileEntity tile = world.getBlockTileEntity(i, j, k);
 		if (tile instanceof IInventory)
