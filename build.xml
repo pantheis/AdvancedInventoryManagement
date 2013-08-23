@@ -158,7 +158,7 @@
 
 	<!-- Jar the files -->
 		<echo message="Loading key info"/>
-		<loadfile property="keypass" srcFile="${sign.dir}/.keypass"/>
+		<loadfile property="keypass" srcFile="${sign.dir}/.key"/>
 		<echo message="Creating jar file ${jar.dir}/${mod.name}-${mymod.version.full}.jar"/>
 		<jar destfile="${jar.dir}/${mod.name}-${mymod.version.full}.jar" basedir="${classes.dir}">
 			<manifest>
@@ -169,7 +169,7 @@
 			</manifest>
 		</jar>
 		<echo message="Signing jar file"/>
-		<signjar jar="${jar.dir}/${mod.name}-${mymod.version.full}.jar" alias="kaijin" keystore="${sign.dir}/.keystore" storepass="${keypass}"/>
+		<signjar jar="${jar.dir}/${mod.name}-${mymod.version.full}.jar" alias="KaijinCraft" keystore="${sign.dir}/.keystore" storepass="${keypass}"/>
 
 	<!-- Finally, clear out the repo and class files for a fresh start next time -->
 		<echo message="Cleaning up"/>
