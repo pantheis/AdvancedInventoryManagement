@@ -5,6 +5,8 @@
 
 package com.kaijin.AdvInvMan;
 
+import java.util.logging.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,7 +18,9 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.FingerprintWarning;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -24,7 +28,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = Info.MOD_ID, name=Info.MOD_NAME, version=Info.VERSION, dependencies = Info.MOD_DEPENDENCIES)
+@Mod(modid = Info.MOD_ID, name=Info.MOD_NAME, version=Info.VERSION, /* @CERTIFICATE_SUM@ */ dependencies = Info.MOD_DEPENDENCIES)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {Info.PACKET_CHANNEL}, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = (Info.PACKET_CHANNEL), packetHandler = ServerPacketHandler.class))
@@ -79,5 +83,13 @@ public class AdvancedInventoryManagement
 		}
 
 		Info.registerStrings();
+	}
+
+	@FingerprintWarning
+	public void certificateWarning(FMLFingerprintViolationEvent warning)
+	{
+		FMLLog.getLogger().log(Level.SEVERE, "[" + Info.MOD_NAME + "] [Certificate Error] Fingerprint does not match! This mod's jar file has been corrupted or modified from the original version.");
+		FMLLog.getLogger().log(Level.SEVERE, "[" + Info.MOD_NAME + "] [Certificate Error] Expected fingerprint: " + warning.expectedFingerprint);
+		FMLLog.getLogger().log(Level.SEVERE, "[" + Info.MOD_NAME + "] [Certificate Error] File: " + warning.source.getAbsolutePath());
 	}
 }
